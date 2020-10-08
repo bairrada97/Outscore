@@ -21,7 +21,7 @@ export const actions = {
 	async getFixtures({ commit }) {
 		await this.$axios
 			.get(
-				"/.netlify/functions/api",
+				"https://quizzical-galileo-304eab.netlify.app/.netlify/functions/api/fixtures/live",
 				//{
 				//   headers: {
 				//     'x-rapidapi-host': 'v3.football.api-sports.io',
