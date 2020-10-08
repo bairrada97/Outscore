@@ -21,7 +21,7 @@ export const actions = {
 	async getFixtures({ commit }) {
 		await this.$axios
 			.get(
-				"https://dog.ceo/api/breeds/image/random",
+				"/.netlify/functions/api",
 				//{
 				//   headers: {
 				//     'x-rapidapi-host': 'v3.football.api-sports.io',
@@ -31,7 +31,7 @@ export const actions = {
 			)
 			.then((response) => {
 				console.log(response);
-				commit("SET_FIXTURES", response.data.message);
+				commit("SET_FIXTURES", response);
 			});
 	},
 };

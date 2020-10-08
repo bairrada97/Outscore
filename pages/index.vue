@@ -29,7 +29,9 @@ export default {
 		};
 	},
 
-	mounted() {},
+	 mounted() {
+		  this.$store.dispatch('getFixtures')
+	},
 };
 </script>
 
