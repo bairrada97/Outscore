@@ -24,7 +24,7 @@ router.get("/", (req, res) => {
             .catch((error)=>{
                 console.error(error);
             })
-      }, 1000 * 55 );*/
+      }, 1000 * 55 );*/ 
 });
 
 router.get("/clear", (req, res) => {

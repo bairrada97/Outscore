@@ -1,1 +1,16 @@
-!function(e,t){for(var r in t)e[r]=t[r]}(exports,function(e){var t={};function r(n){if(t[n])return t[n].exports;var o=t[n]={i:n,l:!1,exports:{}};return e[n].call(o.exports,o,o.exports,r),o.l=!0,o.exports}return r.m=e,r.c=t,r.d=function(e,t,n){r.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:n})},r.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},r.t=function(e,t){if(1&t&&(e=r(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var n=Object.create(null);if(r.r(n),Object.defineProperty(n,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var o in e)r.d(n,o,function(t){return e[t]}.bind(null,o));return n},r.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return r.d(t,"a",t),t},r.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},r.p="",r(r.s=33)}({33:function(e,t){const r={axios:{baseURL:"https://cat-fact.herokuapp.com"},cacheOptions:{stdTTL:15,checkperiod:20,deleteOnExpire:!0,maxKeys:100}};e.exports=r}}));
+const config = {}
+
+config.axios = {
+    'baseURL':'https://v3.football.api-sports.io/', //https://v2.api-football.com/fixtures/live https://cat-fact.herokuapp.com
+    "headers":{
+        "content-type":"application/octet-stream",
+        "x-rapidapi-host": "v3.football.api-sports.io",
+        "x-rapidapi-key": "bd3b30e0ee4efd020aaf515e7a304cba",
+        "useQueryString":true
+    }
+     
+}
+
+config.cacheOptions= { stdTTL: 15, checkperiod: 20, deleteOnExpire: true, maxKeys: 100 }
+
+module.exports = config; 
