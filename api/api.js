@@ -7,7 +7,7 @@ const dinamicRoute = require("./DinamicRoute");
 
 const DEBUG = process.env.CONTEXT === "development";
 
-dinamicRoute(router, '/facts/random');
+dinamicRoute(router, '/fixtures?live=all');
 router.get("/", (req, res) => {
     
     res.send(`<h2>Cache status: ${JSON.stringify(footabalApiCache.getStats())}</h2> ${footabalApiCache.keys()}`);

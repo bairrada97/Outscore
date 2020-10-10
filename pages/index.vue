@@ -27,8 +27,7 @@ export default {
 		console.log(response.value);
 
 
-		
-                root.$store.dispatch('getFixtures');
+		   root.$store.dispatch('getFixtures');
 
 			
 	

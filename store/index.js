@@ -21,7 +21,7 @@ export const actions = {
 	async getFixtures({ commit }) {
 		await this.$axios
 			.get(
-				"/api/facts/random",
+				"/api/fixtures?live=all",
 				//{
 				//   headers: {
 				//     'x-rapidapi-host': 'v3.football.api-sports.io',
