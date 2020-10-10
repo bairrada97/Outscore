@@ -15,22 +15,34 @@
 <script>
 import { defineComponent, ref, useFetch } from "@nuxtjs/composition-api";
 
+
 export default {
 	props: {
 		user: "ze",
+		polling: null
 	},
 	setup(props, { root }) {
 		const response = ref("");
 		response.value = root.$store.state.fixtures;
 		console.log(response.value);
 
+
+		
+                root.$store.dispatch('getFixtures');
+
+			
+	
+
 		return {
 			response,
 		};
 	},
+	created(){
+		
+	},
 
 	 mounted() {
-		  this.$store.dispatch('getFixtures')
+		
 	},
 };
 </script>

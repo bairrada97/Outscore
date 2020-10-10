@@ -5,7 +5,7 @@
 </template>
 <script>
 export default {
-  middleware: 'loadData',
+ 
 }
 </script>
 <style>
