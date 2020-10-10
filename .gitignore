@@ -1,5 +1,6 @@
 # dependencies
 node_modules
+functions
 
 # logs
 npm-debug.log
@@ -10,5 +11,5 @@ npm-debug.log
 # Nuxt generate
 dist
 
-#compiled lambda functions
+# compiled lambda functions
 functions
