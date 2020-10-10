@@ -12,12 +12,12 @@ class Outscore {
   
         const catFactsEndPoint = {
             url: '/facts/random',
-            axios: catFactsAxiosInstance,
+            axios: catFactsAxiosInstance, 
             router: router,
             cacheStdTTL: '10',
         };
         const apiFootballEndPoint = {
-            url: '/fixtures/live',
+            url: '/fixtures?live=all',
             axios: apiFootballInstance,
             router: router,
             cacheStdTTL: '60',

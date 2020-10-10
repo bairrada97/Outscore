@@ -22,12 +22,7 @@ export const actions = {
 		await this.$axios
 			.get(
 				"/api/fixtures?live=all",
-				{
-				   headers: {
-				     'x-rapidapi-host': 'v3.football.api-sports.io',
-				     'x-rapidapi-key': 'bd3b30e0ee4efd020aaf515e7a304cba',
-				   },
-				}
+				
 			)
 			.then((response) => {
 				console.log(response);
