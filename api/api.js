@@ -1,38 +1,42 @@
-const express = require('express');
-const serverless = require('serverless-http');
-const app = express();
-const router = express.Router();
+const { app, serverless, router} = require('./loaders/express')
 const dinamicRoute = require("./DinamicRoute"); 
+const {catFactsAxiosInstance, apiFootballInstance} = require("./loaders/axios");
+const OutscoreServer = new Outscore(router);
 
+router.get("/", (req, res) => {
+    res.json(OutscoreServer.endPoints)
+});
 
-const DEBUG = process.env.CONTEXT === "development";
-
-dinamicRoute(router, '/fixtures?live=all');
-router.get("/", (req, res) => { 
-    
-    res.send(`<h2>Cache status: ${JSON.stringify(footabalApiCache.getStats())}</h2> ${footabalApiCache.keys()}`);
-   /* res.writeHead(200, { 'content-type': 'text/html' })
-    fs.createReadStream('./src/index.html').pipe(res);
-    res.send(`<h2>Cache status: ${JSON.stringify(footabalApiCache.getStats())}</h2> ${footabalApiCache.keys()}`);
+class Outscore {
+    constructor(router){
   
-    intervalObj = setInterval(() => {
-        console.log('interviewing the interval');
-        ApiFootbal.getLive()
-            .then((response)=>{
-                footabalApiCache.set(response.data._id, response.data )
-            })
-            .catch((error)=>{
-                console.error(error);
-            })
-      }, 1000 * 55 );*/
-});
+        const catFactsEndPoint = {
+            url: '/facts/random',
+            axios: catFactsAxiosInstance,
+            router: router,
+            cacheStdTTL: '10',
+        };
+        const apiFootballEndPoint = {
+            url: '/fixtures/live',
+            axios: apiFootballInstance,
+            router: router,
+            cacheStdTTL: '60',
+        };
+        this._endPoints = [apiFootballEndPoint, catFactsEndPoint];
 
-router.get("/clear", (req, res) => {
-    clearInterval(intervalObj);
-});
+        this.createEndpoints();
+    }
 
-//TODO:add to config? files
-app.use(`/.netlify/functions/api`, router);
-app.set('view engine', 'html');
+    createEndpoints() {
+        this._endPoints.forEach((endPoint)=>(dinamicRoute(endPoint)))
+    }
+    set endPoints(endpoint){
+        this._endPoints.push(endpoint);
+    }
+    get endPoints(){
+        return this._endPoints;
+    }
+}
+
 module.exports = app;
 module.exports.handler = serverless(app);

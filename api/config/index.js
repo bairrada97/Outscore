@@ -1,6 +1,8 @@
-import axiosConfig from './axios';
-import DefaultCacheConfig from './cache';
+import { catFactsAxios, apiFootballAxios} from './axios';
+import defaultCacheConfig from './cache';
+
 export {
-    axiosConfig,
-    DefaultCacheConfig
+    catFactsAxios,
+    apiFootballAxios,
+    defaultCacheConfig
 }

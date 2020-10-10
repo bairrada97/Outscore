@@ -1,9 +1,9 @@
 const NodeCache = require( "node-cache" );
-const {cacheDefaultOptions} = require('./config');
+const {defaultCacheConfig} = require('./config');
 
 module.exports = function CreateRouter( {router, url, cacheStdTTL, axios} ) { 
   console.log(url, process.env);
-  const footabalApiCache = new NodeCache(cacheDefaultOptions.stdTTL = cacheStdTTL);
+  const footabalApiCache = new NodeCache(defaultCacheConfig.stdTTL = cacheStdTTL);
 
   return router.get(url, function(req, res){
       var params = req.params;

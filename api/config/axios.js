@@ -11,7 +11,7 @@
         "useQueryString":true
     }
 }
-export {
+module.exports = {
     apiFootballAxios,
     catFactsAxios,
 };
