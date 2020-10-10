@@ -1,43 +1,57 @@
 const axios = require('axios')
-const config = require('./Config');
+const { catFactsAxios, apiFootballAxios} = require('./Config');
 
-const axiosInstance = axios.create({
-    ...config.axios,
+const catFactsAxiosInstance = axios.create({
+    ...catFactsAxios,
     "method":"GET",
 });
-
+const apiFootballInstance = axios.create({
+  ...apiFootballAxios,
+  "method":"GET",
+});
 // Add a response interceptor
-axiosInstance.interceptors.response.use(function (response) {
-    // Any status code that lie within the range of 2xx cause this function to trigger
-    // Do something with response data
-    if(response.headers['content-type'] === 'application/json'){
-        return response;
-    }
-    return response;
-  }, function (error) {
-    // Any status codes that falls outside the range of 2xx cause this function to trigger
-    // Do something with response error
-    if (err.response) {
-        // client received an error response (5xx, 4xx)
-        console.log(err.response);
-      } else if (err.request) {
-        // client never received a response, or request never left
-        console.log(err.request);
-      } else {
-        // anything else
-        console.log(error);
-      }
-    return Promise.reject(error);
-  });
+catFactsAxiosInstance.interceptors.response.use(onInterceptResponseSuccess, onInterceptResponseErrors);
+apiFootballInstance.interceptors.response.use(onInterceptResponseSuccess, onInterceptResponseErrors);
 
-  // Add a request interceptor
-  axiosInstance.interceptors.request.use(function (config) {
+// Add a request interceptor
+catFactsAxiosInstance.interceptors.request.use(onInterceptRequestSuccess , onInterceptRequestErrors);
+apiFootballInstance.interceptors.request.use(onInterceptRequestSuccess , onInterceptRequestErrors);
+
+  function onInterceptRequestSuccess(config){
     // Do something before request is sent
     console.info(config.baseURL, config)
     return config;
-  }, function (error) {
-    // Do something with request error
-    return Promise.reject(error);
-  });
+ }
+ function onInterceptRequestErrors(error){
+   console.table(error);
+  // Do something with request error
+  return Promise.reject(error);
+ }
 
-  module.exports = axiosInstance;
+ function onInterceptResponseSuccess(response){
+  // Any status code that lie within the range of 2xx cause this function to trigger
+    // Do something with response data
+    if(response.headers['content-type'] === 'application/json'){
+      return response;
+  }
+  return response;
+}
+function onInterceptResponseErrors(error){
+ // Any status codes that falls outside the range of 2xx cause this function to trigger
+    // Do something with response error
+    if (err.response) {
+      // client received an error response (5xx, 4xx)
+      console.log(err.response);
+    } else if (err.request) {
+      // client never received a response, or request never left
+      console.log(err.request);
+    } else {
+      // anything else
+      console.log(error);
+    }
+  return Promise.reject(error);
+}
+  module.exports ={
+    catFactsAxiosInstance,
+    apiFootballInstance
+  }
