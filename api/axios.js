@@ -1,4 +1,4 @@
-const axios = require('axios').default;
+const axios = require('axios')
 const config = require('./Config');
 
 const axiosInstance = axios.create({
