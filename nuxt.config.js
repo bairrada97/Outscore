@@ -41,7 +41,7 @@ export default {
 
 	proxy: {
 		"/api/": {
-			target: "localhost:8888/.netlify/functions/api",
+			target: "https://outscore-test.netlify.app/.netlify/functions/api/",
 			pathRewrite: { "^/api/": "" },
 		},
 	},

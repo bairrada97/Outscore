@@ -21,7 +21,7 @@ export const actions = {
 	async getFixtures({ commit }) {
 		await this.$axios
 			.get(
-				"http://localhost:8888/.netlify/functions/api/facts/random",
+				"/api/facts/random",
 				//{
 				//   headers: {
 				//     'x-rapidapi-host': 'v3.football.api-sports.io',
