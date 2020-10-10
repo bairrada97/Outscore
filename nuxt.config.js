@@ -41,7 +41,7 @@ export default {
 
 	proxy: {
 		"/api/": {
-			target: "https://v3.football.api-sports.io/",
+			target: "localhost:8888/.netlify/functions/api",
 			pathRewrite: { "^/api/": "" },
 		},
 	},
