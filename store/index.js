@@ -17,17 +17,17 @@ export const getters = {
 		return state.fixtures;
 	},
 };
-export const actions = {
+export const actions = { 
 	async getFixtures({ commit }) {
 		await this.$axios
 			.get(
-				"https://quizzical-galileo-304eab.netlify.app/.netlify/functions/api/fixtures/live",
-				//{
-				//   headers: {
-				//     'x-rapidapi-host': 'v3.football.api-sports.io',
-				//     'x-rapidapi-key': 'bd3b30e0ee4efd020aaf515e7a304cba',
-				//   },
-				//}
+				"/api/fixtures?live=all",
+				{
+				   headers: {
+				     'x-rapidapi-host': 'v3.football.api-sports.io',
+				     'x-rapidapi-key': 'bd3b30e0ee4efd020aaf515e7a304cba',
+				   },
+				}
 			)
 			.then((response) => {
 				console.log(response);
