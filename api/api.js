@@ -15,14 +15,9 @@ class Outscore {
             axios: catFactsAxiosInstance, 
             router: router,
             cacheStdTTL: '10',
-        };
-<<<<<<< HEAD
+        }; 
         const apiFootballEndPoint = { 
             url: '/fixtures?live=all',
-=======
-        const apiFootballEndPoint = {
-            url: '/fixtures',
->>>>>>> main
             axios: apiFootballInstance,
             router: router,
             cacheStdTTL: '60',
