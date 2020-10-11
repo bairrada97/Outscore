@@ -17,7 +17,7 @@ class Outscore {
             cacheStdTTL: '10',
         }; 
         const apiFootballEndPoint = { 
-            url: '/fixtures?live=all',
+            url: '/fixtures',
             axios: apiFootballInstance,
             router: router,
             cacheStdTTL: '60',

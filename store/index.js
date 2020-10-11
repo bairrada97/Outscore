@@ -2,7 +2,7 @@ export const state = () => ({
 	fixtures: {},
 	counter: 0,
 });
-
+ 
 export const mutations = {
 	SET_FIXTURES: (state, payload) => {
 		state.fixtures = payload;

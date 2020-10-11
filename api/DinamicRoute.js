@@ -19,7 +19,7 @@ module.exports = function CreateRouter( {router, url, cacheStdTTL, axios} ) {
       }else{
         res.json(data);
       }  
-    });
+    }); 
 
    function getRouteConfig(req) {
     const queryParams = {}
