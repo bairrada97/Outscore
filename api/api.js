@@ -16,25 +16,48 @@ class Outscore {
             router: router,
             cacheStdTTL: '10',
         };
+<<<<<<< HEAD
         const apiFootballEndPoint = { 
             url: '/fixtures?live=all',
+=======
+        const apiFootballEndPoint = {
+            url: '/fixtures',
+>>>>>>> main
             axios: apiFootballInstance,
             router: router,
             cacheStdTTL: '60',
         };
-        this._endPoints = [apiFootballEndPoint, catFactsEndPoint];
+        const apiFootballStatisticsEndPoint = {
+            url: '/fixtures/statistics',
+            axios: apiFootballInstance,
+            router: router,
+            cacheStdTTL: '60',
+        };
+        this._endPoints = [apiFootballEndPoint, catFactsEndPoint, apiFootballStatisticsEndPoint];
+        this._activeEndPoints = [];
 
         this.createEndpoints();
     }
 
     createEndpoints() {
-        this._endPoints.forEach((endPoint)=>(dinamicRoute(endPoint)))
+      this._activeEndPoints = this._endPoints.map((endPoint)=>(dinamicRoute(endPoint)))
+
     }
     set endPoints(endpoint){
         this._endPoints.push(endpoint);
     }
     get endPoints(){
-        return this._endPoints;
+        return this._activeEndPoints.map(({cache, url}) => ({
+               url: url,
+               keys: cache.keys(),
+               stats: cache.getStats(),
+               ttl: cache.keys().map( (key) => { 
+                   const myObj = {}
+                    myObj[key] = new Date(cache.getTtl( key ));
+                    return myObj;
+                 } ),
+            
+                }))
     }
 }
 
