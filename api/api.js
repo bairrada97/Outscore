@@ -26,7 +26,7 @@ class Outscore {
             url: '/fixtures/statistics',
             axios: apiFootballInstance,
             router: router,
-            cacheStdTTL: '60',
+            cacheStdTTL: '3600',
         };
         this._endPoints = [apiFootballEndPoint, catFactsEndPoint, apiFootballStatisticsEndPoint];
         this._activeEndPoints = [];

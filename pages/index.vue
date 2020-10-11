@@ -28,6 +28,8 @@ export default {
 
 
 		   root.$store.dispatch('getFixtures');
+		   root.$store.dispatch('getStatistics1');
+		   root.$store.dispatch('getStatistics2');
 
 			
 	

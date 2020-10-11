@@ -29,4 +29,26 @@ export const actions = {
 				commit("SET_FIXTURES", response);
 			});
 	},
+	async getStatistics1({ commit }) {
+		await this.$axios
+			.get(
+				"/api/fixtures/statistics?fixture=562524&team=9976",
+				
+			)
+			.then((response) => {
+				console.log(response);
+				commit("SET_FIXTURES", response);
+			});
+	},
+	async getStatistics2({ commit }) {
+		await this.$axios
+			.get(
+				"/api/fixtures/statistics?fixture=562525&team=325",
+				
+			)
+			.then((response) => {
+				console.log(response);
+				commit("SET_FIXTURES", response);
+			});
+	},
 };
