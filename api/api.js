@@ -20,7 +20,7 @@ class Outscore {
             url: '/fixtures',
             axios: apiFootballInstance,
             router: router,
-            cacheStdTTL: '60',
+            cacheStdTTL: '3600',
         };
         const apiFootballStatisticsEndPoint = {
             url: '/fixtures/statistics',
