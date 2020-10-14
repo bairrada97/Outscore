@@ -1,50 +1,47 @@
 <template>
 	<div class="container">
-		<!-- <div v-for="data in response" :key="data">
-			<div class="ze">
-			<span>{{ data.teams.home.name }}</span>
-				<span>{{ data.goals.home }}</span>
-				<span>{{ data.goals.away }}</span>
-				<span>{{ data.teams.away.name }}</span>
-			</div>
-		</div> -->
-		<span>{{ response }}</span>
+		
+		<div v-for="item in list.response" :key="item">
+			<span>{{item.teams.home.name}}</span>
+			<span>{{item.goals.home}}</span>
+			<span>{{item.goals.away}}</span>
+			<span>{{item.teams.away.name}}</span>
+		</div>
+		
 	</div>
 </template>
 
 <script>
-import { defineComponent, ref, useFetch } from "@nuxtjs/composition-api";
+import { defineComponent, toRefs,ref,  onMounted, reactive } from "@nuxtjs/composition-api";
+import useFetch from '~/scripts/useFetch';
 
-
+ 
 export default {
-	props: {
+	props: { 
 		user: "ze",
-		polling: null
 	},
 	setup(props, { root }) {
-		const response = ref("");
-		response.value = root.$store.state.fixtures;
-		console.log(response.value);
+		
+		const getData =  () => {
+			let apiData = reactive({list: [], error: null, fetching: false});
+			const {response, error, fetchData, fetching} = useFetch('/api/fixtures?live=all')
+			fetchData();
 
-
-		   root.$store.dispatch('getFixtures');
-		   root.$store.dispatch('getStatistics1');
-		   root.$store.dispatch('getStatistics2');
-
+			apiData.list = response;
+			apiData.error = error;
+			apiData.fetching = fetching;
 			
-	
+			return {...toRefs(apiData)};
+		}
 
+		const { list } = getData();
+		console.log(list)
+		
 		return {
-			response,
+			list
 		};
 	},
-	created(){
-		
-	},
 
-	 mounted() {
-		
-	},
 };
 </script>
 
