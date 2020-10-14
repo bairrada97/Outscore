@@ -24,13 +24,13 @@ export default {
 		
 		const getData =  () => {
 			let apiData = reactive({list: [], error: null, fetching: false});
-			const {response, error, fetchData, fetching} = useFetch('/api/fixtures?live=all')
+			const {response, error, fetchData, fetching} = useFetch('/.netlify/functions/api/fixtures?live=all')
 			fetchData();
 
 			apiData.list = response;
 			apiData.error = error;
 			apiData.fetching = fetching;
-			
+
 			return {...toRefs(apiData)};
 		}
 
