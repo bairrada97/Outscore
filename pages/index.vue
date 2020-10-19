@@ -1,48 +1,42 @@
 <template>
 	<div class="container">
-		
-		<div v-for="item in list.response" :key="item">
+		{{store.state.cenas}}
+		{{store.state.liveGames}}
+		<div v-for="item in store.state.liveGames.response" :key="item">
 			<span>{{item.teams.home.name}}</span>
 			<span>{{item.goals.home}}</span>
 			<span>{{item.goals.away}}</span>
 			<span>{{item.teams.away.name}}</span>
 		</div>
 		
-	</div>
+	</div> 
 </template>
 
 <script>
-import { defineComponent, toRefs,ref,  onMounted, reactive } from "@nuxtjs/composition-api";
-import useFetch from '~/scripts/useFetch';
+import {reactive, toRefs,ref,  onMounted,  } from "@nuxtjs/composition-api";
+import useFetch from '~/utils/useFetch';
+
 
  
 export default {
-	props: { 
-		user: "ze",
-	},
-	setup(props, { root }) {
-		
-		const getData =  () => {
-			let apiData = reactive({list: [], error: null, fetching: false});
-			const {response, error, fetchData, fetching} = useFetch('/.netlify/functions/api/fixtures?live=all')
-			fetchData();
+	inject:['store'],
+	setup() {
 
-			apiData.list = response;
-			apiData.error = error;
-			apiData.fetching = fetching;
+		getData();
 
-			return {...toRefs(apiData)};
-		}
-
-		const { list } = getData();
-		console.log(list)
-		
 		return {
-			list
+			
 		};
 	},
 
 };
+
+const getData =  () => {
+														
+	const {response, error, fetchData, fetching} = useFetch(' https://api-football-v3.herokuapp.com/api/v3/fixtures?live=all') 	/*  /.netlify/functions/api/fixtures?live=all */
+	store.setLiveGames(response, error, fetching);
+}
+
 </script>
 
 <style>

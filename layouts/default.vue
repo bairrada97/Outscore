@@ -4,8 +4,12 @@
   </div>
 </template>
 <script>
+import {provide, inject} from '@nuxtjs/composition-api'
+import store from '@/store.js'
 export default {
- 
+ provide:{
+   store
+ }
 }
 </script>
 <style>
