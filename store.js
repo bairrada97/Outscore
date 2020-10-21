@@ -2,19 +2,17 @@ import { reactive } from "@nuxtjs/composition-api";
 
 
 const state = reactive({
-    cenas: 'zzz',
-    liveGames: {
-      list: {},
-      error : false,
-      fetching : false
-    },
+    liveGames: {},
 })
 
 
-const setLiveGames = (data, error, fetching) => {
-  state.liveGames.list = data;
-  state.liveGames.error = error;
-  state.liveGames.fetching = fetching
+const setLiveGames = (response) => {
+  state.liveGames = response;
+  
+}
+const getLiveGames = () => {
+ return state.liveGames
+  
 }
 
 
@@ -23,6 +21,6 @@ export default {
   // With readonly(), we prevent our state to be mutated
   // outside of the global.js module
   state,
-  setLiveGames
+  setLiveGames,getLiveGames
   
 }

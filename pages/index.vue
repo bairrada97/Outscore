@@ -1,8 +1,7 @@
 <template>
 	<div class="container">
-		{{store.state.cenas}}
-		{{store.state.liveGames}}
-		<div v-for="item in store.state.liveGames.response" :key="item">
+
+		<div v-for="item in liveGames.response" :key="item.results">
 			<span>{{item.teams.home.name}}</span>
 			<span>{{item.goals.home}}</span>
 			<span>{{item.goals.away}}</span>
@@ -13,29 +12,42 @@
 </template>
 
 <script>
-import {reactive, toRefs,ref,  onMounted,  } from "@nuxtjs/composition-api";
-import useFetch from '~/utils/useFetch';
+import {reactive, toRefs,ref,  onMounted,  useFetch } from "@nuxtjs/composition-api";
+
+import store from '@/store.js'
+import axios from 'axios'
 
 
  
 export default {
-	inject:['store'],
 	setup() {
 
-		getData();
+	 	const liveGames = ref(null)
+
+		const { fetch, fetchState } = useFetch(async () => {
+		await axios.get('https://api-football-v3.herokuapp.com/api/v3/fixtures?live=all').then((response) => {
+	
+			store.setLiveGames(response.data)
+		}).then(() =>{
+			liveGames.value = store.getLiveGames()
+		})
+		})
+
+		// Manually trigger a refetch
+		fetch() 
+
+	
+
+		// Access fetch error, pending and timestamp
+		fetchState
 
 		return {
-			 
+			 liveGames
 		};
 	},
 
 };
 
-const getData =  () => {
-														
-	const {response, error, fetchData, fetching} = useFetch(' https://api-football-v3.herokuapp.com/api/v3/fixtures?live=all') 	/*  /.netlify/functions/api/fixtures?live=all */
-	store.setLiveGames(response, error, fetching);
-}
 
 </script>
 
