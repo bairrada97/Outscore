@@ -1,11 +1,13 @@
 <template>
 	<div class="container">
-
 		<div v-for="item in liveGames.response" :key="item.results">
+
+		 <nuxt-link  :to="{name: 'game', params:{fixture: item.fixture.id },query: { home: normalizeURL(item.teams.home.name), away: normalizeURL(item.teams.away.name)}, props:{item}} " >
 			<span>{{item.teams.home.name}}</span>
 			<span>{{item.goals.home}}</span>
 			<span>{{item.goals.away}}</span>
 			<span>{{item.teams.away.name}}</span>
+			</nuxt-link>
 		</div>
 		
 	</div> 
@@ -22,7 +24,11 @@ import axios from 'axios'
 export default {
 	setup() {
 
-	 	const liveGames = ref(null)
+		 const liveGames = ref(null)
+		 liveGames.value = store.getLiveGames() || null;
+		 const normalizeURL =  (a) => {
+            return a.replace(/\s/g, '').toLowerCase();
+        }
 
 		const { fetch, fetchState } = useFetch(async () => {
 		await axios.get('https://api-football-v3.herokuapp.com/api/v3/fixtures?live=all').then((response) => {
@@ -42,11 +48,14 @@ export default {
 		fetchState
 
 		return {
-			 liveGames
+			 liveGames,
+			 normalizeURL
 		};
 	},
 
 };
+
+
 
 
 </script>
