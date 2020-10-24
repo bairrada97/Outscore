@@ -22,7 +22,12 @@ export default {
 	components: true,
 
 	// Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
-	buildModules: ["@nuxtjs/composition-api"],
+	buildModules: ["@nuxtjs/composition-api", '@aceforth/nuxt-optimized-images'],
+
+	optimizedImages: {
+		optimizeImages: true,
+		optimizeImagesInDev: false
+	  },
 
 	// Modules (https://go.nuxtjs.dev/config-modules)
 	modules: [

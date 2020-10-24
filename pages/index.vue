@@ -1,8 +1,9 @@
 <template>
-	<div class="container">
+	<div class="container" v-if="liveGames">
+		
 		<div v-for="item in liveGames.response" :key="item.results">
 
-		 <nuxt-link  :to="{name: 'game', params:{fixture: item.fixture.id },query: { home: normalizeURL(item.teams.home.name), away: normalizeURL(item.teams.away.name)}, props:{item}} " >
+		 <nuxt-link  :to="{name: 'game', query: { fixture: item.fixture.id} }" >
 			<span>{{item.teams.home.name}}</span>
 			<span>{{item.goals.home}}</span>
 			<span>{{item.goals.away}}</span>
@@ -10,7 +11,7 @@
 			</nuxt-link>
 		</div>
 		
-	</div> 
+	</div>   
 </template>
 
 <script>
@@ -22,32 +23,34 @@ import axios from 'axios'
 
  
 export default {
-	setup() {
+	setup() {  
 
 		 const liveGames = ref(null)
-		 liveGames.value = store.getLiveGames() || null;
-		 const normalizeURL =  (a) => {
+		 
+		
+		 const normalizeURL =  (a) => {   
             return a.replace(/\s/g, '').toLowerCase();
         }
-
+  
 		const { fetch, fetchState } = useFetch(async () => {
 		await axios.get('https://api-football-v3.herokuapp.com/api/v3/fixtures?live=all').then((response) => {
-				console.log(response.data)
-				if( response.data.cacheDate != liveGames.value.cacheData){
-					store.setLiveGames(response.data)	
-				} 
-		
+			liveGames.value = store.getLiveGames();
+				if(!liveGames.value.cacheDate || response.data.cacheDate != liveGames.value.cacheDate ){
+					store.setLiveGames(response.data)	 
+				}
+				
+				
 		}).then(() =>{
 			liveGames.value = store.getLiveGames()
 		})
 		})
 
-		// Manually trigger a refetch
-		fetch() 
+		// Manuall/* y trigger a refetch
+		 fetch() 
 
 	
 
-		// Access fetch error, pending and timestamp
+		// Access fetch error, pending and timestamp 
 		fetchState
 
 		return {
@@ -71,6 +74,10 @@ div {
 .ze {
 	margin-bottom: 10px;
 }
+
+span{
+	font-size: 30px;
+}
 .container {
 	margin: 0 auto;
 	min-height: 100vh;
@@ -78,6 +85,7 @@ div {
 	justify-content: center;
 	align-items: center;
 	text-align: center;
+	padding:  0 10vw;
 	flex-direction: column;
 }
 
