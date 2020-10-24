@@ -15,7 +15,7 @@ const getLiveGames = () => {
   
 }
 
-const getSingeGame = (payload) => {
+const getSingleGame = (payload) => {
   console.log(state)
   return state.liveGames.response.find(game => game.fixture.id == payload)
    
@@ -27,6 +27,6 @@ export default {
   // With readonly(), we prevent our state to be mutated
   // outside of the global.js module
   state,
-  setLiveGames,getLiveGames,getSingeGame
+  setLiveGames,getLiveGames,getSingleGame
   
 }

@@ -44,24 +44,21 @@ import axios from 'axios'
 export default {
 	setup() {
         const {params} = useContext()
-        const game = store.getSingeGame(params.value.fixture);
+        const game = params.value.fixture && store.getSingleGame(params.value.fixture) ;
         const gameAwayStatistic = ref(null);
         const gameHomeStatistic = ref(null);
         		const { fetch, fetchState } = useFetch(async () => {
                     const awayStatisticEndpoint = `https://api-football-v3.herokuapp.com/api/v3/fixtures/statistics?fixture=${params.value.fixture}&team=${game.teams.away.id}`;
-                    const homeStatisticEndpoint = `https://api-football-v3.herokuapp.com/api/v3/fixtures/statistics?fixture=${params.value.fixture}&team=${game.teams.home.id}`;
+                    const homeStatisticEndpoint = `app.com/api/v3/fixtures/statistics?fixture=${params.value.fixture}&team=${game.teams.home.id}`;
 
-                    await axios.all(
-                        [ axios.get(awayStatisticEndpoint),  axios.get(homeStatisticEndpoint)]).then(axios.spread((...data) => {
-                        const awayData = data[0].response;
-                        const homeData = data[1].response
-
-                        gameHomeStatistic.value = awayData;
-                        gameAwayStatistic.value = homeStatisticEndpoint
-                        // use/access the results 
-                        })).catch(errors => {
-                        // react on errors.
-                        }) 
+                    await axios.all([axios.get(awayStatisticEndpoint), axios.get(homeStatisticEndpoint)]).then(
+                        axios.spread((response1, response2) => {
+                        gameHomeStatistic.value = response1;
+                        gameAwayStatistic.value = response2;
+                        console.log(gameHomeStatistic, gameAwayStatistic)
+                        }),
+                    );
+                  
 
                         
 	

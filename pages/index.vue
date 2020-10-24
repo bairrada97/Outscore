@@ -32,8 +32,11 @@ export default {
 
 		const { fetch, fetchState } = useFetch(async () => {
 		await axios.get('https://api-football-v3.herokuapp.com/api/v3/fixtures?live=all').then((response) => {
-	
-			store.setLiveGames(response.data)
+				console.log(response.data)
+				if( response.data.cacheDate != liveGames.value.cacheData){
+					store.setLiveGames(response.data)	
+				} 
+		
 		}).then(() =>{
 			liveGames.value = store.getLiveGames()
 		})
