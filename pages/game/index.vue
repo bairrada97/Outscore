@@ -117,7 +117,7 @@ header {
 }
 
 .time {
-    margin-top: 50px;
+    margin-top: 51px;
 }
 
 .container {
