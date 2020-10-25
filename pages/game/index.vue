@@ -12,7 +12,12 @@
                     <img :src="singleGame.teams.home.logo + '?lqip'" alt="" />
                     <span>{{ singleGame.teams.home.name }}</span>
                 </div>
+
                 <div class="teamScore">
+                    <div class="time">
+                        <span>{{ singleGame.fixture.status.elapsed }}'</span>
+                        <span>{{ singleGame.fixture.status.short }}</span>
+                    </div>
                     {{ singleGame.goals.home }}
                     -
                     {{ singleGame.goals.away }}
@@ -100,7 +105,7 @@ export default {
 
 <style lang="scss" scoped>
 div {
-    font-size: 30px;
+    font-size: 20px;
 }
 header {
     width: 100%;
@@ -109,6 +114,10 @@ header {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
+}
+
+.time {
+    margin-top: 50px;
 }
 
 .container {

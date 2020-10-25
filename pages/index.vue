@@ -2,10 +2,33 @@
     <div class="container" v-if="liveGames">
         <div v-for="item in liveGames.response" :key="item.results">
             <nuxt-link :to="{ name: 'game', query: { fixture: item.fixture.id } }">
-                <span>{{ item.teams.home.name }}</span>
-                <span>{{ item.goals.home }}</span>
-                <span>{{ item.goals.away }}</span>
-                <span>{{ item.teams.away.name }}</span>
+                <div class="teams">
+                    <div class="homeTeam">
+                        <div class="detail">
+                            <img :src="item.teams.home.logo" alt="" />
+                            <span>{{ item.teams.home.name }}</span>
+                        </div>
+
+                        <div class="goal">
+                            <span>{{ item.goals.home }}</span>
+                        </div>
+                    </div>
+                    <div class="awayTeam">
+                        <div class="detail">
+                            <img :src="item.teams.away.logo" alt="" />
+                            <span>{{ item.teams.away.name }}</span>
+                        </div>
+
+                        <div class="goal">
+                            <span>{{ item.goals.away }}</span>
+                        </div>
+                    </div>
+                    <div class="time">
+                        <span>{{ item.fixture.status.elapsed }}'</span>
+                        <span>{{ item.fixture.status.short }}</span>
+                    </div>
+                </div>
+                <div></div>
             </nuxt-link>
         </div>
     </div>
@@ -50,7 +73,7 @@ export default defineComponent({
 </script>
 
 
-<style>
+<style  lang="scss" >
 div {
     display: block;
 }
@@ -59,16 +82,66 @@ div {
     margin-bottom: 10px;
 }
 
+.teams {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+    width: 100%;
+    border-bottom: 1px solid #187c56;
+    padding: 20px 0;
+}
+
+.homeTeam,
+.awayTeam {
+    display: grid;
+
+    .detail {
+        grid-row: 1;
+    }
+
+    .goal {
+        grid-row: 1;
+        justify-self: flex-end;
+    }
+}
+.time {
+    grid-row: 1/3;
+    align-self: center;
+    margin-left: 20px;
+}
+.homeTeam {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.awayTeam {
+    grid-row: 2;
+    grid-column: 1;
+}
+
+img {
+    width: 30px;
+    margin-right: 10px;
+}
+
+a {
+    display: flex;
+    justify-content: space-between;
+    text-decoration: none;
+    color: #187c56;
+}
+
 span {
-    font-size: 30px;
+    font-size: 24px;
+
+    &.goal {
+        color: #7ccc15;
+    }
 }
 .container {
     margin: 0 auto;
     min-height: 100vh;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
     padding: 0 10vw;
     flex-direction: column;
 }
