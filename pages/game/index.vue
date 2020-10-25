@@ -29,7 +29,7 @@
                 <ul v-for="stats in statistic.statistics" :key="stats.type">
                     <li>
                         <p class="type">{{ stats.type }}</p>
-                        <p>{{ stats.value }}</p>
+                        <p>{{ stats.value || 0 }}</p>
                     </li>
                 </ul>
             </div>
