@@ -5,7 +5,7 @@
                 <div class="teams">
                     <div class="homeTeam">
                         <div class="detail">
-                            <img :src="item.teams.home.logo" alt="" />
+                            <img :src="item.teams.home.logo + '?webp'" alt="" />
                             <span>{{ item.teams.home.name }}</span>
                         </div>
 
@@ -15,7 +15,7 @@
                     </div>
                     <div class="awayTeam">
                         <div class="detail">
-                            <img :src="item.teams.away.logo" alt="" />
+                            <img :src="item.teams.away.logo + '?webp'" alt="" />
                             <span>{{ item.teams.away.name }}</span>
                         </div>
 
