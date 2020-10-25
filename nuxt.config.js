@@ -26,7 +26,11 @@ export default {
 
 	optimizedImages: {
 		optimizeImages: true,
-		optimizeImagesInDev: false
+		optimizeImagesInDev: true,
+		webp: {
+			preset: 'default',
+			quality: 100,
+		  },
 	  },
 
 	// Modules (https://go.nuxtjs.dev/config-modules)
