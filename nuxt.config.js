@@ -1,13 +1,26 @@
 export default {
 	// Target (https://go.nuxtjs.dev/config-target)
 
-	target:"server",
+	target: "server",
 
 	// Global page headers (https://go.nuxtjs.dev/config-head)
 	head: {
 		title: "outscore",
-		meta: [{ charset: "utf-8" }, { name: "viewport", content: "width=device-width, initial-scale=1" }, { hid: "description", name: "description", content: "" }],
-		link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
+		meta: [{
+			charset: "utf-8"
+		}, {
+			name: "viewport",
+			content: "width=device-width, initial-scale=1"
+		}, {
+			hid: "description",
+			name: "description",
+			content: ""
+		}],
+		link: [{
+			rel: "icon",
+			type: "image/x-icon",
+			href: "/favicon.ico"
+		}],
 	},
 
 	// Global CSS (https://go.nuxtjs.dev/config-css)
@@ -15,14 +28,14 @@ export default {
 
 	// Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
 	plugins: [
-		
+
 	],
 
 	// Auto import components (https://go.nuxtjs.dev/config-components)
 	components: true,
 
 	// Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
-	buildModules: ["@nuxtjs/composition-api", '@aceforth/nuxt-optimized-images'],
+	buildModules: ["@nuxtjs/composition-api", '@aceforth/nuxt-optimized-images', 'nuxt-lazy-load'],
 
 	optimizedImages: {
 		optimizeImages: true,
@@ -30,8 +43,8 @@ export default {
 		webp: {
 			preset: 'default',
 			quality: 100,
-		  },
-	  },
+		},
+	},
 
 	// Modules (https://go.nuxtjs.dev/config-modules)
 	modules: [
@@ -51,29 +64,31 @@ export default {
 	proxy: {
 		"/api/": {
 			target: "https://outscore-test.netlify.app/.netlify/functions/api/",
-			pathRewrite: { "^/api/": "" },
+			pathRewrite: {
+				"^/api/": ""
+			},
 		},
 	},
 
 	pwa: {
 		workbox: {
 			enabled: false,
-			runtimeCaching: [
-				{
-					// Should be a regex string. Compiles into new RegExp('https://my-cdn.com/.*')
-					urlPattern: "https://dog.ceo/api/breeds/image/random",
-					handler: "cacheFirst",
-					method: "GET",
-					strategyOptions: {
-						cacheName: "my-api-cache",
-						cacheableResponse: { statuses: [0, 200] },
+			runtimeCaching: [{
+				// Should be a regex string. Compiles into new RegExp('https://my-cdn.com/.*')
+				urlPattern: "https://dog.ceo/api/breeds/image/random",
+				handler: "cacheFirst",
+				method: "GET",
+				strategyOptions: {
+					cacheName: "my-api-cache",
+					cacheableResponse: {
+						statuses: [0, 200]
 					},
-					// Defaults to `NetworkFirst` if omitted
-					// handler: 'NetworkFirst',
-					// Defaults to `GET` if omitted
-					// method: 'GET'
 				},
-			],
+				// Defaults to `NetworkFirst` if omitted
+				// handler: 'NetworkFirst',
+				// Defaults to `GET` if omitted
+				// method: 'GET'
+			}, ],
 		},
 	},
 
