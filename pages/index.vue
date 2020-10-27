@@ -1,9 +1,9 @@
 <template>
     <div class="container" v-if="liveGames">
-        <LazyHydrate ssr-only>
+        
              <Teste :item="item"  v-for="item in liveGames.response" :key="item.results"></Teste>
   
-         </LazyHydrate>
+    
 
       
     </div>
