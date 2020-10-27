@@ -1,7 +1,7 @@
 export default {
 	// Target (https://go.nuxtjs.dev/config-target)
 
-	target: "server",
+	target: "universal",
 
 	// Global page headers (https://go.nuxtjs.dev/config-head)
 	head: {
@@ -71,25 +71,11 @@ export default {
 	},
 
 	pwa: {
-		workbox: {
-			enabled: false,
-			runtimeCaching: [{
-				// Should be a regex string. Compiles into new RegExp('https://my-cdn.com/.*')
-				urlPattern: "https://dog.ceo/api/breeds/image/random",
-				handler: "cacheFirst",
-				method: "GET",
-				strategyOptions: {
-					cacheName: "my-api-cache",
-					cacheableResponse: {
-						statuses: [0, 200]
-					},
-				},
-				// Defaults to `NetworkFirst` if omitted
-				// handler: 'NetworkFirst',
-				// Defaults to `GET` if omitted
-				// method: 'GET'
-			}, ],
-		},
+		manifest: {
+			name: 'Outscore',
+			lang: 'en',
+			useWebmanifestExtension: false
+		}
 	},
 
 	generate: {
