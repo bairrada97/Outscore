@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs, ref, onMounted, useFetch } from "@nuxtjs/composition-api";
+import { defineComponent, reactive, toRefs, ref, onMounted, useFetch, onActivated } from "@nuxtjs/composition-api";
 import store from "@/store.js";
 import axios from "axios";
 
@@ -61,8 +61,13 @@ export default defineComponent({
         const { fetch, fetchState } = useFetch(async () => {
             liveGames.value = await useLiveGames();
         });
-
         fetch();
+        onActivated(() => {
+            if (fetchState.timestamp <= Date.now() - 15000) {
+                fetch();
+            }
+        });
+
         return {
             normalizeURL,
             liveGames,
@@ -72,8 +77,7 @@ export default defineComponent({
 });
 </script>
 
-
-<style  lang="scss" >
+<style lang="scss">
 div {
     display: block;
 }
