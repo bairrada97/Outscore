@@ -48,46 +48,12 @@ export default defineComponent({
     // ...
   },
     setup() {
-        const normalizeURL = a => a.replace(/\s/g, "").toLowerCase();
-        const liveGames = ref(null);
-        // const interval = setInterval(() => fetch(), 15000);
+    
 
-        const useLiveGames = async () => {
-            await axios
-                .get("https://api-football-v3.herokuapp.com/api/v3/fixtures?live=all")
-                .then(response => {
-                    liveGames.value = store.getLiveGames();
-                    const hasDataUpdated = !liveGames.value.cacheDate || response.data.cacheDate != liveGames.value.cacheDate;
-                    if (hasDataUpdated) store.setLiveGames(response.data);
-                })
-                .then(() => {
-                    liveGames.value = store.getLiveGames();
-                });
-            return { ...toRefs(liveGames.value) };
-        };
-
-        const { fetch, fetchState } = useFetch(async () => {
-            liveGames.value = await useLiveGames();
-        });
-
-        fetch();
-
-        onActivated(() => {
-            fetch();
-        }); 
- 
-        const timing = setInterval(() => {
-             fetch();
-        }, 15000);
-
-        // onUnmounted(() => {
-        //     clearInterval(interval);
-        // });
 
         return {
-            normalizeURL,
-            liveGames,
-            fetchState
+           
+         
         };
     }
 });

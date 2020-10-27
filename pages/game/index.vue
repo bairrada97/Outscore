@@ -53,7 +53,6 @@ import store from "@/store.js";
 import axios from "axios";
 
 export default {
- 
     setup() {
         const { query } = useContext();
         const singleGame = ref(null);
