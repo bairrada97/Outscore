@@ -2,14 +2,16 @@
     <div class="container" v-if="singleGame">
         <header>
             <div>
-                <img :src="singleGame.league.country + '?webp'" alt="" />
+                  <img :data-src="singleGame.league.country" alt="" title="" v-lazy-load>
+  
                 {{ singleGame.league.country }}
                 {{ singleGame.league.name }}
                 {{ singleGame.league.round }}
             </div>
             <div class="teamDisplay">
                 <div class="teamInfo">
-                    <img :src="singleGame.teams.home.logo + '?lqip'" alt="" />
+                    <img :data-src="singleGame.teams.home.logo" alt="" title="" v-lazy-load>
+
                     <span>{{ singleGame.teams.home.name }}</span>
                 </div>
 
@@ -23,7 +25,8 @@
                     {{ singleGame.goals.away }}
                 </div>
                 <div class="teamInfo">
-                    <img :src="singleGame.teams.away.logo + '?lqip'" alt="" />
+                           <img :data-src="singleGame.teams.away.logo" alt="" title="" v-lazy-load>
+                  
                     <span>{{ singleGame.teams.away.name }}</span>
                 </div>
             </div>
@@ -91,13 +94,14 @@ export default {
         const { fetch, fetchState } = useFetch(async () => {
             singleGame.value = await useSingleGame();
             singleStatisticsGame.value = await useGameStatistic();
-        });
+        }); 
 
         onActivated(() => {
             fetch();
         });
 
         fetch();
+ 
         return {
             singleGame,
             singleStatisticsGame,

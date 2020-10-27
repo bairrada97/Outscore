@@ -5,7 +5,8 @@
                 <div class="teams">
                     <div class="homeTeam">
                         <div class="detail">
-                            <img :src="item.teams.home.logo + '?webp'" alt="" />
+                            <img :data-src="item.teams.home.logo" alt="" title="" v-lazy-load>
+                         
                             <span>{{ item.teams.home.name }}</span>
                         </div>
 
@@ -15,10 +16,11 @@
                     </div>
                     <div class="awayTeam">
                         <div class="detail">
-                            <img :src="item.teams.away.logo + '?webp'" alt="" />
+                             <img :data-src="item.teams.away.logo" alt="" title="" v-lazy-load>
+                         
                             <span>{{ item.teams.away.name }}</span>
                         </div>
-
+ 
                         <div class="goal">
                             <span>{{ item.goals.away }}</span>
                         </div>
@@ -67,7 +69,11 @@ export default defineComponent({
 
         onActivated(() => {
             fetch();
-        });
+        }); 
+ 
+        const timing = setInterval(() => {
+             fetch();
+        }, 15000);
 
         // onUnmounted(() => {
         //     clearInterval(interval);
