@@ -41,10 +41,10 @@
         </div>
         <div v-else>There is no statistic available in this game</div>
     </div>
-</template> 
+</template>
 
 <script>
-import { reactive, toRefs, ref, onMounted, useFetch, useContext } from "@nuxtjs/composition-api";
+import { reactive, toRefs, ref, onMounted, useFetch, useContext, onActivated } from "@nuxtjs/composition-api";
 
 import store from "@/store.js";
 import axios from "axios";
@@ -91,6 +91,10 @@ export default {
         const { fetch, fetchState } = useFetch(async () => {
             singleGame.value = await useSingleGame();
             singleStatisticsGame.value = await useGameStatistic();
+        });
+
+        onActivated(() => {
+            fetch();
         });
 
         fetch();

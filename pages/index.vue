@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs, ref, onMounted, useFetch } from "@nuxtjs/composition-api";
+import { defineComponent, reactive, toRefs, ref, onMounted, useFetch, onActivated, onUnmounted } from "@nuxtjs/composition-api";
 import store from "@/store.js";
 import axios from "axios";
 
@@ -43,6 +43,7 @@ export default defineComponent({
     setup() {
         const normalizeURL = a => a.replace(/\s/g, "").toLowerCase();
         const liveGames = ref(null);
+        // const interval = setInterval(() => fetch(), 15000);
 
         const useLiveGames = async () => {
             await axios
@@ -63,6 +64,15 @@ export default defineComponent({
         });
 
         fetch();
+
+        onActivated(() => {
+            fetch();
+        });
+
+        // onUnmounted(() => {
+        //     clearInterval(interval);
+        // });
+
         return {
             normalizeURL,
             liveGames,
@@ -72,8 +82,7 @@ export default defineComponent({
 });
 </script>
 
-
-<style  lang="scss" >
+<style lang="scss">
 div {
     display: block;
 }
