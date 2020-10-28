@@ -45,7 +45,7 @@
         <div v-else>There is no statistic available in this game</div>
     </div>
 </template>
-
+ 
 <script>
 import { reactive, toRefs, ref, onMounted, useFetch, useContext, onActivated } from "@nuxtjs/composition-api";
 

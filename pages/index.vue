@@ -2,10 +2,7 @@
     <div class="container" v-if="liveGames">
         
              <Teste :item="item"  v-for="item in liveGames.response" :key="item.results"></Teste>
-  
-    
 
-      
     </div>
 </template>
 
@@ -15,50 +12,26 @@ import store from "@/store.js";
 import axios from "axios";
 import LazyHydrate from 'vue-lazy-hydration';
 
+import useLiveGames from '../modules/useLiveGames';
+
+  
 export default defineComponent({
-     components: {
+     components: { 
     LazyHydrate,
-     Teste: () => import('@/components/Teste.vue'),
+     Teste: () => import('@/components/Teste.vue'  /* webpackChunkName: "teste" */),
     
-    // ...
+   
   },
     setup() {
         const normalizeURL = a => a.replace(/\s/g, "").toLowerCase();
-        const liveGames = ref(null);
-        // const interval = setInterval(() => fetch(), 15000);
-
-        const useLiveGames = async () => {
-            await axios
-                .get("https://api-football-v3.herokuapp.com/api/v3/fixtures?live=all")
-                .then(response => {
-                    liveGames.value = store.getLiveGames();
-                    const hasDataUpdated = !liveGames.value.cacheDate || response.data.cacheDate != liveGames.value.cacheDate;
-                    if (hasDataUpdated) store.setLiveGames(response.data);
-                })
-                .then(() => {
-                    liveGames.value = store.getLiveGames();
-                });
-            return { ...toRefs(liveGames.value) };
-        };
-
-        const { fetch, fetchState } = useFetch(async () => {
-            liveGames.value = await useLiveGames();
-        });
+        const {liveGames, error, loadLiveGames} = useLiveGames();
+        const { fetch, fetchState } = useFetch(async () =>  await loadLiveGames());
 
         fetch();
-
-        onActivated(() => {
-            fetch();
-        }); 
+        onActivated(() =>  fetch()); 
+        const interval = setInterval(() => fetch(), 15000);
+       
  
-        const timing = setInterval(() => {
-             fetch();
-        }, 15000);
-
-        // onUnmounted(() => {
-        //     clearInterval(interval);
-        // });
-
         return {
             normalizeURL,
             liveGames,

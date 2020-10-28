@@ -35,16 +35,9 @@ export default {
 	components: true,
 
 	// Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
-	buildModules: ["@nuxtjs/composition-api", '@aceforth/nuxt-optimized-images', 'nuxt-lazy-load'],
+	buildModules: ["@nuxtjs/composition-api", 'nuxt-lazy-load'],
 
-	optimizedImages: {
-		optimizeImages: true,
-		optimizeImagesInDev: true,
-		webp: {
-			preset: 'default',
-			quality: 100,
-		},
-	},
+
 
 	// Modules (https://go.nuxtjs.dev/config-modules)
 	modules: [

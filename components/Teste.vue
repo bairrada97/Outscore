@@ -39,14 +39,10 @@
 import { defineComponent, reactive, toRefs, ref, onMounted, useFetch, onActivated, onUnmounted } from "@nuxtjs/composition-api";
 import store from "@/store.js";
 import axios from "axios";
-import LazyHydrate from 'vue-lazy-hydration';
 
 export default defineComponent({
    props: ["item"],
-     components: {
-    LazyHydrate,
-    // ...
-  },
+   
     setup() {
     
 
