@@ -1,4 +1,13 @@
-import { defineComponent, reactive, toRefs, ref, onMounted, useFetch, onActivated, onUnmounted } from "@nuxtjs/composition-api";
+import {
+    defineComponent,
+    reactive,
+    toRefs,
+    ref,
+    onMounted,
+    useFetch,
+    onActivated,
+    onUnmounted
+} from "@nuxtjs/composition-api";
 import store from "@/store.js";
 import axios from "axios";
 
@@ -8,7 +17,7 @@ export default function () {
     const loadGames = async () => {
         try {
             await axios
-                .get("https://api-football-v3.herokuapp.com/api/v3/fixtures?date=2020-10-29")
+                .get("https://api-football-v3.herokuapp.com/api/v3/fixtures?date=2020-10-30")
                 .then(response => {
                     games.value = store.getGames();
                     const hasDataUpdated = !games.value.cacheDate || response.data.cacheDate != games.value.cacheDate;
