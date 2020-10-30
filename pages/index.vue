@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <div v-for="(leagueName, key) in getLeagues.value" :key="key">
+        <div v-for="(leagueName, key) in groupedLeagues" :key="key">
             <h1>{{ key }}</h1>
             <Teste :item="item" v-for="item in leagueName" :key="item.fixture.id"></Teste>
         </div>
@@ -8,6 +8,7 @@
 </template>
 
 <script>
+    // https://api-football-v3.herokuapp.com/api/v3/fixtures/?clearCache=all
     import { defineComponent, reactive, toRefs, ref, onMounted, useFetch, onActivated, onUnmounted, computed } from "@nuxtjs/composition-api";
     import store from "@/store.js";
     import axios from "axios";
@@ -23,6 +24,18 @@
         },
         setup() {
             const getLeagues = ref([]);
+            const isLoadingCountries = ref(false);
+            const groupedLeagues = computed(() => {
+                return getLeagues.value.reduce((acc, item) => {
+                    if (!acc[item.league.country]) {
+                        acc[item.league.country] = [];
+                    }
+
+                    acc[item.league.country].push(item);
+
+                    return acc;
+                }, {});
+            });
 
             // const {liveGames, error, loadLiveGames} = useLiveGames();
             // const { fetch, fetchState } = useFetch(async () =>  await loadLiveGames());
@@ -30,29 +43,21 @@
             const { fetch, fetchState } = useFetch(
                 async () =>
                     await loadGames().then(() => {
-                        getLeagues.value = computed(() => {
-                            return games.value.response.reduce((acc, item) => {
-                                if (!acc[item.league.country]) {
-                                    acc[item.league.country] = [];
-                                }
-
-                                acc[item.league.country].push(item);
-
-                                return acc;
-                            }, {});
-                        });
-                        console.log(getLeagues);
+                        getLeagues.value = games.value.response;
                     })
             );
 
             fetch();
+
+            console.log(groupedLeagues);
             onActivated(() => fetch());
             const interval = setInterval(() => fetch(), 15000);
 
             return {
                 games,
                 fetchState,
-                getLeagues
+                getLeagues,
+                groupedLeagues
             };
         }
     });
