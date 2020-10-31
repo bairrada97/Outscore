@@ -5,10 +5,8 @@
                 <div class="homeTeam">
                     <div class="detail">
                         <img :data-src="item.teams.home.logo" alt="" title="" v-lazy-load />
-
                         <span>{{ item.teams.home.name }}</span>
                     </div>
-
                     <div class="goal">
                         <span>{{ item.goals.home }}</span>
                     </div>
@@ -16,10 +14,8 @@
                 <div class="awayTeam">
                     <div class="detail">
                         <img :data-src="item.teams.away.logo" alt="" title="" v-lazy-load />
-
                         <span>{{ item.teams.away.name }}</span>
                     </div>
-
                     <div class="goal">
                         <span>{{ item.goals.away }}</span>
                     </div>
