@@ -17,7 +17,7 @@ export default function () {
     const loadGames = async () => {
         try {
             await axios
-                .get("https://api-football-v3.herokuapp.com/api/v3/fixtures?date=2020-10-30")
+                .get("https://api-football-v3.herokuapp.com/api/v3/fixtures?date=2020-11-01")
                 .then(response => {
                     games.value = store.getGames();
                     const hasDataUpdated = !games.value.cacheDate || response.data.cacheDate != games.value.cacheDate;

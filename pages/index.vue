@@ -33,9 +33,8 @@ export default defineComponent({
         const groupedLeagues = computed(() => {
             return getLeagues.value.reduce((acc, game) => {
                 if (!acc[game.league.country]) acc[game.league.country] = [];
-                if (Object.values(!acc[game.league.country]).includes(game.league.name)) console.log(acc[game.league.country], acc[game.league.name]);
 
-                acc[game.league.country].push(acc[game.league.name]);
+                acc[game.league.country].push(game);
 
                 return acc;
             }, {});
