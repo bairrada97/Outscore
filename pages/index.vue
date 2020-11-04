@@ -1,13 +1,16 @@
 <template>
     <div class="container">
-        <Calendar></Calendar>
-        <!-- <div @click="openGame(leagueName)" v-for="(leagueName, key) in groupedLeagues" :key="key">
+        <!-- <Calendar></Calendar> -->
+        <div @click="openGame(countryName)" v-for="(countryName, key) in groupedLeagues" :key="key">
             <h1>{{ key }}</h1>
 
-            <div v-if="leagueName == isShown">
-                <Game :item="item" v-for="item in isShown" :key="item.fixture.id"></Game>
+            <div v-if="countryName == isShown">
+                <div v-for="(leagueName, key) in isShown" :key="key">
+                    <h2>{{ key }}</h2>
+                    <Game :item="item" v-for="item in leagueName" :key="item.fixture.id"></Game>
+                </div>
             </div>
-        </div> -->
+        </div>
     </div>
 </template>
 
@@ -32,17 +35,26 @@
             const isLoadingCountries = ref(false);
             const isShown = ref(false);
             const league = ref(null);
-            const groupedLeagues = computed(() => {
+            const uniqueItems = reactive({});
+            const groupedLeagues = computed(leagues => {
                 return getLeagues.value.reduce((acc, game) => {
-                    if (!acc[game.league.country]) acc[game.league.country] = [];
+                    // if (!acc[game.league.country]) acc[game.league.country] = [];
 
-                    acc[game.league.country].push(game);
-
+                    // acc[game.league.country].push(game);
+                    // acc[game.league.country] = acc[game.league.country] || {};
+                    // acc[game.league.country].league = acc[game.league.name] || new Set();
+                    // acc[game.league.country].league.add(game);
+                    //   // if (!acc[game.league.country]) acc[game.league.country] = [];
+                    let league = game.league.name;
+                    // acc[game.league.country].push(game);
+                    acc[game.league.country] = acc[game.league.country] || {};
+                    acc[game.league.country][league] = acc[game.league.country][league] || new Set();
+                    acc[game.league.country][league].add(game);
                     return acc;
                 }, {});
             });
 
-            const openGame = leagueName => (isShown.value = leagueName);
+            const openGame = countryName => (isShown.value = countryName);
             // const {liveGames, error, loadLiveGames} = useLiveGames();
             // const { fetch, fetchState } = useFetch(async () =>  await loadLiveGames());
             const { games, error, loadGames } = useGamesByDate();
@@ -56,7 +68,7 @@
             fetch();
             onActivated(() => fetch());
             const interval = setInterval(() => fetch(), 15000);
-
+            console.log(groupedLeagues);
             return {
                 games,
                 fetchState,
