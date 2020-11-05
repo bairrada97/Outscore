@@ -4,17 +4,18 @@ import axios from "axios";
 
 export default function () {
     const games = ref(null);
-    const date = reactive({
+    const state = reactive({
         today: new Date()
     });
-    date.currentMonth = date.today.getMonth();
-    date.currentYear = date.today.getFullYear();
+    state.currentMonth = state.today.getMonth();
+    state.currentYear = state.today.getFullYear();
 
+    store.setFormatDate(state.currentYear, state.currentMonth, state.today.getDate());
     const selectedDate = computed(() => store.getSelectedDate());
     const loadGames = async () => {
         try {
+            console.log(store);
             console.log(selectedDate);
-
             await axios
                 .get(`https://api-football-v3.herokuapp.com/api/v3/fixtures?date=${selectedDate.value}`)
                 .then(response => {
