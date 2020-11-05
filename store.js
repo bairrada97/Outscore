@@ -4,7 +4,8 @@ const state = reactive({
     liveGames: {},
     selectedGameStatistics: {},
     openedGame: {},
-    games: {}
+    games: {},
+    selectedDate: null
 });
 
 const setLiveGames = response => {
@@ -17,6 +18,13 @@ const setGames = response => {
 
 const setGameStatistics = response => {
     state.selectedGameStatistics = response;
+};
+
+const setFormatDate = (year, month, day) => {
+    const date = new Date(year, month, day);
+    const offset = date.getTimezoneOffset();
+    let newDate = new Date(date.getTime() - offset * 60 * 1000);
+    state.selectedDate = newDate.toISOString().split("T")[0];
 };
 const getLiveGames = () => {
     return state.liveGames;
@@ -42,10 +50,11 @@ const getSpecificGame = payload => {
     return state.liveGames.response?.find(game => game.fixture.id == payload);
 };
 
-// Export an object with the state and mutations
+const getSelectedDate = () => {
+    return state.selectedDate;
+};
+
 export default {
-    // With readonly(), we prevent our state to be mutated
-    // outside of the global.js module
     state,
     setLiveGames,
     getLiveGames,
@@ -55,5 +64,7 @@ export default {
     setGameStatistics,
     getGameStatistics,
     getSpecificGame,
-    setSingleGame
+    setSingleGame,
+    setFormatDate,
+    getSelectedDate
 };
