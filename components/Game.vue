@@ -68,7 +68,7 @@ div {
     grid-template-rows: 1fr 1fr;
     width: 100%;
     border-bottom: 1px solid #187c56;
-    padding: 20px 0;
+    padding: 10px 0;
 }
 
 .homeTeam,
@@ -100,7 +100,7 @@ div {
 }
 
 img {
-    width: 30px;
+    width: 15px;
     margin-right: 10px;
 }
 
@@ -112,7 +112,7 @@ a {
 }
 
 span {
-    font-size: 24px;
+    font-size: 14px;
 
     &.goal {
         color: #7ccc15;

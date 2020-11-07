@@ -85,13 +85,15 @@ export default {
         manifest: {
             name: "Outscore",
             lang: "en",
-            useWebmanifestExtension: false
+            useWebmanifestExtension: false,
+            cacheAssets: true
         }
     },
 
     generate: {
         fallback: true
     },
+
     // Content module configuration (https://go.nuxtjs.dev/content-config)
     content: {},
 

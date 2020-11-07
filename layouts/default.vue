@@ -26,7 +26,7 @@ html {
 }
 
 .home {
-    font-size: 50px;
+    font-size: 20px;
     display: block;
     margin-top: 30px;
     text-align: center;
