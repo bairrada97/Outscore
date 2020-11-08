@@ -2,28 +2,29 @@
     <div class="container">
         <Calendar></Calendar>
         <button :class="{ active: isLive }" class="toggleLive" @click="toggleLive">Live</button>
-
-        <div @click="openGame(countryName)" v-for="(countryName, key) in displayOrderedGames" :key="key">
-            <div class="country">
-                <img :src="countryName.image" alt="" />
-                <h1>{{ key }}</h1>
-            </div>
-            <div v-if="isLive">
-                <div v-for="(competition, key) in countryName.competitions" :key="key">
-                    <h2>{{ key }}</h2>
-                    <Game :item="item" v-for="item in competition" :key="item.fixture.id"></Game>
+        <div v-if="loading">Loading...</div>
+        <div v-else>
+            <div @click="openGame(countryName)" v-for="(countryName, key) in displayOrderedGames" :key="key">
+                <div class="country">
+                    <img :src="countryName.image" alt="" />
+                    <h1>{{ key }}</h1>
                 </div>
-            </div>
-            <div v-else>
-                <div v-if="countryName == isShown && isSelected">
-                    <div v-for="(competition, key) in isShown.competitions" :key="key">
+                <div v-if="isLive">
+                    <div v-for="(competition, key) in countryName.competitions" :key="key">
                         <h2>{{ key }}</h2>
                         <Game :item="item" v-for="item in competition" :key="item.fixture.id"></Game>
                     </div>
                 </div>
-            </div>
+                <div v-else>
+                    <div v-if="countryName == isShown && isSelected">
+                        <div v-for="(competition, key) in isShown.competitions" :key="key">
+                            <h2>{{ key }}</h2>
+                            <Game :item="item" v-for="item in competition" :key="item.fixture.id"></Game>
+                        </div>
+                    </div>
+                </div>
 
-            <!--
+                <!--
             <div v-if="isLive">
                 <div v-for="(leagueName, key) in isShown" :key="key">
                     <h2>{{ key }}</h2>
@@ -40,6 +41,7 @@
                 </div>
             </div>
               -->
+            </div>
         </div>
     </div>
 </template>
@@ -67,6 +69,7 @@ export default defineComponent({
         const selectedDate = computed(() => store.getSelectedDate());
         const sortGamesByCountryAndLeague = ref(null);
         const isLive = ref(false);
+        const loading = ref(true);
         const { liveGames, loadLiveGames } = useLiveGames();
         const displayOrderedGames = computed(leagues => {
             sortGamesByCountryAndLeague.value = getLeagues.value.sort((a, b) => a.league.country.localeCompare(b.league.country) || a.league.id - b.league.id);
@@ -85,7 +88,6 @@ export default defineComponent({
                 return acc;
             }, {});
         });
-        console.log(displayOrderedGames.value);
 
         const openGame = countryName => {
             delete countryName.image;
@@ -100,12 +102,12 @@ export default defineComponent({
                 return;
             }
             if (!liveGames.value) {
+                loading.value = true;
                 loadLiveGames().then(() => {
                     getLeagues.value = liveGames.value.response;
+                    loading.value = false;
                 });
             }
-
-            console.log(isShown.value, displayOrderedGames.value);
         };
 
         const { games, loadGames } = useGamesByDate();
@@ -113,6 +115,7 @@ export default defineComponent({
             async () =>
                 await loadGames().then(() => {
                     getLeagues.value = games.value.response;
+                    loading.value = false;
                 })
         );
 
@@ -122,7 +125,7 @@ export default defineComponent({
                 fetch();
             }
         );
-
+        console.log(fetchState);
         fetch();
         /*     onActivated(() => fetch());
             const interval = setInterval(() => fetch(), 15000); */
@@ -136,7 +139,8 @@ export default defineComponent({
             isShown,
             isSelected,
             isLive,
-            toggleLive
+            toggleLive,
+            loading
         };
     }
 });
