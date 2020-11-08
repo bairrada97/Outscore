@@ -1,18 +1,45 @@
 <template>
     <div class="container">
         <Calendar></Calendar>
+        <button :class="{ active: isLive }" class="toggleLive" @click="toggleLive">Live</button>
+
         <div @click="openGame(countryName)" v-for="(countryName, key) in displayOrderedGames" :key="key">
             <div class="country">
                 <img :src="countryName.image" alt="" />
                 <h1>{{ key }}</h1>
             </div>
-
-            <div v-if="countryName == isShown && isSelected">
-                <div v-for="(leagueName, key) in isShown" :key="key">
+            <div v-if="isLive">
+                <div v-for="(competition, key) in countryName.competitions" :key="key">
                     <h2>{{ key }}</h2>
-                    <Game :item="item" v-for="item in leagueName" :key="item.fixture.id"></Game>
+                    <Game :item="item" v-for="item in competition" :key="item.fixture.id"></Game>
                 </div>
             </div>
+            <div v-else>
+                <div v-if="countryName == isShown && isSelected">
+                    <div v-for="(competition, key) in isShown.competitions" :key="key">
+                        <h2>{{ key }}</h2>
+                        <Game :item="item" v-for="item in competition" :key="item.fixture.id"></Game>
+                    </div>
+                </div>
+            </div>
+
+            <!--
+            <div v-if="isLive">
+                <div v-for="(leagueName, key) in isShown" :key="key">
+                    <h2>{{ key }}</h2>
+
+                  
+                </div>
+            </div>
+            <div v-else>
+                <div v-if="countryName == isShown && isSelected">
+                    <div v-for="(leagueName, key) in isShown" :key="key">
+                        <h2>{{ key }}</h2>
+                        <Game :item="item" v-for="item in leagueName" :key="item.fixture.id"></Game>
+                    </div>
+                </div>
+            </div>
+              -->
         </div>
     </div>
 </template>
@@ -39,18 +66,26 @@ export default defineComponent({
         const isSelected = ref(false);
         const selectedDate = computed(() => store.getSelectedDate());
         const sortGamesByCountryAndLeague = ref(null);
+        const isLive = ref(false);
+        const { liveGames, loadLiveGames } = useLiveGames();
         const displayOrderedGames = computed(leagues => {
             sortGamesByCountryAndLeague.value = getLeagues.value.sort((a, b) => a.league.country.localeCompare(b.league.country) || a.league.id - b.league.id);
             return sortGamesByCountryAndLeague.value.reduce((acc, game) => {
                 let league = game.league.name;
                 acc[game.league.country] = acc[game.league.country] || {};
-                acc[game.league.country][league] = acc[game.league.country][league] || new Set();
-                acc[game.league.country][league].add(game);
+                acc[game.league.country].competitions = acc[game.league.country].competitions || {};
+                acc[game.league.country].competitions[league] = acc[game.league.country].competitions[league] || new Set();
+                acc[game.league.country].competitions[league].add(game);
                 acc[game.league.country].image = game.league.flag;
+                /* 
+               acc[game.league.country][league] = acc[game.league.country][league] || new Set(); */
+                /*       acc[game.league.country][league]
+               ;/ */
 
                 return acc;
             }, {});
         });
+        console.log(displayOrderedGames.value);
 
         const openGame = countryName => {
             delete countryName.image;
@@ -58,9 +93,22 @@ export default defineComponent({
             isShown.value = countryName;
         };
 
-        // const {liveGames, error, loadLiveGames} = useLiveGames();
-        // const { fetch, fetchState } = useFetch(async () =>  await loadLiveGames());
-        const { games, error, loadGames } = useGamesByDate();
+        const toggleLive = () => {
+            isLive.value = !isLive.value;
+            if (!isLive.value) {
+                getLeagues.value = games.value.response;
+                return;
+            }
+            if (!liveGames.value) {
+                loadLiveGames().then(() => {
+                    getLeagues.value = liveGames.value.response;
+                });
+            }
+
+            console.log(isShown.value, displayOrderedGames.value);
+        };
+
+        const { games, loadGames } = useGamesByDate();
         const { fetch, fetchState } = useFetch(
             async () =>
                 await loadGames().then(() => {
@@ -86,7 +134,9 @@ export default defineComponent({
             displayOrderedGames,
             openGame,
             isShown,
-            isSelected
+            isSelected,
+            isLive,
+            toggleLive
         };
     }
 });
@@ -101,6 +151,24 @@ div {
     margin-bottom: 10px;
 }
 
+.toggleLive {
+    all: unset;
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+    border: 1px solid #187c56;
+    border-radius: 50%;
+    outline-color: none;
+    height: 40px;
+    margin-top: 30px;
+    background: transparent;
+    &.active {
+        background: #187c56;
+        color: white;
+    }
+}
 .country {
     display: flex;
     align-items: center;
