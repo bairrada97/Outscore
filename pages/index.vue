@@ -101,13 +101,12 @@ export default defineComponent({
                 getLeagues.value = games.value.response;
                 return;
             }
-            if (!liveGames.value) {
-                loading.value = true;
-                loadLiveGames().then(() => {
-                    getLeagues.value = liveGames.value.response;
-                    loading.value = false;
-                });
-            }
+
+            loading.value = true;
+            loadLiveGames().then(() => {
+                getLeagues.value = liveGames.value.response;
+                loading.value = false;
+            });
         };
 
         const { games, loadGames } = useGamesByDate();
