@@ -39,7 +39,7 @@ export default {
     components: true,
 
     // Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
-    buildModules: [],
+    buildModules: ["nuxt-compress"],
 
     // Modules (https://go.nuxtjs.dev/config-modules)
     modules: [
@@ -52,7 +52,18 @@ export default {
         "@nuxt/content",
         "nuxt-lazy-load",
         "@nuxtjs/sitemap",
-        "nuxt-precompress"
+        "nuxt-precompress",
+        [
+            "nuxt-compress",
+            {
+                gzip: {
+                    cache: true
+                },
+                brotli: {
+                    threshold: 10240
+                }
+            }
+        ]
         // "@nuxtjs/robots"
     ],
 
@@ -98,5 +109,7 @@ export default {
     content: {},
 
     // Build Configuration (https://go.nuxtjs.dev/config-build)
-    build: {}
+    build: {
+        extractCSS: true
+    }
 };
