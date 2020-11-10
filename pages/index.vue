@@ -29,14 +29,14 @@
 </template>
 
 <script>
-    // https://api-football-v3.herokuapp.com/api/v3/fixtures/?clearCache=all
-    import { defineComponent, reactive, toRefs, ref, onMounted, useFetch, onActivated, onUnmounted, computed, watch } from "@nuxtjs/composition-api";
-    import store from "@/store.js";
-    import axios from "axios";
-    import LazyHydrate from "vue-lazy-hydration";
+// https://api-football-v3.herokuapp.com/api/v3/fixtures/?clearCache=all
+import { defineComponent, reactive, toRefs, ref, onMounted, useFetch, onActivated, onUnmounted, computed, watch } from "@nuxtjs/composition-api";
+import store from "@/store.js";
+import axios from "axios";
+import LazyHydrate from "vue-lazy-hydration";
 
-    import useLiveGames from "../modules/useLiveGames";
-    import useGamesByDate from "../modules/useGamesByDate";
+import useLiveGames from "../modules/useLiveGames";
+import useGamesByDate from "../modules/useGamesByDate";
 
 export default defineComponent({
     components: {
@@ -65,25 +65,25 @@ export default defineComponent({
                 acc[game.league.country].image = game.league.flag;
                 /* 
                acc[game.league.country][league] = acc[game.league.country][league] || new Set(); */
-                    /*       acc[game.league.country][league]
+                /*       acc[game.league.country][league]
                ;/ */
 
-                    return acc;
-                }, {});
-            });
+                return acc;
+            }, {});
+        });
 
-            const openGame = countryName => {
-                delete countryName.image;
-                countryName != isShown.value ? (isSelected.value = true) : (isSelected.value = !isSelected.value);
-                isShown.value = countryName;
-            };
+        const openGame = countryName => {
+            delete countryName.image;
+            countryName != isShown.value ? (isSelected.value = true) : (isSelected.value = !isSelected.value);
+            isShown.value = countryName;
+        };
 
-            const toggleLive = () => {
-                isLive.value = !isLive.value;
-                if (!isLive.value) {
-                    getLeagues.value = games.value.response;
-                    return;
-                }
+        const toggleLive = () => {
+            isLive.value = !isLive.value;
+            if (!isLive.value) {
+                getLeagues.value = games.value.response;
+                return;
+            }
 
             loading.value = true;
             loadLiveGames().then(() => {
@@ -92,13 +92,12 @@ export default defineComponent({
             });
         };
 
-        const { fetch, fetchState } = useFetch(
-            async () =>
-                await loadGames().then(() => {
-                    getLeagues.value = games.value.response;
-                    loading.value = false;
-                });
-            };
+        const { fetch, fetchState } = useFetch(async () => {
+            await loadGames().then(() => {
+                getLeagues.value = games.value.response;
+                loading.value = false;
+            });
+        });
 
         watch(
             () => selectedDate.value,
@@ -111,140 +110,140 @@ export default defineComponent({
         /*     onActivated(() => fetch());
             const interval = setInterval(() => fetch(), 15000); */
 
-            return {
-                games,
-                fetchState,
-                getLeagues,
-                displayOrderedGames,
-                openGame,
-                isShown,
-                isSelected,
-                isLive,
-                toggleLive,
-                loading
-            };
-        }
-    });
+        return {
+            games,
+            fetchState,
+            getLeagues,
+            displayOrderedGames,
+            openGame,
+            isShown,
+            isSelected,
+            isLive,
+            toggleLive,
+            loading
+        };
+    }
+});
 </script>
 
 <style lang="scss">
-    div {
-        display: block;
-    }
+div {
+    display: block;
+}
 
-    .ze {
-        margin-bottom: 10px;
-    }
+.ze {
+    margin-bottom: 10px;
+}
 
-    .toggleLive {
-        all: unset;
-        width: 40px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: black;
-        border: 1px solid #187c56;
-        border-radius: 50%;
-        outline-color: none;
-        height: 40px;
-        margin-top: 30px;
-        background: transparent;
-        &.active {
-            background: #187c56;
-            color: white;
-        }
+.toggleLive {
+    all: unset;
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+    border: 1px solid #187c56;
+    border-radius: 50%;
+    outline-color: none;
+    height: 40px;
+    margin-top: 30px;
+    background: transparent;
+    &.active {
+        background: #187c56;
+        color: white;
     }
-    .country {
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-    }
+}
+.country {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
 
-    h2 {
-        font-size: 16px;
-    }
-    .teams {
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr 1fr;
-        width: 100%;
-        border-bottom: 1px solid #187c56;
-        padding: 20px 0;
-    }
+h2 {
+    font-size: 16px;
+}
+.teams {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+    width: 100%;
+    border-bottom: 1px solid #187c56;
+    padding: 20px 0;
+}
 
-    .homeTeam,
-    .awayTeam {
-        display: grid;
+.homeTeam,
+.awayTeam {
+    display: grid;
 
-        .detail {
-            grid-row: 1;
-        }
-
-        .goal {
-            grid-row: 1;
-            justify-self: flex-end;
-        }
-    }
-    .time {
-        grid-row: 1/3;
-        align-self: center;
-        margin-left: 20px;
-    }
-    .homeTeam {
-        grid-column: 1;
+    .detail {
         grid-row: 1;
     }
 
-    .awayTeam {
-        grid-row: 2;
-        grid-column: 1;
+    .goal {
+        grid-row: 1;
+        justify-self: flex-end;
     }
+}
+.time {
+    grid-row: 1/3;
+    align-self: center;
+    margin-left: 20px;
+}
+.homeTeam {
+    grid-column: 1;
+    grid-row: 1;
+}
 
-    img {
-        width: 15px;
-        margin-right: 10px;
-    }
+.awayTeam {
+    grid-row: 2;
+    grid-column: 1;
+}
 
-    a {
-        display: flex;
-        justify-content: space-between;
-        text-decoration: none;
-        color: #187c56;
-    }
+img {
+    width: 15px;
+    margin-right: 10px;
+}
 
-    span {
-        font-size: 24px;
+a {
+    display: flex;
+    justify-content: space-between;
+    text-decoration: none;
+    color: #187c56;
+}
 
-        &.goal {
-            color: #7ccc15;
-        }
-    }
-    .container {
-        margin: 0 auto;
-        min-height: 100vh;
-        display: flex;
-        padding: 0 10vw;
-        flex-direction: column;
-    }
+span {
+    font-size: 24px;
 
-    .title {
-        font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        display: block;
-        font-weight: 300;
-        font-size: 100px;
-        color: #35495e;
-        letter-spacing: 1px;
+    &.goal {
+        color: #7ccc15;
     }
+}
+.container {
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    padding: 0 10vw;
+    flex-direction: column;
+}
 
-    .subtitle {
-        font-weight: 300;
-        font-size: 42px;
-        color: #526488;
-        word-spacing: 5px;
-        padding-bottom: 15px;
-    }
+.title {
+    font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    display: block;
+    font-weight: 300;
+    font-size: 100px;
+    color: #35495e;
+    letter-spacing: 1px;
+}
 
-    .links {
-        padding-top: 15px;
-    }
+.subtitle {
+    font-weight: 300;
+    font-size: 42px;
+    color: #526488;
+    word-spacing: 5px;
+    padding-bottom: 15px;
+}
+
+.links {
+    padding-top: 15px;
+}
 </style>
