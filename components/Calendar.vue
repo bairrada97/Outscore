@@ -1,35 +1,39 @@
 <template>
-    <div class="calendar">
-        <div>{{ state.currentMonthName }}</div>
-        <div>{{ state.currentYear }}</div>
-        <div>
-            <ul class="weekDays">
-                <li v-for="days in state.weekNames" :key="days">{{ days }}</li>
-            </ul>
-        </div>
-        <div class="days">
-            <span
-                @click="
-                    selectDate(state.currentYear, state.currentMonth - 1, state.getLastDayOfPreviousMonth - state.startDay + day);
-                    goPrev();
-                "
-                class="lastMonth"
-                v-for="day in state.startDay"
-                :key="'empty' + day"
-                >{{ state.getLastDayOfPreviousMonth - state.startDay + day }}</span
-            >
-            <span :class="currenDateClass(state.currentYear, state.currentMonth, day)" @click="selectDate(state.currentYear, state.currentMonth, day)" v-for="day in state.getLastDayOfMonth" :key="day">{{ day }}</span>
-            <span
-                @click="
-                    goNext();
-                    selectDate(state.currentYear, state.currentMonth, day);
-                "
-                class="lastMonth"
-                v-for="day in 6 - state.endDay"
-                :key="'nextMonth' + day"
-                >{{ day }}</span
-            >
-        </div>
+    <div id="calendar" class="calendar">
+        <transition-group :name="state.direction" tag="div" mode="in-out" class="slider__container">
+            <div key="lorem">
+                <div>{{ state.currentMonthName }}</div>
+                <div>{{ state.currentYear }}</div>
+                <div>
+                    <ul class="weekDays">
+                        <li v-for="days in state.weekNames" :key="days">{{ days }}</li>
+                    </ul>
+                </div>
+                <div class="days">
+                    <span
+                        @click="
+                            selectDate(state.currentYear, state.currentMonth - 1, state.getLastDayOfPreviousMonth - state.startDay + day);
+                            goPrev();
+                        "
+                        class="lastMonth"
+                        v-for="day in state.startDay"
+                        :key="'empty' + day"
+                        >{{ state.getLastDayOfPreviousMonth - state.startDay + day }}</span
+                    >
+                    <span :class="currenDateClass(state.currentYear, state.currentMonth, day)" @click="selectDate(state.currentYear, state.currentMonth, day)" v-for="day in state.getLastDayOfMonth" :key="day">{{ day }}</span>
+                    <span
+                        @click="
+                            goNext();
+                            selectDate(state.currentYear, state.currentMonth, day);
+                        "
+                        class="lastMonth"
+                        v-for="day in 6 - state.endDay"
+                        :key="'nextMonth' + day"
+                        >{{ day }}</span
+                    >
+                </div>
+            </div>
+        </transition-group>
         <button @click="goPrev">Prev</button>
         <button @click="goNext">Next</button>
     </div>
@@ -55,7 +59,10 @@ export default defineComponent({
             getLastDayOfPreviousMonth: computed(() => new Date(state.currentYear, state.getMonth - 1, 0).getDate()),
             startDay: computed(() => new Date(state.currentYear, state.currentMonth, 1).getDay()),
             endDay: computed(() => new Date(state.currentYear, state.currentMonth + 1, 0).getDay()),
-            selectedDate: null
+            selectedDate: null,
+            initialX: null,
+            initialY: null,
+            direction: null
         });
 
         state.currentMonth = state.today.getMonth();
@@ -71,7 +78,7 @@ export default defineComponent({
             } else {
                 state.currentMonth++;
             }
-            console.log(state.endDay);
+            state.direction = "next";
         };
         const goPrev = () => {
             if (state.currentMonth === 0) {
@@ -80,6 +87,8 @@ export default defineComponent({
             } else {
                 state.currentMonth--;
             }
+
+            state.direction = "prev";
         };
 
         const selectDate = (year, month, day) => {
@@ -92,6 +101,46 @@ export default defineComponent({
             const calenderFullDate = new Date(state.currentYear, state.currentMonth, day).toDateString();
             return calenderFullDate === state.selectedDate.toDateString() ? "activeDay" : "";
         };
+
+        const startTouch = e => {
+            state.initialX = e.touches[0].clientX;
+            state.initialY = e.touches[0].clientY;
+        };
+        const moveTouch = e => {
+            if (state.initialX === null) return;
+            if (state.initialY === null) return;
+            let currentX = e.touches[0].clientX,
+                currentY = e.touches[0].clientY,
+                diffX = state.initialX - currentX,
+                diffY = state.initialY - currentY;
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                if (diffX > 0) {
+                    /*   e.currentTarget.style.transform = `translate3d(-${diffX}px, 0, 0) `; */
+                    goNext();
+                } else {
+                    goPrev();
+                }
+
+                state.initialX = null;
+                state.initialY = null;
+                /* ? goNext() : goPrev(); */
+            }
+
+            e.preventDefault();
+        };
+        onMounted(() => {
+            /* window.addEventListener("mouseup", () => this.stopDrag()); */
+
+            document.querySelector(".calendar").addEventListener("touchstart", event => {
+                startTouch(event);
+            });
+            document.querySelector(".calendar").addEventListener("touchmove", event => {
+                moveTouch(event);
+            });
+
+            /*     window.addEventListener("touchend", () => this.stopDrag());
+            window.addEventListener("touchmove", (event: TouchEvent) => this.preventDraggingInYMovement(event)); */
+        });
 
         return {
             state,
@@ -136,5 +185,26 @@ export default defineComponent({
     justify-content: center;
     width: 20px;
     height: 20px;
+}
+
+.prev-enter-active,
+.prev-leave-active {
+    transition: 0.5s;
+}
+.prev-enter {
+    transform: translate(-100%, 0);
+}
+.prev-leave-to {
+    transform: translate(100%, 0);
+}
+.next-enter-active,
+.next-leave-active {
+    transition: 0.5s;
+}
+.next-enter {
+    transform: translate(100%, 0);
+}
+.next-leave-to {
+    transform: translate(-100%, 0);
 }
 </style>

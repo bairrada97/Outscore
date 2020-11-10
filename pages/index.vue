@@ -23,24 +23,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!--
-            <div v-if="isLive">
-                <div v-for="(leagueName, key) in isShown" :key="key">
-                    <h2>{{ key }}</h2>
-
-
-                </div>
-            </div>
-            <div v-else>
-                <div v-if="countryName == isShown && isSelected">
-                    <div v-for="(leagueName, key) in isShown" :key="key">
-                        <h2>{{ key }}</h2>
-                        <Game :item="item" v-for="item in leagueName" :key="item.fixture.id"></Game>
-                    </div>
-                </div>
-            </div>
-              -->
             </div>
         </div>
     </div>
@@ -56,37 +38,32 @@
     import useLiveGames from "../modules/useLiveGames";
     import useGamesByDate from "../modules/useGamesByDate";
 
-    export default defineComponent({
-        components: {
-            LazyHydrate,
-            Game: () => import("@/components/Game.vue" /* webpackChunkName: "Game" */),
-            Calendar: () => import("@/components/Calendar.vue" /* webpackChunkName: "Calendar" */)
-        },
-        setup() {
-            const getLeagues = ref([]);
-            const isShown = ref(null);
-            const isSelected = ref(false);
-            const selectedDate = computed(() => store.getSelectedDate());
-            const sortGamesByCountryAndLeague = ref(null);
-            const isLive = ref(false);
-            const loading = ref(true);
-            const { liveGames, loadLiveGames } = useLiveGames();
-
-            const displayOrderedGames = computed(leagues => {
-                sortGamesByCountryAndLeague.value = getLeagues.value.sort((a, b) => a.league.country.localeCompare(b.league.country) || a.league.id - b.league.id); //recebe os jogos e organiza por pais e por liga
-
-                //constroi um novo object com a estrutura
-                //pais
-                //competicao
-                //jogo
-                return sortGamesByCountryAndLeague.value.reduce((acc, game) => {
-                    let league = game.league.name;
-                    acc[game.league.country] = acc[game.league.country] || {};
-                    acc[game.league.country].competitions = acc[game.league.country].competitions || {};
-                    acc[game.league.country].competitions[league] = acc[game.league.country].competitions[league] || new Set();
-                    acc[game.league.country].competitions[league].add(game);
-                    acc[game.league.country].image = game.league.flag;
-                    /*
+export default defineComponent({
+    components: {
+        LazyHydrate,
+        Game: () => import("@/components/Game.vue" /* webpackChunkName: "Game" */),
+        Calendar: () => import("@/components/Calendar.vue" /* webpackChunkName: "Calendar" */)
+    },
+    setup() {
+        const getLeagues = ref([]);
+        const isShown = ref(null);
+        const isSelected = ref(false);
+        const selectedDate = computed(() => store.getSelectedDate());
+        const sortGamesByCountryAndLeague = ref(null);
+        const isLive = ref(false);
+        const loading = ref(true);
+        const { liveGames, loadLiveGames } = useLiveGames();
+        const { games, loadGames } = useGamesByDate();
+        const displayOrderedGames = computed(leagues => {
+            sortGamesByCountryAndLeague.value = getLeagues.value.sort((a, b) => a.league.country.localeCompare(b.league.country) || a.league.id - b.league.id);
+            return sortGamesByCountryAndLeague.value.reduce((acc, game) => {
+                let league = game.league.name;
+                acc[game.league.country] = acc[game.league.country] || {};
+                acc[game.league.country].competitions = acc[game.league.country].competitions || {};
+                acc[game.league.country].competitions[league] = acc[game.league.country].competitions[league] || new Set();
+                acc[game.league.country].competitions[league].add(game);
+                acc[game.league.country].image = game.league.flag;
+                /* 
                acc[game.league.country][league] = acc[game.league.country][league] || new Set(); */
                     /*       acc[game.league.country][league]
                ;/ */
@@ -108,31 +85,30 @@
                     return;
                 }
 
-                loading.value = true;
-                loadLiveGames().then(() => {
-                    getLeagues.value = liveGames.value.response;
+            loading.value = true;
+            loadLiveGames().then(() => {
+                getLeagues.value = liveGames.value.response;
+                loading.value = false;
+            });
+        };
+
+        const { fetch, fetchState } = useFetch(
+            async () =>
+                await loadGames().then(() => {
+                    getLeagues.value = games.value.response;
                     loading.value = false;
                 });
             };
 
-            const { games, loadGames } = useGamesByDate();
-            const { fetch, fetchState } = useFetch(
-                async () =>
-                    await loadGames().then(() => {
-                        getLeagues.value = games.value.response;
-                        loading.value = false;
-                    })
-            );
+        watch(
+            () => selectedDate.value,
+            (count, prevCount) => {
+                fetch();
+            }
+        );
 
-            watch(
-                () => selectedDate.value,
-                (count, prevCount) => {
-                    fetch();
-                }
-            );
-            console.log(fetchState);
-            fetch();
-            /*     onActivated(() => fetch());
+        fetch();
+        /*     onActivated(() => fetch());
             const interval = setInterval(() => fetch(), 15000); */
 
             return {
