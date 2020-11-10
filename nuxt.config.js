@@ -97,7 +97,9 @@ export default {
             name: "Outscore",
             lang: "en",
             useWebmanifestExtension: false,
-            cacheAssets: true
+            cacheAssets: true,
+            theme_color: "#187c56",
+            background_color: " #187c56"
         }
     },
 
