@@ -12,19 +12,19 @@
                 <div :key="calendar.currentMonth" class="days">
                     <span
                         @click="
-                            selectDate(state.currentYear, state.currentMonth - 1, state.getLastDayOfPreviousMonth - state.startDay + day);
-                            goPrev();
+                            selectDate(calendar.currentYear, calendar.currentMonth - 1, calendar.getLastDayOfPreviousMonth - calendar.startDay + day);
+                            goPrev(calendar.currentYear, calendar.currentMonth - 1, calendar.getLastDayOfPreviousMonth - calendar.startDay + day);
                         "
                         class="lastMonth"
                         v-for="day in calendar.startDay"
                         :key="'empty' + day"
                         >{{ calendar.getLastDayOfPreviousMonth - calendar.startDay + day }}</span
                     >
-                    <span :class="currenDateClass(state.currentYear, state.currentMonth, day)" @click="selectDate(state.currentYear, state.currentMonth, day)" v-for="day in calendar.getLastDayOfMonth" :key="day">{{ day }}</span>
+                    <span :class="[currentDateClass(calendar.currentYear, calendar.currentMonth, day), currentSelectedDayClass(calendar.currentYear, calendar.currentMonth, day)]" @click="selectDate(calendar.currentYear, calendar.currentMonth, day)" v-for="day in calendar.getLastDayOfMonth" :key="day">{{ day }}</span>
                     <span
                         @click="
-                            goNext();
-                            selectDate(state.currentYear, state.currentMonth, day);
+                            goNext(calendar.currentYear, calendar.currentMonth + 1, day);
+                            selectDate(calendar.currentYear, calendar.currentMonth + 1, day);
                         "
                         class="lastMonth"
                         v-for="day in 6 - calendar.endDay"
@@ -69,14 +69,16 @@ export default defineComponent({
             diffY: 0,
             direction: null,
             isDragging: false,
+            isStartTouch: false,
             closestMonths: [],
             getClosestMonths: null,
 
             transform: 100
         });
 
+        state.currentMonth = state.today.getMonth();
         state.currentYear = state.today.getFullYear();
-        state.selectedDate = new Date(state.currentYear, state.currentMonth, state.today.getDate());
+        state.currentDate = new Date(state.currentYear, state.currentMonth, state.today.getDate());
 
         store.setFormatDate(state.currentYear, state.currentMonth, state.today.getDate());
 
@@ -90,8 +92,10 @@ export default defineComponent({
             calendar.getLastDayOfPreviousMonth = new Date(calendar.currentYear, calendar.getMonth - 1, 0).getDate();
             calendar.startDay = new Date(calendar.currentYear, calendar.currentMonth, 1).getDay();
             calendar.endDay = new Date(calendar.currentYear, calendar.currentMonth + 1, 0).getDay();
+            calendar.isSelected = false;
         });
-        const goNext = () => {
+        const goNext = (year, month, day) => {
+            state.selectedDate = new Date(year, month, day);
             document.querySelector(".calendarContainer").style.transition = "transform 0.4s ease";
             getClosestMonths.value.shift();
             document.querySelector(".calendarContainer").style.transform = `translateX(-100vw)`;
@@ -112,12 +116,13 @@ export default defineComponent({
 
             document.querySelector(".calendarContainer").addEventListener("transitionend", resetTransition);
         };
-        const goPrev = () => {
+        const goPrev = (year, month, day) => {
+            state.selectedDate = new Date(year, month, day);
+
             document.querySelector(".calendarContainer").style.transition = "transform 0.4s ease";
             getClosestMonths.value.pop();
             document.querySelector(".calendarContainer").style.transform = `translateX(100vw)`;
             document.querySelector(".calendarContainer").style.marginLeft = `-100vw`;
-
             document.querySelector(".calendarContainer").addEventListener("transitionend", goPreviousMonth);
         };
 
@@ -152,21 +157,30 @@ export default defineComponent({
             state.selectedDate = new Date(year, month, day);
         };
 
-        const currenDateClass = (year, month, day) => {
-            const calenderFullDate = new Date(state.currentYear, state.currentMonth, day).toDateString();
-            return calenderFullDate === state.selectedDate.toDateString() ? "activeDay" : "";
+        const currentDateClass = (year, month, day) => {
+            const calenderFullDate = new Date(year, month, day).toDateString();
+            console.log(calenderFullDate, state.currentDate.toDateString());
+            return calenderFullDate === state.currentDate.toDateString() ? "activeDay" : "";
+        };
+
+        const currentSelectedDayClass = (year, month, day) => {
+            const clickedDay = new Date(year, month, day).toDateString();
+
+            return clickedDay === state.selectedDate?.toDateString() ? "selectedDate" : "";
         };
 
         const startTouch = event => {
             state.initialX = event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;
             state.initialY = event instanceof MouseEvent ? event.clientY : event.touches[0].clientY;
-            state.isDragging = true;
+            state.isStartTouch = true;
+            console.log(state.initialX);
         };
 
         const moveTouch = event => {
             if (state.initialX === null) return;
             if (state.initialY === null) return;
-            if (!state.isDragging) return;
+            if (!state.isStartTouch) return;
+            state.isDragging = true;
             state.currentX = event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;
             state.currentY = event instanceof MouseEvent ? event.clientY : event.touches[0].clientY;
             state.diffX = state.initialX - state.currentX;
@@ -177,14 +191,13 @@ export default defineComponent({
                 } else {
                     event.currentTarget.querySelector(".calendarContainer").style.transform = `translate3d(${-state.diffX}px, 0, 0) `;
                 }
-
-                /* ? goNext() : goPrev(); */
             }
 
             event.preventDefault();
         };
 
         const touchEnd = event => {
+            state.isStartTouch = false;
             if (!state.isDragging) return;
 
             if (Math.abs(state.diffX) > Math.abs(state.diffY)) {
@@ -194,16 +207,17 @@ export default defineComponent({
                     goPrev();
                 }
             }
+
             state.isDragging = false;
         };
 
         onMounted(() => {
             /* window.addEventListener("mouseup", () => this.stopDrag()); */
-            /*         document.querySelector("body").addEventListener("touchstart", event => {
+            document.querySelector("body").addEventListener("touchstart", event => {
                 if (event.target.closest(".calendar")) {
                     startTouch(event);
                 }
-            }); */
+            });
             document.querySelector("body").addEventListener("touchstart", event => {
                 if (event.target.closest(".calendarContainer")) {
                     startTouch(event);
@@ -253,7 +267,6 @@ export default defineComponent({
                 },
                 { passive: false }
             );
-
             /*     window.addEventListener("touchend", () => this.stopDrag());
             window.addEventListener("touchmove", (event: TouchEvent) => this.preventDraggingInYMovement(event)); */
         });
@@ -263,7 +276,8 @@ export default defineComponent({
             goNext,
             goPrev,
             selectDate,
-            currenDateClass,
+            currentDateClass,
+            currentSelectedDayClass,
             getClosestMonths
         };
     }
@@ -324,9 +338,9 @@ button {
 
     span {
         cursor: pointer;
+        width: 20px;
     }
 }
-
 .activeDay {
     border-radius: 50%;
     background-color: #187c56;
@@ -336,36 +350,16 @@ button {
     justify-content: center;
     width: 20px;
     height: 20px;
+    z-index: 9;
 }
-
-.home-enter-active,
-.home-leave-active {
-    transition: 0.5s;
-}
-.home-enter {
-    transform: translate(100%, 0);
-}
-.home-leave-to {
-    transform: translate(-100%, 0);
-}
-.prev-enter-active,
-.prev-leave-active {
-    transition: 0.5s;
-}
-.prev-enter {
-    transform: translate(-100%, 0);
-}
-.prev-leave-to {
-    transform: translate(100%, 0);
-}
-.next-enter-active,
-.next-leave-active {
-    transition: 0.5s;
-}
-.next-enter {
-    transform: translate(100%, 0);
-}
-.next-leave-to {
-    transform: translate(-100%, 0);
+.selectedDate {
+    border-radius: 50%;
+    background-color: grey;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
 }
 </style>
