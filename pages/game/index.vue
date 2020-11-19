@@ -37,7 +37,7 @@
         </div>
 
         <div class="gameStatistics" v-if="singleGame.statistics && isStatisticsOpen">
-            <div v-for="statistic in singleGame.statistics" :key="statistic.results">
+            <div v-for="(statistic, index) in singleGame.statistics" :key="index">
                 <ul v-for="stats in statistic.statistics" :key="stats.type">
                     <li>
                         <p class="type">{{ stats.type }}</p>
@@ -48,11 +48,11 @@
         </div>
 
         <div class="lineups" v-if="isLineupsOpen">
-            <div class="lineupsContainer" v-for="lineups in singleGame.lineups" :key="lineups.results">
+            <div class="lineupsContainer" v-for="(lineups, index) in singleGame.lineups" :key="index">
                 <div>
                     <span>formation</span>
                     <div class="formation">
-                        <span v-for="formation in lineups.formation" :key="formation">
+                        <span v-for="(formation, index) in lineups.formation" :key="index">
                             {{ formation }}
                         </span>
                     </div>
@@ -92,9 +92,9 @@ export default {
         };
 
         const useSingleGame = async () => {
-            singleGame.value = store.getSpecificGame(query.value.fixture) || null;
-            !singleGame.value ? await fetchGameById() : (singleGame.value = store.getSpecificGame(query.value.fixture));
-
+            singleGame.value = store.getSingleGame();
+            !Object.keys(singleGame.value).length ? await fetchGameById() : (singleGame.value = store.getSingleGame());
+            console.log(singleGame);
             return { ...toRefs(singleGame.value) };
         };
         /*   const useGameStatistic = async () => {

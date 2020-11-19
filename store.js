@@ -47,7 +47,7 @@ const getSingleGame = () => {
 };
 
 const getSpecificGame = payload => {
-    return state.liveGames.response?.find(game => game.fixture.id == payload);
+    return state.games.response?.find(game => game.fixture.id == payload);
 };
 
 const getSelectedDate = () => {
