@@ -93,7 +93,8 @@ export default {
 
         const useSingleGame = async () => {
             singleGame.value = store.getSingleGame();
-            !Object.keys(singleGame.value).length ? await fetchGameById() : (singleGame.value = store.getSingleGame());
+            await fetchGameById();
+            /*  !Object.keys(singleGame.value).length ? await fetchGameById() : (singleGame.value = store.getSingleGame()); */
             console.log(singleGame);
             return { ...toRefs(singleGame.value) };
         };
