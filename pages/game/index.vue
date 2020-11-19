@@ -94,7 +94,7 @@ export default {
         const useSingleGame = async () => {
             singleGame.value = store.getSpecificGame(query.value.fixture) || null;
             !singleGame.value ? await fetchGameById() : (singleGame.value = store.getSpecificGame(query.value.fixture));
-            console.log(singleGame);
+
             return { ...toRefs(singleGame.value) };
         };
         /*   const useGameStatistic = async () => {
