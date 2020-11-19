@@ -2,15 +2,15 @@
     <div class="container" v-if="singleGame">
         <header>
             <div>
-                  <img :data-src="singleGame.league.country" alt="" title="" v-lazy-load>
-  
+                <img :data-src="singleGame.league.country" alt="" title="" v-lazy-load />
+
                 {{ singleGame.league.country }}
                 {{ singleGame.league.name }}
                 {{ singleGame.league.round }}
             </div>
             <div class="teamDisplay">
                 <div class="teamInfo">
-                    <img :data-src="singleGame.teams.home.logo" alt="" title="" v-lazy-load>
+                    <img :data-src="singleGame.teams.home.logo" alt="" title="" v-lazy-load />
 
                     <span>{{ singleGame.teams.home.name }}</span>
                 </div>
@@ -25,15 +25,19 @@
                     {{ singleGame.goals.away }}
                 </div>
                 <div class="teamInfo">
-                           <img :data-src="singleGame.teams.away.logo" alt="" title="" v-lazy-load>
-                  
+                    <img :data-src="singleGame.teams.away.logo" alt="" title="" v-lazy-load />
+
                     <span>{{ singleGame.teams.away.name }}</span>
                 </div>
             </div>
         </header>
+        <div>
+            <button @click="openStatistics">Statistics</button>
+            <button @click="openLineups">Lineups</button>
+        </div>
 
-        <div class="gameStatistics" v-if="singleStatisticsGame">
-            <div v-for="statistic in singleStatisticsGame.response" :key="statistic.results">
+        <div class="gameStatistics" v-if="singleGame.statistics && isStatisticsOpen">
+            <div v-for="statistic in singleGame.statistics" :key="statistic.results">
                 <ul v-for="stats in statistic.statistics" :key="stats.type">
                     <li>
                         <p class="type">{{ stats.type }}</p>
@@ -42,7 +46,24 @@
                 </ul>
             </div>
         </div>
-        <div v-else>There is no statistic available in this game</div>
+
+        <div class="lineups" v-if="isLineupsOpen">
+            <div class="lineupsContainer" v-for="lineups in singleGame.lineups" :key="lineups.results">
+                <div>
+                    <span>formation</span>
+                    <div class="formation">
+                        <span v-for="formation in lineups.formation" :key="formation">
+                            {{ formation }}
+                        </span>
+                    </div>
+                </div>
+
+                <ul class="lineupsPlayer" v-for="startXI in lineups.startXI" :key="startXI.type">
+                    <li>{{ startXI.player.name }}</li>
+                    <li>{{ startXI.player.number }}</li>
+                </ul>
+            </div>
+        </div>
     </div>
 </template>
  
@@ -57,20 +78,31 @@ export default {
         const { query } = useContext();
         const singleGame = ref(null);
         const singleStatisticsGame = ref(null);
+        let isStatisticsOpen = ref(false);
+        let isLineupsOpen = ref(false);
+
+        const openStatistics = () => {
+            isStatisticsOpen.value = true;
+            isLineupsOpen.value = false;
+        };
+
+        const openLineups = () => {
+            isStatisticsOpen.value = false;
+            isLineupsOpen.value = true;
+        };
 
         const useSingleGame = async () => {
             singleGame.value = store.getSpecificGame(query.value.fixture) || null;
             !singleGame.value ? await fetchGameById() : (singleGame.value = store.getSpecificGame(query.value.fixture));
-
+            console.log(singleGame);
             return { ...toRefs(singleGame.value) };
         };
-        const useGameStatistic = async () => {
+        /*   const useGameStatistic = async () => {
             await axios
                 .get(`https://api-football-v3.herokuapp.com/api/v3/fixtures/statistics?fixture=${query.value.fixture}`)
                 .then(response => {
                     singleStatisticsGame.value = store.getGameStatistics();
-                    const hasDataUpdated =
-                        !singleStatisticsGame.value.cacheDate || response.data.cacheDate != singleStatisticsGame.value.cacheDate;
+                    const hasDataUpdated = !singleStatisticsGame.value.cacheDate || response.data.cacheDate != singleStatisticsGame.value.cacheDate;
 
                     if (hasDataUpdated) store.setGameStatistics(response.data);
                 })
@@ -79,7 +111,8 @@ export default {
                 });
 
             return { ...toRefs(singleStatisticsGame.value) };
-        };
+        }; */
+
         const fetchGameById = async () => {
             await axios
                 .get(`https://api-football-v3.herokuapp.com/api/v3/fixtures?id=${query.value.fixture}`)
@@ -93,19 +126,23 @@ export default {
 
         const { fetch, fetchState } = useFetch(async () => {
             singleGame.value = await useSingleGame();
-            singleStatisticsGame.value = await useGameStatistic();
-        }); 
+            /* singleStatisticsGame.value = await useGameStatistic(); */
+        });
 
         onActivated(() => {
             fetch();
         });
 
         fetch();
- 
+
         return {
             singleGame,
             singleStatisticsGame,
-            fetchState
+            fetchState,
+            openLineups,
+            openStatistics,
+            isStatisticsOpen,
+            isLineupsOpen
         };
     }
 };
@@ -118,21 +155,51 @@ div {
 header {
     width: 100%;
 }
+
+.formation {
+    display: flex;
+    justify-content: center;
+}
 .teamDisplay {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
-}
-
-.time {
     margin-top: 50px;
 }
 
+.time {
+    margin-bottom: 20px;
+    margin-left: 0;
+}
+
+.lineups {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 0 10px;
+    margin-top: 50px;
+    justify-content: space-between;
+
+    ul {
+        padding: 0;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    li {
+        display: flex;
+        align-items: center;
+        list-style: none;
+        justify-content: space-between;
+
+        padding: 10px;
+        font-size: 14px;
+        text-align: left;
+    }
+}
 .container {
     margin: 0 auto;
     min-height: 100vh;
     display: flex;
-    justify-content: center;
     align-items: center;
     text-align: center;
     padding: 0 10vw;
@@ -146,33 +213,39 @@ header {
     span {
         margin-top: 20px;
         font-weight: 700;
+        font-size: 16px;
     }
 }
 
 .teamScore {
-    font-size: 50px;
+    font-size: 24px;
 }
 
 .gameStatistics {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    width: 100%;
-    gap: 0 100px;
+    grid-template-columns: auto auto;
+    gap: 0 10px;
     margin-top: 50px;
+    justify-content: space-between;
+
+    ul {
+        padding: 0;
+    }
 
     li {
         display: flex;
         align-items: center;
         list-style: none;
         justify-content: space-between;
-
         font-weight: 700;
         border-bottom: 1px solid #333;
         padding: 10px;
 
         .type {
-            margin-right: 50px;
+            margin-right: 5%;
             font-weight: 400;
+            font-size: 14px;
+            text-align: left;
         }
     }
 }

@@ -23,7 +23,7 @@
                     <span :class="[currentDateClass(calendar.currentYear, calendar.currentMonth, day), currentSelectedDayClass(calendar.currentYear, calendar.currentMonth, day)]" @click="selectDate(calendar.currentYear, calendar.currentMonth, day)" v-for="day in calendar.getLastDayOfMonth" :key="day">{{ day }}</span>
                     <span
                         @click="
-                            goNext(calendar.currentYear, calendar.currentMonth + 1, day);
+                            throttle(goNext(calendar.currentYear, calendar.currentMonth + 1, day), 4000);
                             selectDate(calendar.currentYear, calendar.currentMonth + 1, day);
                         "
                         class="lastMonth"
@@ -50,7 +50,19 @@ import useCalendar from "../modules/useCalendar";
 export default {
     setup() {
         const { weekNames, currentSelectedDayClass, goNext, goPrev, currentDateClass, selectDate, getClosestMonths } = useCalendar();
-
+        const throttle = (func, limit) => {
+            let inThrottle;
+            return function () {
+                const args = arguments;
+                const context = this;
+                console.log("z");
+                if (!inThrottle) {
+                    func.apply(context, args);
+                    inThrottle = true;
+                    setTimeout(() => (inThrottle = false), limit);
+                }
+            };
+        };
         return {
             weekNames,
             currentSelectedDayClass,
@@ -58,7 +70,8 @@ export default {
             goPrev,
             currentDateClass,
             selectDate,
-            getClosestMonths
+            getClosestMonths,
+            throttle
         };
     }
 };
@@ -93,7 +106,7 @@ export default {
 }
 
 button {
-    margin-top: 200px;
+    margin-top: 20px;
 }
 .calendar {
     position: relative;

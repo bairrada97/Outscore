@@ -53,7 +53,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 div {
     display: block;
 }
@@ -124,6 +124,7 @@ span {
     display: flex;
     padding: 0 10vw;
     flex-direction: column;
+    justify-content: unset;
 }
 
 .title {
