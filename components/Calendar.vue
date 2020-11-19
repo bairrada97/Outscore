@@ -132,6 +132,7 @@ button {
     span {
         cursor: pointer;
         width: 20px;
+        font-size: 12px;
     }
 }
 .activeDay {
