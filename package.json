@@ -4,11 +4,11 @@
     "private": true,
     "scripts": {
         "dev": "nuxt",
-        "build": "nuxt build --modern=client",
-        "start": "nuxt start --modern=client",
+        "build": "nuxt build --modern=server",
+        "start": "nuxt start --modern=server",
         "analyze": "nuxt build --analyze",
         "generate": "nuxt generate",
-        "heroku-postbuild": "npm run build"
+        "heroku-postbuild": "npm run build --modern=server"
     },
     "dependencies": {
         "@nuxt/content": "^1.8.1",
