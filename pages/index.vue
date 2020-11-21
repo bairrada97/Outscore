@@ -222,7 +222,7 @@ span {
     margin: 0 auto;
     min-height: 100vh;
     display: flex;
-    padding: 0 10vw;
+    padding: 0 1%;
     flex-direction: column;
 }
 
