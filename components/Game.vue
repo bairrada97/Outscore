@@ -25,7 +25,7 @@
                     <div>{{ item.fixture.status.short != "NS" && item.fixture.status.short != "PST" ? item.fixture.status.short : getDate(item.fixture.date) }}</div>
                 </div>
             </div>
-            <div></div>
+            <slot></slot>
         </nuxt-link>
     </div>
 </template>
@@ -74,6 +74,7 @@ div {
 .homeTeam,
 .awayTeam {
     display: grid;
+    justify-content: space-between;
 
     .detail {
         grid-row: 1;
