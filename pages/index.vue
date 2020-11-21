@@ -55,8 +55,8 @@ export default defineComponent({
         const { liveGames, loadLiveGames } = useLiveGames();
         const { games, loadGames } = useGamesByDate();
         const displayOrderedGames = computed(leagues => {
-            sortGamesByCountryAndLeague.value = getLeagues.value.sort((a, b) => a.league.country.localeCompare(b.league.country) || a.league.id - b.league.id);
-            return sortGamesByCountryAndLeague.value.reduce((acc, game) => {
+            sortGamesByCountryAndLeague.value = getLeagues.value?.sort((a, b) => a.league.country.localeCompare(b.league.country) || a.league.id - b.league.id);
+            return sortGamesByCountryAndLeague.value?.reduce((acc, game) => {
                 let league = game.league.name;
                 acc[game.league.country] = acc[game.league.country] || {};
                 acc[game.league.country].competitions = acc[game.league.country].competitions || {};
