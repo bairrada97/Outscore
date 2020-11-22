@@ -43,7 +43,7 @@
             <div class="half" :data-half="key" v-for="(half, key) in displayEvents" :key="key">
                 <p>{{ key }}</p>
                 <div class="gameSummary__teams">
-                    <div v-for="(teams, key) in half.teams" class="singleTeam" :key="key">
+                    <div :data-team="key" v-for="(teams, key) in half.teams" class="singleTeam" :key="key">
                         <div class="gameSummary__events" v-for="(events, key) in teams" :key="key">
                             <p class="gameSummary__events--time">{{ events.time.elapsed }}'</p>
                             <p class="gameSummary__events--type">{{ events.type == "Card" ? events.detail : events.type }}</p>
@@ -143,7 +143,7 @@
 </template>
  
 <script>
-import { reactive, toRefs, ref, onMounted, useFetch, useContext, onActivated, computed, onDeactivated } from "@nuxtjs/composition-api";
+import { reactive, toRefs, ref, onMounted, useFetch, useContext, onActivated, computed, onDeactivated, watch } from "@nuxtjs/composition-api";
 
 import store from "@/store.js";
 import axios from "axios";
@@ -187,9 +187,9 @@ export default {
             const isAwayOrHome = Object.values(fixture.teams).find(item => item.id == id);
             const opponentIsAwayOrHome = Object.values(fixture.teams).find(item => item.id != id);
 
-            if (isAwayOrHome.winner) {
+            if (isAwayOrHome?.winner) {
                 return 1;
-            } else if (opponentIsAwayOrHome.winner) {
+            } else if (opponentIsAwayOrHome?.winner) {
                 return 0;
             } else {
                 return -1;
@@ -261,21 +261,27 @@ export default {
         const displayEvents = computed(leagues => {
             return singleGame.value.events?.reduce((acc, event) => {
                 let team = event.team.name;
+                let homeTeam = computed(() => singleGame.value.teams.home);
+                let awayTeam = computed(() => singleGame.value.teams.away);
                 event.time.elapsed <= 45 ? (acc.firstHalf = acc.firstHalf || {}) : (acc.secondHalf = acc.secondHalf || {});
                 if (event.time.elapsed <= 45) {
                     acc.firstHalf["teams"] = acc.firstHalf["teams"] || {};
-                    acc.firstHalf.teams[team] = acc.firstHalf.teams[team] || new Set();
-                    acc.firstHalf.teams[team].add(event);
+                    acc.firstHalf.teams[homeTeam.value.name] = acc.firstHalf.teams[homeTeam.value.name] || new Set();
+                    acc.firstHalf.teams[awayTeam.value.name] = acc.firstHalf.teams[awayTeam.value.name] || new Set();
+
+                    event.team.id == homeTeam.value.id ? acc.firstHalf.teams[homeTeam.value.name].add(event) : acc.firstHalf.teams[awayTeam.value.name].add(event);
                 } else {
                     acc.secondHalf["teams"] = acc.secondHalf["teams"] || {};
-                    acc.secondHalf.teams[team] = acc.secondHalf.teams[team] || new Set();
-                    acc.secondHalf.teams[team].add(event);
+                    acc.secondHalf.teams[homeTeam.value.name] = acc.secondHalf.teams[homeTeam.value.name] || new Set();
+                    acc.secondHalf.teams[awayTeam.value.name] = acc.secondHalf.teams[awayTeam.value.name] || new Set();
+                    event.team.id == homeTeam.value.id ? acc.secondHalf.teams[homeTeam.value.name].add(event) : acc.secondHalf.teams[awayTeam.value.name].add(event);
                 }
 
                 return acc;
             }, {});
         });
 
+        console.log(displayEvents);
         const fetchGameById = async () => {
             await axios.get(`https://api-football-v3.herokuapp.com/api/v3/fixtures?id=${query.value.fixture}`).then(response => {
                 store.setSingleGame(response.data.response[0]);
@@ -290,6 +296,16 @@ export default {
         onActivated(() => {
             fetch();
         });
+
+        watch(
+            () => query.value.fixture,
+            async (count, prevCount) => {
+                openEvents();
+                await fetch();
+                /*  await useStandings();
+                await useH2H(); */
+            }
+        );
 
         onDeactivated(() => {
             openEvents();
