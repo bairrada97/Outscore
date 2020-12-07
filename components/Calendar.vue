@@ -23,7 +23,7 @@
                     <span :class="[currentDateClass(calendar.currentYear, calendar.currentMonth, day), currentSelectedDayClass(calendar.currentYear, calendar.currentMonth, day)]" @click="selectDate(calendar.currentYear, calendar.currentMonth, day)" v-for="day in calendar.getLastDayOfMonth" :key="day">{{ day }}</span>
                     <span
                         @click="
-                            throttle(goNext(calendar.currentYear, calendar.currentMonth + 1, day), 4000);
+                            goNext(calendar.currentYear, calendar.currentMonth + 1, day);
                             selectDate(calendar.currentYear, calendar.currentMonth + 1, day);
                         "
                         class="lastMonth"

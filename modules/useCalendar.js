@@ -73,12 +73,16 @@ export default function () {
             currentYear: isFirstMonthOfTheYear ? lastMonth.currentYear - 1 : lastMonth.currentYear,
             getMonth: lastMonth.currentMonth - 1,
             currentMonthName: isFirstMonthOfTheYear ? new Date(lastMonth.currentYear - 1, 11).toLocaleString("default", { month: "long" }) : new Date(lastMonth.currentYear, lastMonth.currentMonth - 1).toLocaleString("default", { month: "long" }),
-            getLastDayOfMonth: isFirstMonthOfTheYear ? new Date(lastMonth.currentYear - 1, 11, 0).getDate() : new Date(lastMonth.currentYear, lastMonth.currentMonth - 2, 0).getDate(),
+            getLastDayOfMonth: isFirstMonthOfTheYear ? new Date(lastMonth.currentYear - 1, 12, 0).getDate() : new Date(lastMonth.currentYear, lastMonth.currentMonth, 0).getDate(),
             getLastDayOfPreviousMonth: isFirstMonthOfTheYear ? new Date(lastMonth.currentYear - 1, -1, 0).getDate() : new Date(lastMonth.currentYear, lastMonth.getMonth, 0).getDate(),
             startDay: isFirstMonthOfTheYear ? new Date(lastMonth.currentYear - 1, 11, 1).getDay() : new Date(lastMonth.currentYear, lastMonth.currentMonth - 1, 1).getDay(),
-            endDay: isFirstMonthOfTheYear ? new Date(lastMonth.currentYear - 1, lastMonth.currentMonth - 2, 0).getDay() : new Date(lastMonth.currentYear, lastMonth.currentMonth - 2, 0).getDay()
+            endDay: isFirstMonthOfTheYear ? new Date(lastMonth.currentYear - 1, lastMonth.currentMonth - 2, 0).getDay() : new Date(lastMonth.currentYear, lastMonth.currentMonth, 0).getDay(),
+            isSelected: false
         });
-
+        /*      calendar.startDay = new Date(calendar.currentYear, calendar.currentMonth, 1).getDay();
+        calendar.endDay = new Date(calendar.currentYear, calendar.currentMonth + 1, 0).getDay();
+        calendar.getLastDayOfMonth = new Date(calendar.currentYear, calendar.getMonth, 0).getDate();
+        calendar.isSelected = false; */
         e.currentTarget.removeEventListener("transitionend", goToPreviousMonth);
     };
 
@@ -125,9 +129,10 @@ export default function () {
             getMonth: lastMonth.currentMonth + 1,
             currentMonthName: isLastMonthOfTheYear ? new Date(lastMonth.currentYear + 1, 0).toLocaleString("default", { month: "long" }) : new Date(lastMonth.currentYear, lastMonth.currentMonth + 1).toLocaleString("default", { month: "long" }),
             getLastDayOfMonth: isLastMonthOfTheYear ? new Date(lastMonth.currentYear + 1, 0, 0).getDate() : new Date(lastMonth.currentYear, lastMonth.currentMonth + 2, 0).getDate(),
-            getLastDayOfPreviousMonth: isLastMonthOfTheYear ? new Date(lastMonth.currentYear + 1, -1, 0).getDate() : new Date(lastMonth.currentYear, lastMonth.getMonth, 0).getDate(),
+            getLastDayOfPreviousMonth: isLastMonthOfTheYear ? new Date(lastMonth.currentYear + 1, 12, 0).getDate() : new Date(lastMonth.currentYear, lastMonth.getMonth + 1, 0).getDate(),
             startDay: isLastMonthOfTheYear ? new Date(lastMonth.currentYear + 1, 0, 1).getDay() : new Date(lastMonth.currentYear, lastMonth.currentMonth + 1, 1).getDay(),
-            endDay: isLastMonthOfTheYear ? new Date(lastMonth.currentYear + 1, lastMonth.currentMonth + 2, 0).getDay() : new Date(lastMonth.currentYear, lastMonth.currentMonth + 2, 0).getDay()
+            endDay: isLastMonthOfTheYear ? new Date(lastMonth.currentYear + 1, 1, 0).getDay() : new Date(lastMonth.currentYear, lastMonth.currentMonth + 2, 0).getDay(),
+            isSelected: false
         });
     };
     const goPrev = (year, month, day) => {
