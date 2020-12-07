@@ -4,7 +4,7 @@ import axios from "axios";
 
 export default function () {
     const getClosestMonths = ref([{}, {}, {}]);
-    console.log("cc");
+
     const state = reactive({
         weekNames: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
         today: new Date(),
