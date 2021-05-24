@@ -4,6 +4,7 @@ import axios from "axios";
 
 export default function () {
     const getClosestMonths = ref([{}, {}, {}]);
+
     const state = reactive({
         weekNames: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
         today: new Date(),
@@ -31,7 +32,7 @@ export default function () {
 
     store.setFormatDate(state.currentYear, state.currentMonth, state.today.getDate());
     getClosestMonths.value.map((calendar, index) => {
-        calendar.currentMonth = new Date().getMonth() == 11 ? 0 : new Date().getMonth() + index - 1;
+        calendar.currentMonth = new Date().getMonth() == 0 ? 0 : new Date().getMonth() + index - 1;
         calendar.currentYear = calendar.currentMonth == 12 ? new Date().getFullYear() + 1 : new Date().getFullYear();
         calendar.getMonth = calendar.currentMonth + 1;
         calendar.currentMonthName = new Date(calendar.currentYear, calendar.currentMonth).toLocaleString("default", { month: "long" });
