@@ -1,0 +1,14 @@
+:root{
+    --text-base-size: 1rem;
+
+    
+    --color-primary: #609B15;
+    --color-text: #212121;
+    --color-bg: #F1F1F1;
+}
+body{
+    font-family: 'Source Sans Pro';
+    font-size: var(--text-base-size);
+    color: var(--color-text);
+    width: 375px;
+}    

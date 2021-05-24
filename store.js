@@ -1,6 +1,7 @@
 import { reactive } from "@nuxtjs/composition-api";
 
 const state = reactive({
+    liveToggle: false,
     liveGames: {},
     selectedGameStatistics: {},
     openedGame: {},
@@ -25,6 +26,10 @@ const setFormatDate = (year, month, day) => {
     const offset = date.getTimezoneOffset();
     let newDate = new Date(date.getTime() - offset * 60 * 1000);
     state.selectedDate = newDate.toISOString().split("T")[0];
+};
+
+const setLiveToggle = response => {
+    state.liveToggle = !response;
 };
 const getLiveGames = () => {
     return state.liveGames;
@@ -54,6 +59,10 @@ const getSelectedDate = () => {
     return state.selectedDate;
 };
 
+const getLiveToggle = () => {
+    return state.liveToggle;
+};
+
 export default {
     state,
     setLiveGames,
@@ -66,5 +75,7 @@ export default {
     getSpecificGame,
     setSingleGame,
     setFormatDate,
-    getSelectedDate
+    getSelectedDate,
+    setLiveToggle,
+    getLiveToggle
 };

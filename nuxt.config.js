@@ -28,9 +28,19 @@ export default {
             }
         ]
     },
-
+ 
     // Global CSS (https://go.nuxtjs.dev/config-css)
-    css: [],
+    css: [
+        
+    ],
+
+    styleResources: {
+        // your settings here
+       
+        scss: ["@/assets/styles/*.scss"],
+      
+   
+     },
 
     // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
     plugins: [],
@@ -39,7 +49,7 @@ export default {
     components: true,
 
     // Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
-    buildModules: ["@nuxtjs/html-validator"],
+    buildModules: ["@nuxtjs/html-validator", "@nuxtjs/style-resources"],
 
     // Modules (https://go.nuxtjs.dev/config-modules)
     modules: [
@@ -112,6 +122,19 @@ export default {
 
     // Build Configuration (https://go.nuxtjs.dev/config-build)
     build: {
-        extractCSS: true
-    }
+        extractCSS: true,
+        babel: {
+            plugins: [
+              '@babel/plugin-proposal-optional-chaining'
+            ]
+          }
+    },
+
+    storybook: {
+        // Options
+        parameters:{
+
+            layout: 'fullscreen'
+        }
+      }
 };

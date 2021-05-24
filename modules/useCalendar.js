@@ -10,6 +10,13 @@ export default function () {
         currentMonth: computed(() => state.today.getMonth()),
         currentYear: computed(() => state.today.getFullYear()),
         currentDate: computed(() => new Date(state.currentYear, state.currentMonth, state.today.getDate())),
+        homepageFiveDays: computed(() => [
+            new Date(state.currentYear, state.currentMonth, state.today.getDate() - 2),
+            new Date(state.currentYear, state.currentMonth, state.today.getDate() - 1),
+            new Date(state.currentYear, state.currentMonth, state.today.getDate()),
+            new Date(state.currentYear, state.currentMonth, state.today.getDate() + 1),
+            new Date(state.currentYear, state.currentMonth, state.today.getDate() + 2)
+        ]),
         selectedDate: null,
         initialX: null,
         initialY: null,
@@ -34,6 +41,7 @@ export default function () {
         calendar.endDay = new Date(calendar.currentYear, calendar.currentMonth + 1, 0).getDay();
         calendar.isSelected = false;
     });
+
     const translateCalendarOnSwipe = calendar => {
         if (userSlideYCoordinate()) return;
         userSlideToRight() ? (calendar.style.transform = `translate3d(-${state.diffX}px, 0, 0) `) : (calendar.style.transform = `translate3d(${-state.diffX}px, 0, 0) `);
@@ -97,7 +105,6 @@ export default function () {
 
     const currentSelectedDayClass = (year, month, day) => {
         const clickedDay = new Date(year, month, day).toDateString();
-
         return clickedDay === state.selectedDate?.toDateString() ? "selectedDate" : "";
     };
 
@@ -192,6 +199,7 @@ export default function () {
         body.addEventListener("mouseup", touchEnd, { passive: false });
         body.addEventListener("touchend", touchEnd, { passive: false });
     });
+    
     return {
         currentSelectedDayClass,
         currentDateClass,

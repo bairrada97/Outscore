@@ -1,7 +1,9 @@
 <template>
     <div class="container">
-        <Calendar></Calendar>
-        <button :class="{ active: isLive }" class="toggleLive" @click="toggleLive">Live</button>
+        
+         <CalendarBar />
+        
+        <!-- <button :class="{ active: isLive }" class="toggleLive" @click="toggleLive">Live</button> -->
         <div v-if="loading">Loading...</div>
         <div v-else>
             <div @click="openGame(countryName)" v-for="(countryName, key) in displayOrderedGames" :key="key">
@@ -42,7 +44,8 @@ export default defineComponent({
     components: {
         LazyHydrate,
         Game: () => import("@/components/Game.vue" /* webpackChunkName: "Game" */),
-        Calendar: () => import("@/components/Calendar.vue" /* webpackChunkName: "Calendar" */)
+        Calendar: () => import("@/components/Calendar/Calendar.vue" /* webpackChunkName: "Calendar" */),
+        CalendarBar: () => import("@/components/CalendarBar/CalendarBar.vue" /* webpackChunkName: "Calendar" */)
     },
     setup() {
         const getLeagues = ref([]);
