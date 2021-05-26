@@ -17,6 +17,7 @@ export default function () {
             await axios
                 .get(`https://api-football-v3.herokuapp.com/api/v3/fixtures?date=${selectedDate.value}`)
                 .then(response => {
+                    store.setLiveToggle(true)
                     games.value = store.getGames();
                     const hasDataUpdated = !games.value.cacheDate || response.data.cacheDate != games.value.cacheDate;
                     if (hasDataUpdated) store.setGames(response.data);

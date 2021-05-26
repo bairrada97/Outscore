@@ -10,6 +10,8 @@
 <script>
 import { watch } from "@nuxtjs/composition-api";
 import useCalendar from "../../modules/useCalendar";
+import store from "@/store.js";
+
 
 export default {
     setup() {
@@ -18,7 +20,8 @@ export default {
 
         watch(
             () => selectedDate.value,
-            (newValue, prevValue) => { 
+            (newValue, prevValue) => {
+              
                 console.log(newValue, prevValue)
             }
         );
@@ -47,10 +50,12 @@ export default {
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            width: 100%;    
+            width: 100%;
+            height: 100%;  
             
             &.selectedDate{
                 color: var(--color-primary);
+                border-bottom: 1px solid  var(--color-primary);
             }
         }
         

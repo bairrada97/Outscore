@@ -49,12 +49,13 @@ export default {
             display: flex;
             flex-direction: column;
             align-items: center;
-            color: var(--color-primary);
+            background: var(--color-primary);
+            color: #fff;
             justify-content: center; 
             width: 54px;
             padding: 4px 0;
-            border: 0;
             border-bottom: 1px solid  var(--color-primary);
+          
            
            &:focus{
                outline: 0;
@@ -65,25 +66,28 @@ export default {
             }
 
             &.active{
-                background: var(--color-primary);
-               
-                color: #fff;
+                background: none;
+                color: var(--color-primary);
+                 
+             
             }
 
             
         }
 
         &__liveToggleIcon{
-            color: var(--color-primary);
+            color: #fff;
 
             .active &{
-                color: #fff
+            color: var(--color-primary);
+
+                
             }
           
         }
 
         &__calendarButton{
-            background: var(--color-bg);
+            background: var(--color-bg--dark);
             width: 54px;
 
         }
