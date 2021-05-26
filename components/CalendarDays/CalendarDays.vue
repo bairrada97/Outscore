@@ -8,13 +8,26 @@
 </template>
 
 <script>
+import { watch } from "@nuxtjs/composition-api";
 import useCalendar from "../../modules/useCalendar";
+
 export default {
     setup() {
-        const {homepageFiveDays, selectDate, currentSelectedDayClass} = useCalendar();
+        const {homepageFiveDays, selectDate, currentSelectedDayClass, selectedDate} = useCalendar();
+      
+
+        watch(
+            () => selectedDate.value,
+            (newValue, prevValue) => { 
+                console.log(newValue, prevValue)
+            }
+        );
+
+
           return {
             homepageFiveDays,
             selectDate,
+            selectedDate,
             currentSelectedDayClass
         };
     }

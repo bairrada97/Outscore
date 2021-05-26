@@ -39,6 +39,8 @@ import LazyHydrate from "vue-lazy-hydration";
 
 import useLiveGames from "../modules/useLiveGames";
 import useGamesByDate from "../modules/useGamesByDate";
+import useCalendar from "@/modules/useCalendar";
+
 
 export default defineComponent({
     components: {
@@ -55,8 +57,10 @@ export default defineComponent({
         const sortGamesByCountryAndLeague = ref(null);
         const isLive = ref(false);
         const loading = ref(true);
+        const liveToggle = computed(() => store.getLiveToggle());
         const { liveGames, loadLiveGames } = useLiveGames();
         const { games, loadGames } = useGamesByDate();
+        const { today, selectDate } = useCalendar();
         const displayOrderedGames = computed(leagues => {
             sortGamesByCountryAndLeague.value = getLeagues.value?.sort((a, b) => a.league.country.localeCompare(b.league.country) || a.league.id - b.league.id);
             return sortGamesByCountryAndLeague.value?.reduce((acc, game) => {
@@ -82,8 +86,8 @@ export default defineComponent({
         };
 
         const toggleLive = () => {
-            isLive.value = !isLive.value;
-            if (!isLive.value) {
+          
+            if (!liveToggle.value) {
                 getLeagues.value = games.value.response;
                 return;
             }
@@ -103,9 +107,12 @@ export default defineComponent({
         });
 
         watch(
-            () => selectedDate.value,
-            (count, prevCount) => {
-                fetch();
+            () => [selectedDate.value, liveToggle.value],
+            (newValue, prevValue) => { 
+                const dateHasChanged = newValue[0] != prevValue[0];
+
+                liveToggle.value && !dateHasChanged ? toggleLive(): fetch();
+                dateHasChanged ? fetch() : "";
             }
         );
 

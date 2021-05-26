@@ -30,6 +30,7 @@ export default function () {
         transform: 100
     });
 
+    state.selectedDate = state.currentDate;
     store.setFormatDate(state.currentYear, state.currentMonth, state.today.getDate());
     getClosestMonths.value.map((calendar, index) => {
         calendar.currentMonth = new Date().getMonth() == 0 ? 0 : new Date().getMonth() + index - 1;

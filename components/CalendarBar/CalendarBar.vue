@@ -27,10 +27,8 @@ export default {
     },
     setup() {
         const liveToggle = computed(() => store.getLiveToggle());
-        const toggleLive = () => {
-           
-            store.setLiveToggle(liveToggle.value)
-        };
+        const toggleLive = () => store.setLiveToggle(liveToggle.value);
+ 
     
         return {
            toggleLive,
