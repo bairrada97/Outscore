@@ -6,7 +6,8 @@ const state = reactive({
     selectedGameStatistics: {},
     openedGame: {},
     games: {},
-    selectedDate: null
+    selectedDate: null,
+    isCalendarOpen: false
 });
 
 const setLiveGames = response => {
@@ -30,6 +31,14 @@ const setFormatDate = (year, month, day) => {
 
 const setLiveToggle = response => {
     state.liveToggle = !response;
+};
+
+const setCalendarOpen = response => {
+    state.isCalendarOpen = response;
+};
+
+const getCalendarOpen = () => {
+    return state.isCalendarOpen;
 };
 const getLiveGames = () => {
     return state.liveGames;
@@ -77,5 +86,7 @@ export default {
     setFormatDate,
     getSelectedDate,
     setLiveToggle,
-    getLiveToggle
+    getLiveToggle,
+    setCalendarOpen,
+    getCalendarOpen
 };

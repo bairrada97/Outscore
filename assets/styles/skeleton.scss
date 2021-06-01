@@ -1,16 +1,16 @@
-:root{
+:root {
     --text-base-size: 1rem;
 
-    
-    --color-primary: #609B15;
+    --color-primary: #609b15;
     --color-text: #212121;
-    --color-bg: #F1F1F1;
-    --color-bg--dark: #DCDCDC;
+    --color-bg: #f1f1f1;
+    --color-bg--dark: #dcdcdc;
+    --color-bg--dark--high: #c4c4c4;
 }
-body{
-    font-family: 'Source Sans Pro';
+body {
+    font-family: "Source Sans Pro";
     font-size: var(--text-base-size);
     color: var(--color-text);
     width: 375px;
     margin: 0 auto;
-}    
+}

@@ -17,13 +17,6 @@
             const { homepageFiveDays, selectDate, currentSelectedDayClass, currentDateClass, selectedDate } = useCalendar();
             const liveToggle = computed(() => store.getLiveToggle());
 
-            watch(
-                () => liveToggle,
-                (newValue, prevValue) => {
-                    console.log(liveToggle, newValue, prevValue);
-                }
-            );
-
             return {
                 homepageFiveDays,
                 selectDate,
@@ -36,7 +29,7 @@
     };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
     .calendarDays {
         display: flex;
         align-items: center;

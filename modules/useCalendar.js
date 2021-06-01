@@ -43,29 +43,29 @@ export default function () {
         userSlideToRight() ? (calendar.style.transform = `translate3d(-${state.diffX}px, 0, 0) `) : (calendar.style.transform = `translate3d(${-state.diffX}px, 0, 0) `);
     };
     const translateCalendarToRight = () => {
-        const $calendarContainer = document.querySelector(".calendarContainer");
+        const $calendarContainer = document.querySelector(".calendar__container");
         $calendarContainer.style.transition = "transform 0.4s ease";
-        $calendarContainer.style.transform = `translateX(-100vw)`;
+        $calendarContainer.style.transform = `translateX(-100%)`;
         $calendarContainer.style.marginLeft = `0`;
         $calendarContainer.addEventListener("transitionend", resetTransition);
     };
     const translateCalendarToLeft = () => {
-        const $calendarContainer = document.querySelector(".calendarContainer");
+        const $calendarContainer = document.querySelector(".calendar__container");
         $calendarContainer.style.transition = "transform 0.4s ease";
-        $calendarContainer.style.transform = `translateX(100vw)`;
-        $calendarContainer.style.marginLeft = `-100vw`;
+        $calendarContainer.style.transform = `translateX(100%)`;
+        $calendarContainer.style.marginLeft = `-100%`;
         $calendarContainer.addEventListener("transitionend", goToPreviousMonth);
     };
     const resetTransition = e => {
-        const $calendarContainer = document.querySelector(".calendarContainer");
+        const $calendarContainer = document.querySelector(".calendar__container");
         $calendarContainer.style.transition = "none";
         $calendarContainer.style.transform = `translateX(0)`;
-        $calendarContainer.style.marginLeft = `-100vw`;
+        $calendarContainer.style.marginLeft = `-100%`;
         e.currentTarget.removeEventListener("transitionend", resetTransition);
     };
 
     const goToPreviousMonth = e => {
-        const $calendarContainer = document.querySelector(".calendarContainer");
+        const $calendarContainer = document.querySelector(".calendar__container");
         const lastMonth = getClosestMonths.value[0];
         const isFirstMonthOfTheYear = lastMonth.currentMonth == 0;
         $calendarContainer.style.transition = "none";
@@ -142,15 +142,15 @@ export default function () {
     };
 
     const startTouch = event => {
-        const isTargetCalendar = event => event.target.closest(".calendarContainer");
+        const isTargetCalendar = event => event.target.closest(".calendar__container");
         if (!isTargetCalendar(event)) return;
         state.initialX = event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;
         state.initialY = event instanceof MouseEvent ? event.clientY : event.touches[0].clientY;
         state.isStartTouch = true;
     };
     const moveTouch = event => {
-        const $calendarContainer = event.currentTarget.querySelector(".calendarContainer");
-        const isTargetCalendar = event => event.target.closest(".calendarContainer");
+        const $calendarContainer = event.currentTarget.querySelector(".calendar__container");
+        const isTargetCalendar = event => event.target.closest(".calendar__container");
         if (!isTargetCalendar(event) || userNotStartedDrag()) return;
 
         setSliderValues(event);
