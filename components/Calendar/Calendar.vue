@@ -41,110 +41,109 @@
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs, ref, onMounted, useFetch, onActivated, onUnmounted, computed, watch } from "@nuxtjs/composition-api";
-import store from "@/store.js";
-import axios from "axios";
+    import { defineComponent, reactive, toRefs, ref, onMounted, useFetch, onActivated, onUnmounted, computed, watch } from "@nuxtjs/composition-api";
+    import store from "@/store.js";
+    import axios from "axios";
 
-import useCalendar from "../../modules/useCalendar";
+    import useCalendar from "../../modules/useCalendar";
 
-export default {
-    setup() {
-        const { weekNames, currentSelectedDayClass, goNext, goPrev, currentDateClass, selectDate, getClosestMonths } = useCalendar();
-        const throttle = (func, limit) => {
-            let inThrottle;
-            return function () {
-                const args = arguments;
-                const context = this;
-                console.log("z");
-                if (!inThrottle) {
-                    func.apply(context, args);
-                    inThrottle = true;
-                    setTimeout(() => (inThrottle = false), limit);
-                }
+    export default {
+        setup() {
+            const { weekNames, currentSelectedDayClass, goNext, goPrev, currentDateClass, selectDate, getClosestMonths } = useCalendar();
+            const throttle = (func, limit) => {
+                let inThrottle;
+                return function () {
+                    const args = arguments;
+                    const context = this;
+                    console.log("z");
+                    if (!inThrottle) {
+                        func.apply(context, args);
+                        inThrottle = true;
+                        setTimeout(() => (inThrottle = false), limit);
+                    }
+                };
             };
-        };
-        return {
-            weekNames,
-            currentSelectedDayClass,
-            goNext,
-            goPrev,
-            currentDateClass,
-            selectDate,
-            getClosestMonths,
-            throttle
-        };
-    }
-};
+            return {
+                weekNames,
+                currentSelectedDayClass,
+                goNext,
+                goPrev,
+                currentDateClass,
+                selectDate,
+                getClosestMonths,
+                throttle
+            };
+        }
+    };
 </script>
 
 <style lang="scss">
-.weekDays {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    padding: 0; 
-    width: 100vw;
+    .weekDays {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        padding: 0;
+        width: 100vw;
 
-    li {
-        list-style-type: none;
+        li {
+            list-style-type: none;
+        }
     }
-}
 
-.calendar {
-    overflow: hidden;
-}
-
-.calendarContainer {
-    display: flex;
-    width: 300vw;
-    overflow: hidden;
-    margin-left: -100vw;
-    position: relative;
-}
-
-.calendarItem {
-    width: 100vw;
-}
-
-
-.calendar {
-    position: relative;
-    display: block;
-    width: 100%;
-    height: 100%;
-}
-
-.sliderContainer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-}
-
-.lastMonth {
-    opacity: 0.4;
-}
-.days {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-
-    span {
-        cursor: pointer;
-        width: 20px;
-        font-size: 12px;
+    .calendar {
+        overflow: hidden;
     }
-}
-.activeDay {
-    border-radius: 50%;
-    background-color: #187c56;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 20px;
-    height: 20px;
-    z-index: 9;
-}
-/*.selectedDate {
+
+    .calendarContainer {
+        display: flex;
+        width: 300vw;
+        overflow: hidden;
+        margin-left: -100vw;
+        position: relative;
+    }
+
+    .calendarItem {
+        width: 100vw;
+    }
+
+    .calendar {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+
+    .sliderContainer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
+
+    .lastMonth {
+        opacity: 0.4;
+    }
+    .days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+
+        span {
+            cursor: pointer;
+            width: 20px;
+            font-size: 12px;
+        }
+    }
+    // .activeDay {
+    //     border-radius: 50%;
+    //     background-color: #187c56;
+    //     color: white;
+    //     display: flex;
+    //     align-items: center;
+    //     justify-content: center;
+    //     width: 20px;
+    //     height: 20px;
+    //     z-index: 9;
+    // }
+    /*.selectedDate {
     border-radius: 50%;
     background-color: grey;
     color: black;

@@ -11,13 +11,7 @@ export default function () {
         currentMonth: computed(() => state.today.getMonth()),
         currentYear: computed(() => state.today.getFullYear()),
         currentDate: computed(() => new Date(state.currentYear, state.currentMonth, state.today.getDate())),
-        homepageFiveDays: computed(() => [
-            new Date(state.currentYear, state.currentMonth, state.today.getDate() - 2),
-            new Date(state.currentYear, state.currentMonth, state.today.getDate() - 1),
-            new Date(state.currentYear, state.currentMonth, state.today.getDate()),
-            new Date(state.currentYear, state.currentMonth, state.today.getDate() + 1),
-            new Date(state.currentYear, state.currentMonth, state.today.getDate() + 2)
-        ]),
+        homepageFiveDays: computed(() => [new Date(state.currentYear, state.currentMonth, state.today.getDate() - 2), new Date(state.currentYear, state.currentMonth, state.today.getDate() - 1), new Date(state.currentYear, state.currentMonth, state.today.getDate()), new Date(state.currentYear, state.currentMonth, state.today.getDate() + 1), new Date(state.currentYear, state.currentMonth, state.today.getDate() + 2)]),
         selectedDate: null,
         initialX: null,
         initialY: null,
@@ -88,10 +82,7 @@ export default function () {
             endDay: isFirstMonthOfTheYear ? new Date(lastMonth.currentYear - 1, lastMonth.currentMonth - 2, 0).getDay() : new Date(lastMonth.currentYear, lastMonth.currentMonth, 0).getDay(),
             isSelected: false
         });
-        /*      calendar.startDay = new Date(calendar.currentYear, calendar.currentMonth, 1).getDay();
-        calendar.endDay = new Date(calendar.currentYear, calendar.currentMonth + 1, 0).getDay();
-        calendar.getLastDayOfMonth = new Date(calendar.currentYear, calendar.getMonth, 0).getDate();
-        calendar.isSelected = false; */
+
         e.currentTarget.removeEventListener("transitionend", goToPreviousMonth);
     };
 
@@ -201,7 +192,7 @@ export default function () {
         body.addEventListener("mouseup", touchEnd, { passive: false });
         body.addEventListener("touchend", touchEnd, { passive: false });
     });
-    
+
     return {
         currentSelectedDayClass,
         currentDateClass,
