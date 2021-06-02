@@ -6,6 +6,7 @@
     --color-bg: #f1f1f1;
     --color-bg--dark: #dcdcdc;
     --color-bg--dark--high: #c4c4c4;
+    --color-bg--black: #797979;
 }
 body {
     font-family: "Source Sans Pro";
@@ -13,4 +14,9 @@ body {
     color: var(--color-text);
     width: 375px;
     margin: 0 auto;
+    font-weight: 400;
+}
+
+.align--full {
+    grid-column: 1/-1;
 }

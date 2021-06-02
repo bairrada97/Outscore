@@ -1,6 +1,6 @@
 <template>
     <ul class="calendarDays">
-        <li class="calendarDays__dayContainer" :class="[!liveToggle ? currentSelectedDayClass(day.getFullYear(), day.getMonth(), day.getDate()) : '', currentDateClass(day.getFullYear(), day.getMonth(), day.getDate())]" v-for="(day, index) in homepageFiveDays" :key="index" @click="selectDate(day.getFullYear(), day.getMonth(), day.getDate())">
+        <li class="calendarDays__dayContainer" :class="[!liveToggle && getRawSelectedDate.toDateString() == day.toDateString() ? currentSelectedDayClass(day.getFullYear(), day.getMonth(), day.getDate()) : '', currentDateClass(day.getFullYear(), day.getMonth(), day.getDate())]" v-for="(day, index) in homepageFiveDays" :key="index" @click="selectDate(day.getFullYear(), day.getMonth(), day.getDate())">
             <span class="calendarDays__numericDay">{{ day.toLocaleDateString("default", { day: "numeric" }) }}</span>
             <span class="calendarDays__weekDay">{{ day.toLocaleDateString("default", { weekday: "short" }) }}</span>
         </li>
@@ -16,6 +16,7 @@
         setup() {
             const { homepageFiveDays, selectDate, currentSelectedDayClass, currentDateClass, selectedDate } = useCalendar();
             const liveToggle = computed(() => store.getLiveToggle());
+            const getRawSelectedDate = computed(() => store.getRawSelectedDate());
 
             return {
                 homepageFiveDays,
@@ -23,7 +24,8 @@
                 selectedDate,
                 currentSelectedDayClass,
                 liveToggle,
-                currentDateClass
+                currentDateClass,
+                getRawSelectedDate
             };
         }
     };

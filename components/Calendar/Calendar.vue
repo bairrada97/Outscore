@@ -60,9 +60,10 @@
 
     export default {
         setup() {
-            const { weekNames, currentSelectedDayClass, goNext, goPrev, currentDateClass, selectDate, getClosestMonths } = useCalendar();
+            const { weekNames, currentSelectedDayClass, goNext, goPrev, currentDateClass, selectDate, getClosestMonths, selectedDate } = useCalendar();
             const getCalendarOpen = computed(() => store.getCalendarOpen());
             const closeCalendar = () => store.setCalendarOpen(false);
+
             return {
                 weekNames,
                 currentSelectedDayClass,
@@ -80,6 +81,7 @@
 
 <style lang="scss" scoped>
     .calendar {
+        opacity: 0;
         position: fixed;
         top: 0;
         width: 100%;
@@ -87,7 +89,6 @@
         overflow: hidden;
         display: grid;
         max-width: 375px;
-        opacity: 1;
         transform: translateY(-100%);
         transition: all 0.4s ease;
 
@@ -199,7 +200,7 @@
         .selectedDate {
             border-radius: 50%;
             background-color: var(--color-bg);
-            color: (--color-text);
+            color: var(--color-text);
         }
     }
 </style>

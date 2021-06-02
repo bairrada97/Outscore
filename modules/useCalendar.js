@@ -163,7 +163,8 @@ export default function () {
         state.isStartTouch = false;
         if (!state.isDragging) return;
         if (userSlideYCoordinate()) return;
-
+        if (userSlideYCoordinate()) return;
+        if (state.diffX <= 10) return; //refactor, make user drag a good amount of X before going to next/prev month otherwise back to original month
         userSlideToRight() ? goNext() : goPrev();
 
         state.isDragging = false;

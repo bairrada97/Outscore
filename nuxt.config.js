@@ -28,19 +28,15 @@ export default {
             }
         ]
     },
- 
+
     // Global CSS (https://go.nuxtjs.dev/config-css)
-    css: [
-        
-    ],
+    css: [],
 
     styleResources: {
         // your settings here
-       
-        scss: ["@/assets/styles/*.scss"],
-      
-   
-     },
+
+        scss: ["@/assets/styles/*.scss"]
+    },
 
     // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
     plugins: [],
@@ -63,6 +59,7 @@ export default {
         "nuxt-lazy-load",
         "@nuxtjs/sitemap",
         "nuxt-precompress",
+        "@nuxt/image",
         [
             "nuxt-compress",
             {
@@ -116,6 +113,9 @@ export default {
     generate: {
         fallback: true
     },
+    image: {
+        domains: ["https://media.api-sports.io"]
+    },
 
     // Content module configuration (https://go.nuxtjs.dev/content-config)
     content: {},
@@ -124,17 +124,14 @@ export default {
     build: {
         extractCSS: true,
         babel: {
-            plugins: [
-              '@babel/plugin-proposal-optional-chaining'
-            ]
-          }
+            plugins: ["@babel/plugin-proposal-optional-chaining"]
+        }
     },
 
     storybook: {
         // Options
-        parameters:{
-
-            layout: 'fullscreen'
+        parameters: {
+            layout: "fullscreen"
         }
-      }
+    }
 };

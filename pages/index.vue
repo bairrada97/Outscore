@@ -2,29 +2,27 @@
     <div class="container">
         <Calendar />
         <CalendarBar />
-
-        <!-- <button :class="{ active: isLive }" class="toggleLive" @click="toggleLive">Live</button> -->
         <div v-if="loading">Loading...</div>
         <div v-else>
+            <h2 class="leagueTypes">National Leagues</h2>
             <div @click="openGame(countryName)" v-for="(countryName, key) in displayOrderedGames" :key="key">
-                <div class="country">
-                    <img :src="countryName.image" alt="" />
-                    <h1>{{ key }}</h1>
-                </div>
-                <div v-if="isLive">
-                    <div v-for="(competition, key) in countryName.competitions" :key="key">
-                        <h2>{{ key }}</h2>
-                        <Game :item="item" v-for="item in competition" :key="item.fixture.id"></Game>
-                    </div>
-                </div>
-                <div v-else>
-                    <div v-if="countryName == isShown && isSelected">
-                        <div v-for="(competition, key) in isShown.competitions" :key="key">
-                            <h2>{{ key }}</h2>
+                <CardCountry v-if="countryName" :country="countryName" :name="key" :isOpen="countryName == isShown && isSelected ? 'isOpen' : ''">
+                    <div v-if="isLive">
+                        <div v-for="(competition, key) in countryName.competitions" :key="key">
+                            <CardLeague :name="key" :league="competition" />
+
                             <Game :item="item" v-for="item in competition" :key="item.fixture.id"></Game>
                         </div>
                     </div>
-                </div>
+                    <div v-else class="align--full">
+                        <div v-if="countryName == isShown && isSelected">
+                            <div v-for="(competition, key) in isShown.competitions" :key="key">
+                                <CardLeague :name="key" :league="competition" />
+                                <Game :item="item" v-for="item in competition" :key="item.fixture.id"></Game>
+                            </div>
+                        </div>
+                    </div>
+                </CardCountry>
             </div>
         </div>
     </div>
@@ -39,14 +37,15 @@
 
     import useLiveGames from "../modules/useLiveGames";
     import useGamesByDate from "../modules/useGamesByDate";
-    import useCalendar from "@/modules/useCalendar";
 
     export default defineComponent({
         components: {
             LazyHydrate,
-            Game: () => import("@/components/Game.vue" /* webpackChunkName: "Game" */),
             Calendar: () => import("@/components/Calendar/Calendar.vue" /* webpackChunkName: "Calendar" */),
-            CalendarBar: () => import("@/components/CalendarBar/CalendarBar.vue" /* webpackChunkName: "Calendar" */)
+            CalendarBar: () => import("@/components/CalendarBar/CalendarBar.vue" /* webpackChunkName: "Calendar" */),
+            CardCountry: () => import("@/components/CardCountry/CardCountry.vue" /* webpackChunkName: "CardCountry" */),
+            CardLeague: () => import("@/components/CardLeague/CardLeague.vue" /* webpackChunkName: "CardLeague" */),
+            Game: () => import("@/components/Game.vue" /* webpackChunkName: "Game" */)
         },
         setup() {
             const getLeagues = ref([]);
@@ -59,20 +58,21 @@
             const liveToggle = computed(() => store.getLiveToggle());
             const { liveGames, loadLiveGames } = useLiveGames();
             const { games, loadGames } = useGamesByDate();
-            const { today, selectDate } = useCalendar();
             const displayOrderedGames = computed(leagues => {
                 sortGamesByCountryAndLeague.value = getLeagues.value?.sort((a, b) => a.league.country.localeCompare(b.league.country) || a.league.id - b.league.id);
                 return sortGamesByCountryAndLeague.value?.reduce((acc, game) => {
                     let league = game.league.name;
                     acc[game.league.country] = acc[game.league.country] || {};
+
                     acc[game.league.country].competitions = acc[game.league.country].competitions || {};
                     acc[game.league.country].competitions[league] = acc[game.league.country].competitions[league] || new Set();
                     acc[game.league.country].competitions[league].add(game);
+
                     acc[game.league.country].image = game.league.flag;
-                    /*
-               acc[game.league.country][league] = acc[game.league.country][league] || new Set(); */
-                    /*       acc[game.league.country][league]
-               ;/ */
+                    acc[game.league.country].totalGames;
+                    let getNumberOfGamesOfEachCompetition = Object.keys(acc[game.league.country].competitions).map(k => acc[game.league.country].competitions[k].size);
+                    let getTotalGamesLengthForEachCountry = getNumberOfGamesOfEachCompetition.reduce((a, b) => a + b, 0);
+                    acc[game.league.country].totalGames = getTotalGamesLengthForEachCountry;
 
                     return acc;
                 }, {});
@@ -137,6 +137,16 @@
 <style lang="scss">
     div {
         display: block;
+    }
+
+    .leagueTypes {
+        font-size: 14px;
+        font-weight: 600;
+        margin-top: 16px;
+        height: 40px;
+        padding-left: 32px;
+        display: flex;
+        align-items: center;
     }
 
     .ze {
@@ -207,11 +217,6 @@
         grid-column: 1;
     }
 
-    img {
-        width: 15px;
-        margin-right: 10px;
-    }
-
     a {
         display: flex;
         justify-content: space-between;
@@ -219,13 +224,6 @@
         color: #187c56;
     }
 
-    span {
-        font-size: 24px;
-
-        &.goal {
-            color: #7ccc15;
-        }
-    }
     .container {
         margin: 0 auto;
         min-height: 100vh;

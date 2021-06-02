@@ -6,7 +6,10 @@ const state = reactive({
     selectedGameStatistics: {},
     openedGame: {},
     games: {},
-    selectedDate: null,
+    selectedDate: {
+        raw: null,
+        formated: null
+    },
     isCalendarOpen: false
 });
 
@@ -24,9 +27,11 @@ const setGameStatistics = response => {
 
 const setFormatDate = (year, month, day) => {
     const date = new Date(year, month, day);
+    state.selectedDate.raw = date;
+
     const offset = date.getTimezoneOffset();
     let newDate = new Date(date.getTime() - offset * 60 * 1000);
-    state.selectedDate = newDate.toISOString().split("T")[0];
+    state.selectedDate.formated = newDate.toISOString().split("T")[0];
 };
 
 const setLiveToggle = response => {
@@ -65,7 +70,11 @@ const getSpecificGame = payload => {
 };
 
 const getSelectedDate = () => {
-    return state.selectedDate;
+    return state.selectedDate.formated;
+};
+
+const getRawSelectedDate = () => {
+    return state.selectedDate.raw;
 };
 
 const getLiveToggle = () => {
@@ -85,6 +94,7 @@ export default {
     setSingleGame,
     setFormatDate,
     getSelectedDate,
+    getRawSelectedDate,
     setLiveToggle,
     getLiveToggle,
     setCalendarOpen,
