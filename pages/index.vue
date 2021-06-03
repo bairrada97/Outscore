@@ -10,26 +10,27 @@
                     <div v-if="isLive">
                         <div v-for="(competition, key) in countryName.competitions" :key="key">
                             <CardLeague :name="key" :league="competition" />
-
-                            <Game :item="item" v-for="item in competition" :key="item.fixture.id"></Game>
+                            <CardGame :game="game" v-for="game in competition" :key="game.fixture.id" />
+                            <!-- <Game :item="item" v-for="item in competition" :key="item.fixture.id"></Game> -->
                         </div>
                     </div>
                     <div v-else class="align--full">
                         <div v-if="countryName == isShown && isSelected">
                             <div v-for="(competition, key) in isShown.competitions" :key="key">
                                 <CardLeague :name="key" :league="competition" />
-                                <Game :item="item" v-for="item in competition" :key="item.fixture.id"></Game>
+                                <CardGame :game="game" v-for="game in competition" :key="game.fixture.id" />
+                                <!-- <Game :item="item" v-for="item in competition" :key="item.fixture.id"></Game> -->
                             </div>
                         </div>
                     </div>
                 </CardCountry>
             </div>
         </div>
+        <!-- <a class="clearCacheButton" target="_blank" href="https://api-football-v3.herokuapp.com/api/v3/fixtures/?clearCache=all">Clear Cache</a> -->
     </div>
 </template>
 
 <script>
-    // https://api-football-v3.herokuapp.com/api/v3/fixtures/?clearCache=all
     import { defineComponent, reactive, toRefs, ref, onMounted, useFetch, onActivated, onUnmounted, computed, watch } from "@nuxtjs/composition-api";
     import store from "@/store.js";
     import axios from "axios";
@@ -45,6 +46,7 @@
             CalendarBar: () => import("@/components/CalendarBar/CalendarBar.vue" /* webpackChunkName: "Calendar" */),
             CardCountry: () => import("@/components/CardCountry/CardCountry.vue" /* webpackChunkName: "CardCountry" */),
             CardLeague: () => import("@/components/CardLeague/CardLeague.vue" /* webpackChunkName: "CardLeague" */),
+            CardGame: () => import("@/components/CardGame/CardGame.vue" /* webpackChunkName: "CardGame" */),
             Game: () => import("@/components/Game.vue" /* webpackChunkName: "Game" */)
         },
         setup() {
@@ -135,6 +137,13 @@
 </script>
 
 <style lang="scss">
+    .clearCacheButton {
+        position: absolute;
+        top: 50px;
+        left: 50px;
+        border: 1px solid #212121;
+        padding: 8px;
+    }
     div {
         display: block;
     }

@@ -17,6 +17,14 @@ body {
     font-weight: 400;
 }
 
+a {
+    color: currentColor;
+    &:hover {
+        color: currentColor;
+        text-decoration: none;
+    }
+}
+
 .align--full {
     grid-column: 1/-1;
 }

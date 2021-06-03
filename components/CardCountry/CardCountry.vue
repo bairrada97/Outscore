@@ -34,7 +34,6 @@
             }
         },
         setup(props) {
-            console.log(props.country);
             return {};
         }
     };
@@ -54,13 +53,14 @@
         }
 
         &.isOpen {
+            border: 1px solid rgba(183, 183, 183, 0.3);
+
             #{$this}__container {
                 background: var(--color-bg--black);
             }
             #{$this}__dropdown {
                 color: #fff;
                 transform: rotateX(180deg);
-
                 box-sizing: content-box;
             }
         }
