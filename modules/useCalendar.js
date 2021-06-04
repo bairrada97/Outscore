@@ -92,12 +92,12 @@ export default function () {
     };
 
     const currentDateClass = (year, month, day) => {
-        const calenderFullDate = new Date(year, month, day).toDateString();
-        return calenderFullDate === state.currentDate.toDateString() ? "activeDay" : "";
+        const calenderFullDate = new Date(year, month, day)?.toDateString();
+        return calenderFullDate === state.currentDate?.toDateString() ? "activeDay" : "";
     };
 
     const currentSelectedDayClass = (year, month, day) => {
-        const clickedDay = new Date(year, month, day).toDateString();
+        const clickedDay = new Date(year, month, day)?.toDateString();
         return clickedDay === state.selectedDate?.toDateString() ? "selectedDate" : "";
     };
 
@@ -164,7 +164,6 @@ export default function () {
         if (!state.isDragging) return;
         if (userSlideYCoordinate()) return;
         if (userSlideYCoordinate()) return;
-        if (state.diffX <= 10) return; //refactor, make user drag a good amount of X before going to next/prev month otherwise back to original month
         userSlideToRight() ? goNext() : goPrev();
 
         state.isDragging = false;

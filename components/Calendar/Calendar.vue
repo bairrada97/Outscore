@@ -88,7 +88,7 @@
         background-color: #fff;
         overflow: hidden;
         display: grid;
-        max-width: 375px;
+        max-width: 450px;
         transform: translateY(-100%);
         transition: all 0.4s ease;
 

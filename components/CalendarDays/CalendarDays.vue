@@ -1,6 +1,6 @@
 <template>
     <ul class="calendarDays">
-        <li class="calendarDays__dayContainer" :class="[!liveToggle && getRawSelectedDate.toDateString() == day.toDateString() ? currentSelectedDayClass(day.getFullYear(), day.getMonth(), day.getDate()) : '', currentDateClass(day.getFullYear(), day.getMonth(), day.getDate())]" v-for="(day, index) in homepageFiveDays" :key="index" @click="selectDate(day.getFullYear(), day.getMonth(), day.getDate())">
+        <li class="calendarDays__dayContainer" :class="[!liveToggle && isToday(day) ? currentSelectedDayClass(day.getFullYear(), day.getMonth(), day.getDate()) : '', currentDateClass(day.getFullYear(), day.getMonth(), day.getDate())]" v-for="(day, index) in homepageFiveDays" :key="index" @click="selectDate(day.getFullYear(), day.getMonth(), day.getDate())">
             <span class="calendarDays__numericDay">{{ day.toLocaleDateString("default", { day: "numeric" }) }}</span>
             <span class="calendarDays__weekDay">{{ day.toLocaleDateString("default", { weekday: "short" }) }}</span>
         </li>
@@ -17,6 +17,7 @@
             const { homepageFiveDays, selectDate, currentSelectedDayClass, currentDateClass, selectedDate } = useCalendar();
             const liveToggle = computed(() => store.getLiveToggle());
             const getRawSelectedDate = computed(() => store.getRawSelectedDate());
+            const isToday = day => getRawSelectedDate.value?.toDateString() == day?.toDateString();
 
             return {
                 homepageFiveDays,
@@ -25,7 +26,8 @@
                 currentSelectedDayClass,
                 liveToggle,
                 currentDateClass,
-                getRawSelectedDate
+                getRawSelectedDate,
+                isToday
             };
         }
     };

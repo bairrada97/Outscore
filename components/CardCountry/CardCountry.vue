@@ -3,10 +3,10 @@
         <div class="cardCountry__container">
             <img class="cardCountry__logo" width="24" height="24" :src="country.image" :alt="name + ' logo'" />
             <h3 class="cardCountry__name">{{ name }}</h3>
-            <span class="cardCountry__gamesNumber" v-if="!liveToggle">
+            <span class="cardCountry__gamesNumber">
                 <span v-if="country.totalLiveGames" :class="{ cardCountry__liveGamesNumber: hasLiveGames }">{{ country.totalLiveGames }}</span>
-                <span v-if="country.totalLiveGames">/</span>
-                <span class="cardCountry__totalGamesNumber">{{ country.totalGames }}</span>
+                <span v-if="country.totalLiveGames && !liveToggle">/</span>
+                <span v-if="!liveToggle" class="cardCountry__totalGamesNumber">{{ country.totalGames }}</span>
             </span>
             <svg class="cardCountry__dropdown" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M7.41 8.29492L12 12.8749L16.59 8.29492L18 9.70492L12 15.7049L6 9.70492L7.41 8.29492Z" fill="currentcolor" />
