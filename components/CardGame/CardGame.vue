@@ -35,10 +35,7 @@
                 type: Object
             }
         },
-        setup(props) {
-            const { game } = props;
-            let gameEventsLength = game.events.length;
-            console.log(gameEventsLength);
+        setup() {
             const getDate = timestamp => {
                 let hours = new Date(timestamp).getHours();
                 let minutes = new Date(timestamp).getMinutes();
@@ -49,7 +46,6 @@
                 return hours + ":" + minutes;
             };
 
-            const checkIfGoalWasScored = () => {};
             return { getDate };
         }
     };
