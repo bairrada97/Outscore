@@ -90,9 +90,6 @@
                 } else {
                     openGames.value.push(countryName);
                 }
-
-                // countryName != isShown.value ? (isSelected.value = true) : "";
-                // isShown.value = countryName;
             };
 
             const toggleLive = () => {
