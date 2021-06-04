@@ -16,7 +16,7 @@
                 </CardCountry>
             </div>
         </div>
-        <a class="clearCacheButton" target="_blank" href="https://api-football-v3.herokuapp.com/api/v3/fixtures/?clearCache=all">Clear Cache</a>
+        <!-- <a class="clearCacheButton" target="_blank" href="https://api-football-v3.herokuapp.com/api/v3/fixtures/?clearCache=all">Clear Cache</a> -->
     </div>
 </template>
 
