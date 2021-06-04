@@ -1,6 +1,6 @@
 <template>
-    <nuxt-link class="cardGame" :to="{ name: 'game', query: { fixture: game.fixture.id } }">
-        <span class="cardGame__status" v-if="game.fixture.status.short == '1H' || game.fixture.status.short == '2H'">{{ game.fixture.status.elapsed }}’</span>
+    <nuxt-link :class="{ isGameLive: isGameLive() }" class="cardGame" :to="{ name: 'game', query: { fixture: game.fixture.id } }">
+        <span class="cardGame__status" v-if="isGameLive()">{{ game.fixture.status.elapsed }}’</span>
         <span class="cardGame__status" v-else>{{ game.fixture.status.short != "NS" && game.fixture.status.short != "PST" ? game.fixture.status.short : getDate(game.fixture.date) }}</span>
         <div class="cardGame__teamsContainer">
             <div class="cardGame__team">
@@ -35,7 +35,11 @@
                 type: Object
             }
         },
-        setup() {
+        setup(props) {
+            const { game } = props;
+            const isGameLive = () => {
+                return game.fixture.status.short == "1H" || game.fixture.status.short == "2H" || game.fixture.status.short == "HT";
+            };
             const getDate = timestamp => {
                 let hours = new Date(timestamp).getHours();
                 let minutes = new Date(timestamp).getMinutes();
@@ -46,7 +50,7 @@
                 return hours + ":" + minutes;
             };
 
-            return { getDate };
+            return { getDate, isGameLive };
         }
     };
 </script>
@@ -61,6 +65,10 @@
 
         &:not(&:last-of-type) {
             border-bottom: 1px solid rgba(183, 183, 183, 0.3);
+        }
+
+        &.isGameLive {
+            border-left: 4px solid var(--color-primary);
         }
 
         &.goalScored {

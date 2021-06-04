@@ -7,11 +7,10 @@
             <h2 class="leagueTypes">National Leagues</h2>
             <div @click="openGame(countryName)" v-for="(countryName, key) in displayOrderedGames" :key="key">
                 <CardCountry v-if="countryName" :country="countryName" :name="key" :isOpen="countryName == isShown && isSelected ? 'isOpen' : ''">
-                    <div v-if="isLive">
+                    <div v-if="liveToggle" class="align--full">
                         <div v-for="(competition, key) in countryName.competitions" :key="key">
                             <CardLeague :name="key" :league="competition" />
                             <CardGame :game="game" v-for="game in competition" :key="game.fixture.id" />
-                            <!-- <Game :item="item" v-for="item in competition" :key="item.fixture.id"></Game> -->
                         </div>
                     </div>
                     <div v-else class="align--full">
@@ -19,14 +18,13 @@
                             <div v-for="(competition, key) in isShown.competitions" :key="key">
                                 <CardLeague :name="key" :league="competition" />
                                 <CardGame :game="game" v-for="game in competition" :key="game.fixture.id" />
-                                <!-- <Game :item="item" v-for="item in competition" :key="item.fixture.id"></Game> -->
                             </div>
                         </div>
                     </div>
                 </CardCountry>
             </div>
         </div>
-        <!-- <a class="clearCacheButton" target="_blank" href="https://api-football-v3.herokuapp.com/api/v3/fixtures/?clearCache=all">Clear Cache</a> -->
+        <a class="clearCacheButton" target="_blank" href="https://api-football-v3.herokuapp.com/api/v3/fixtures/?clearCache=all">Clear Cache</a>
     </div>
 </template>
 
@@ -55,7 +53,6 @@
             const isSelected = ref(false);
             const selectedDate = computed(() => store.getSelectedDate());
             const sortGamesByCountryAndLeague = ref(null);
-            const isLive = ref(false);
             const loading = ref(true);
             const liveToggle = computed(() => store.getLiveToggle());
             const { liveGames, loadLiveGames } = useLiveGames();
@@ -64,17 +61,29 @@
                 sortGamesByCountryAndLeague.value = getLeagues.value?.sort((a, b) => a.league.country.localeCompare(b.league.country) || a.league.id - b.league.id);
                 return sortGamesByCountryAndLeague.value?.reduce((acc, game) => {
                     let league = game.league.name;
+                    let isGameLive = game.fixture.status.short == "1H" || game.fixture.status.short == "2H";
                     acc[game.league.country] = acc[game.league.country] || {};
 
                     acc[game.league.country].competitions = acc[game.league.country].competitions || {};
                     acc[game.league.country].competitions[league] = acc[game.league.country].competitions[league] || new Set();
                     acc[game.league.country].competitions[league].add(game);
-
                     acc[game.league.country].image = game.league.flag;
-                    acc[game.league.country].totalGames;
+
                     let getNumberOfGamesOfEachCompetition = Object.keys(acc[game.league.country].competitions).map(k => acc[game.league.country].competitions[k].size);
                     let getTotalGamesLengthForEachCountry = getNumberOfGamesOfEachCompetition.reduce((a, b) => a + b, 0);
                     acc[game.league.country].totalGames = getTotalGamesLengthForEachCountry;
+
+                    let getNumberOfLiveGamesOfEachCompetition = Object.keys(acc[game.league.country].competitions)
+                        .map(k => {
+                            return [...acc[game.league.country].competitions[k]].filter(game => {
+                                return game.fixture.status.short == "1H" || game.fixture.status.short == "2H" || game.fixture.status.short == "HT";
+                            });
+                        })
+                        .flat(Infinity)
+                        .filter(a => a != "");
+                    let getTotalLiveGamesLengthForEachCountry = [...getNumberOfLiveGamesOfEachCompetition].length;
+
+                    acc[game.league.country].totalLiveGames = getTotalLiveGamesLengthForEachCountry;
 
                     return acc;
                 }, {});
@@ -100,6 +109,8 @@
             };
 
             const { fetch, fetchState } = useFetch(async () => {
+                loading.value = true;
+
                 await loadGames().then(() => {
                     getLeagues.value = games.value.response;
                     loading.value = false;
@@ -128,9 +139,8 @@
                 openGame,
                 isShown,
                 isSelected,
-                isLive,
-                toggleLive,
-                loading
+                loading,
+                liveToggle
             };
         }
     });

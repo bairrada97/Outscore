@@ -1,13 +1,14 @@
 <template>
-    <div class="cardCountry" :class="{ isOpen }">
+    <div class="cardCountry" :class="{ isOpen: isOpen || liveToggle }">
         <div class="cardCountry__container">
             <img class="cardCountry__logo" width="24" height="24" :src="country.image" :alt="name + ' logo'" />
             <h3 class="cardCountry__name">{{ name }}</h3>
-            <span class="cardCountry__gamesNumber">
-                <span class="cardCountry__liveGamesNumber"></span>
+            <span class="cardCountry__gamesNumber" v-if="!liveToggle">
+                <span v-if="country.totalLiveGames" :class="{ cardCountry__liveGamesNumber: hasLiveGames }">{{ country.totalLiveGames }}</span>
+                <span v-if="country.totalLiveGames">/</span>
                 <span class="cardCountry__totalGamesNumber">{{ country.totalGames }}</span>
             </span>
-            <svg class="cardCountry__dropdown" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg v-if="!liveToggle" class="cardCountry__dropdown" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M7.41 8.29492L12 12.8749L16.59 8.29492L18 9.70492L12 15.7049L6 9.70492L7.41 8.29492Z" fill="currentcolor" />
             </svg>
         </div>
@@ -34,7 +35,14 @@
             }
         },
         setup(props) {
-            return {};
+            const { country } = props;
+            const liveToggle = computed(() => store.getLiveToggle());
+            const hasLiveGames = country.totalLiveGames > 0;
+            console.log(country.totalLiveGames);
+            return {
+                liveToggle,
+                hasLiveGames
+            };
         }
     };
 </script>
@@ -47,7 +55,7 @@
             display: grid;
             grid-template-columns: 40px 1fr auto auto;
             gap: 0 16px;
-            padding: 8px 0;
+            padding: 8px 16px;
             align-items: center;
             border-bottom: 1px solid rgba(183, 183, 183, 0.3);
         }
@@ -66,7 +74,6 @@
         }
 
         &__logo {
-            padding-left: 16px;
             box-sizing: content-box;
         }
 
@@ -75,16 +82,18 @@
             font-weight: 400;
         }
 
-        &__totalGamesNumber {
+        &__gamesNumber {
             font-size: 14px;
-            margin-right: 8px;
+        }
+
+        &__liveGamesNumber {
+            color: #ffa800;
         }
 
         &__dropdown {
+            grid-column: -1;
             transition: transform 0.3s ease;
-            padding-right: 16px;
             padding-left: 0;
-
             box-sizing: content-box;
         }
     }
