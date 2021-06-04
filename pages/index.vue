@@ -6,19 +6,11 @@
         <div v-else>
             <h2 class="leagueTypes">National Leagues</h2>
             <div @click="openGame(countryName)" v-for="(countryName, key) in displayOrderedGames" :key="key">
-                <CardCountry v-if="countryName" :country="countryName" :name="key" :isOpen="countryName == isShown && isSelected ? 'isOpen' : ''">
-                    <div v-if="liveToggle" class="align--full">
-                        <div v-for="(competition, key) in countryName.competitions" :key="key">
+                <CardCountry v-if="countryName" :country="countryName" :name="key" :isOpen="getOpenGame(countryName) ? 'isOpen' : ''">
+                    <div class="align--full" v-if="getOpenGame(countryName)">
+                        <div v-for="(competition, key) in getOpenGame(countryName).competitions" :key="key">
                             <CardLeague :name="key" :league="competition" />
                             <CardGame :game="game" v-for="game in competition" :key="game.fixture.id" />
-                        </div>
-                    </div>
-                    <div v-else class="align--full">
-                        <div v-if="countryName == isShown && isSelected">
-                            <div v-for="(competition, key) in isShown.competitions" :key="key">
-                                <CardLeague :name="key" :league="competition" />
-                                <CardGame :game="game" v-for="game in competition" :key="game.fixture.id" />
-                            </div>
                         </div>
                     </div>
                 </CardCountry>
@@ -49,7 +41,8 @@
         },
         setup() {
             const getLeagues = ref([]);
-            const isShown = ref(null);
+            const openGames = ref([]);
+            const isShown = ref(false);
             const isSelected = ref(false);
             const selectedDate = computed(() => store.getSelectedDate());
             const sortGamesByCountryAndLeague = ref(null);
@@ -89,10 +82,17 @@
                 }, {});
             });
 
+            const getOpenGame = game => openGames.value.find(item => item == game);
             const openGame = countryName => {
                 delete countryName.image;
-                countryName != isShown.value ? (isSelected.value = true) : (isSelected.value = !isSelected.value);
-                isShown.value = countryName;
+                if (openGames.value.includes(countryName)) {
+                    openGames.value = openGames.value.filter(game => game != countryName);
+                } else {
+                    openGames.value.push(countryName);
+                }
+
+                // countryName != isShown.value ? (isSelected.value = true) : "";
+                // isShown.value = countryName;
             };
 
             const toggleLive = () => {
@@ -137,10 +137,12 @@
                 getLeagues,
                 displayOrderedGames,
                 openGame,
-                isShown,
+                openGames,
                 isSelected,
                 loading,
-                liveToggle
+                liveToggle,
+                isShown,
+                getOpenGame
             };
         }
     });
