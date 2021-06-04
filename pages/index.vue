@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="">
         <Calendar />
         <CalendarBar />
         <div v-if="loading">Loading...</div>
