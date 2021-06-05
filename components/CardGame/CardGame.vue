@@ -1,5 +1,5 @@
 <template>
-    <nuxt-link :class="{ isGameLive: isGameLive() }" class="cardGame" :to="{ name: 'game', query: { fixture: game.fixture.id } }">
+    <nuxt-link :class="{ isGameLive: isGameLive() }" class="cardGame" :to="{ name: 'match', query: { fixture: game.fixture.id } }">
         <span class="cardGame__status" v-if="isGameLive()">{{ game.fixture.status.elapsed }}’</span>
         <span class="cardGame__status" v-else>{{ game.fixture.status.short != "NS" && game.fixture.status.short != "PST" ? game.fixture.status.short : getDate(game.fixture.date) }}</span>
         <div class="cardGame__teamsContainer">
@@ -41,8 +41,8 @@
                 return game.fixture.status.short == "1H" || game.fixture.status.short == "2H" || game.fixture.status.short == "HT";
             };
             const getDate = timestamp => {
-                let hours = new Date(timestamp).getHours();
-                let minutes = new Date(timestamp).getMinutes();
+                let hours = new Date(timestamp * 1000).getHours();
+                let minutes = new Date(timestamp * 1000).getMinutes();
 
                 hours = hours < 10 ? "0" + hours : hours;
                 minutes = minutes < 10 ? "0" + minutes : minutes;

@@ -36,8 +36,7 @@
             CalendarBar: () => import("@/components/CalendarBar/CalendarBar.vue" /* webpackChunkName: "Calendar" */),
             CardCountry: () => import("@/components/CardCountry/CardCountry.vue" /* webpackChunkName: "CardCountry" */),
             CardLeague: () => import("@/components/CardLeague/CardLeague.vue" /* webpackChunkName: "CardLeague" */),
-            CardGame: () => import("@/components/CardGame/CardGame.vue" /* webpackChunkName: "CardGame" */),
-            Game: () => import("@/components/Game.vue" /* webpackChunkName: "Game" */)
+            CardGame: () => import("@/components/CardGame/CardGame.vue" /* webpackChunkName: "CardGame" */)
         },
         setup() {
             const getLeagues = ref([]);
@@ -90,6 +89,9 @@
                 } else {
                     openGames.value.push(countryName);
                 }
+
+                // countryName != isShown.value ? (isSelected.value = true) : "";
+                // isShown.value = countryName;
             };
 
             const toggleLive = () => {
@@ -153,9 +155,6 @@
         border: 1px solid #212121;
         padding: 8px;
     }
-    div {
-        display: block;
-    }
 
     .leagueTypes {
         font-size: 14px;
@@ -165,109 +164,5 @@
         padding-left: 32px;
         display: flex;
         align-items: center;
-    }
-
-    .ze {
-        margin-bottom: 10px;
-    }
-
-    .toggleLive {
-        all: unset;
-        width: 40px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: black;
-        border: 1px solid #187c56;
-        border-radius: 50%;
-        outline-color: none;
-        height: 40px;
-        margin-top: 30px;
-        background: transparent;
-        &.active {
-            background: #187c56;
-            color: white;
-        }
-    }
-    .country {
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-    }
-
-    h2 {
-        font-size: 16px;
-    }
-    .teams {
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr 1fr;
-        width: 100%;
-        border-bottom: 1px solid #187c56;
-        padding: 20px 0;
-    }
-
-    .homeTeam,
-    .awayTeam {
-        display: grid;
-
-        .detail {
-            grid-row: 1;
-        }
-
-        .goal {
-            grid-row: 1;
-            justify-self: flex-end;
-        }
-    }
-    .time {
-        grid-row: 1/3;
-        align-self: center;
-        margin-left: 20px;
-    }
-    .homeTeam {
-        grid-column: 1;
-        grid-row: 1;
-    }
-
-    .awayTeam {
-        grid-row: 2;
-        grid-column: 1;
-    }
-
-    a {
-        display: flex;
-        justify-content: space-between;
-        text-decoration: none;
-        color: #187c56;
-    }
-
-    .container {
-        margin: 0 auto;
-        min-height: 100vh;
-        display: flex;
-        padding: 0 1%;
-        flex-direction: column;
-    }
-
-    .title {
-        font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        display: block;
-        font-weight: 300;
-        font-size: 100px;
-        color: #35495e;
-        letter-spacing: 1px;
-    }
-
-    .subtitle {
-        font-weight: 300;
-        font-size: 42px;
-        color: #526488;
-        word-spacing: 5px;
-        padding-bottom: 15px;
-    }
-
-    .links {
-        padding-top: 15px;
     }
 </style>

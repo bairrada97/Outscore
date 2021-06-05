@@ -42,6 +42,9 @@
         display: grid;
         grid-template-columns: auto 1fr auto;
         background: #f1f1f1;
+        position: sticky;
+        top: 0;
+        left: 0;
 
         &__liveToggleButton {
             display: flex;

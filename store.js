@@ -4,7 +4,7 @@ const state = reactive({
     liveToggle: false,
     liveGames: {},
     selectedGameStatistics: {},
-    openedGame: {},
+    selectedMatch: {},
     games: {},
     selectedDate: {
         raw: null,
@@ -58,12 +58,12 @@ const getGameStatistics = () => {
     return state.selectedGameStatistics;
 };
 
-const setSingleGame = response => {
-    state.openedGame = response;
+const setSelectedMatch = response => {
+    state.selectedMatch = response;
 };
 
-const getSingleGame = () => {
-    return state.openedGame;
+const getSelectedMatch = () => {
+    return state.selectedMatch;
 };
 
 const getSpecificGame = payload => {
@@ -88,11 +88,11 @@ export default {
     getLiveGames,
     setGames,
     getGames,
-    getSingleGame,
+    getSelectedMatch,
     setGameStatistics,
     getGameStatistics,
     getSpecificGame,
-    setSingleGame,
+    setSelectedMatch,
     setFormatDate,
     getSelectedDate,
     getRawSelectedDate,
