@@ -8,9 +8,9 @@
                 </div>
                 <div class="matchInfo__statusContainer">
                     <div class="matchInfo__scoreContainer">
-                        <span class="matchInfo__score" v-for="(score, index) in match.goals" :key="index">{{ score }}</span>
+                        <span class="matchInfo__score" v-for="(score, index) in match.goals" :key="index">{{ score ? score : 0 }}</span>
                     </div>
-                    <span class="matchInfo____status">{{ match.fixture.status.elapsed }}</span>
+                    <span class="matchInfo____status">{{ match.fixture.status.short == "FT" ? "FT" : match.fixture.status.elapsed ? match.fixture.status.elapsed : getDate(match.fixture.timestamp) }}</span>
                 </div>
             </div>
             <div class="matchInfo__timerContainer">
@@ -66,10 +66,16 @@
 
         &__teamsContainer {
             display: grid;
-            grid-template-columns: auto auto auto;
+            grid-template-columns: 1fr 1fr 1fr;
             justify-content: space-around;
             align-items: center;
             margin-bottom: 16px;
+        }
+
+        &__teams {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         &__team {
