@@ -38,7 +38,7 @@
             const { country } = props;
             const liveToggle = computed(() => store.getLiveToggle());
             const hasLiveGames = country.totalLiveGames > 0;
-            console.log(country.totalLiveGames);
+
             return {
                 liveToggle,
                 hasLiveGames

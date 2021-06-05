@@ -36,7 +36,6 @@ const setFormatDate = (year, month, day) => {
 
 const setLiveToggle = response => {
     state.liveToggle = !response;
-    console.log(state);
 };
 
 const setCalendarOpen = response => {
