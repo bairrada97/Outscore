@@ -1,7 +1,7 @@
 <template>
     <nuxt-link :class="{ isGameLive: isGameLive() }" class="cardGame" :to="{ name: 'match', query: { fixture: game.fixture.id } }">
         <span class="cardGame__status" v-if="isGameLive()">{{ game.fixture.status.elapsed }}’</span>
-        <span class="cardGame__status" v-else>{{ game.fixture.status.short != "NS" && game.fixture.status.short != "PST" ? game.fixture.status.short : getDate(game.fixture.date) }}</span>
+        <span class="cardGame__status" v-else>{{ game.fixture.status.short != "NS" && game.fixture.status.short != "PST" ? game.fixture.status.short : getDate(game.fixture.timestamp) }}</span>
         <div class="cardGame__teamsContainer">
             <div class="cardGame__team">
                 <span class="cardGame__team__goal">{{ game.goals.home }}</span>
