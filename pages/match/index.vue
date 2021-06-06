@@ -1,6 +1,7 @@
 <template>
     <div class="matchDetail">
         <MatchInfo :match="selectedMatch" />
+        <MatchOverview :match="selectedMatch" />
     </div>
 </template>
 
@@ -12,7 +13,8 @@
 
     export default {
         components: {
-            MatchInfo: () => import("@/components/MatchInfo/MatchInfo.vue" /* webpackChunkName: "MatchInfo" */)
+            MatchInfo: () => import("@/components/MatchInfo/MatchInfo.vue" /* webpackChunkName: "MatchInfo" */),
+            MatchOverview: () => import("@/components/MatchOverview/MatchOverview.vue" /* webpackChunkName: "MatchInfo" */)
         },
         setup() {
             const { query } = useContext();
@@ -37,8 +39,6 @@
             onActivated(() => {
                 fetch();
             });
-
-            fetch();
 
             return {
                 selectedMatch
