@@ -1,12 +1,12 @@
 <template>
-    <div class="matchDetail">
-        <MatchInfo :match="selectedMatch" />
-        <MatchOverview :match="selectedMatch" />
+    <div class="matchDetail" v-if="!fetchState.pending">
+        <MatchInfo :match="selectedMatch" v-if="selectedMatch" />
+        <MatchOverview :match="selectedMatch" v-if="selectedMatch" />
     </div>
 </template>
 
 <script>
-    import { reactive, toRefs, ref, onMounted, useFetch, useContext, onActivated, computed, onDeactivated, watch } from "@nuxtjs/composition-api";
+    import { reactive, toRefs, ref, onMounted, useFetch, useContext, onActivated, computed, onDeactivated, watch, onUpdated } from "@nuxtjs/composition-api";
 
     import store from "@/store.js";
     import axios from "axios";
@@ -18,11 +18,12 @@
         },
         setup() {
             const { query } = useContext();
-            const selectedMatch = ref(null);
+            const selectedMatch = ref({});
 
             const useSelectedMatch = async () => {
                 await fetchMatchById();
                 selectedMatch.value = store.getSelectedMatch();
+
                 return { ...toRefs(selectedMatch.value) };
             };
 
@@ -32,16 +33,23 @@
                 });
             };
 
-            const { fetch, fetchState } = useFetch(async () => {
+            const { fetch, fetchState } = useFetch(async context => {
                 selectedMatch.value = await useSelectedMatch();
             });
+
+            fetch();
 
             onActivated(() => {
                 fetch();
             });
 
+            onUpdated(() => {
+                selectedMatch.value = store.getSelectedMatch();
+            });
+
             return {
-                selectedMatch
+                selectedMatch,
+                fetchState
             };
         }
     };

@@ -1,5 +1,5 @@
 <template>
-    <div class="cardEvent" :data-side="event.side">
+    <div class="cardEvent" v-if="event" :data-side="event.side">
         <span class="cardEvent__time">{{ event.time.elapsed }}'</span>
         <img class="cardEvent__icon" :src="getEventIcon(event.detail)" />
         <div class="cardEvent__playerContainer">
@@ -21,7 +21,6 @@
             }
         },
         setup(props) {
-            const eventIcon = ref("");
             const { event } = props;
             const getEventIcon = typeDetail => {
                 switch (typeDetail) {

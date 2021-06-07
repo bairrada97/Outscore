@@ -1,7 +1,7 @@
 <template>
-    <div class="matchInfo" v-if="match">
+    <div class="matchInfo">
         <div class="matchInfo__container">
-            <div class="matchInfo__teamsContainer">
+            <div class="matchInfo__teamsContainer" v-if="match.teams">
                 <div class="matchInfo__teams" v-for="team in match.teams" :key="team.id">
                     <img class="matchInfo__teamsLogo" width="48" height="48" :src="team.logo" :alt="team.logo + ' logo'" />
                     <h3 class="matchInfo__team">{{ team.name }}</h3>
@@ -10,15 +10,15 @@
                     <div class="matchInfo__scoreContainer">
                         <span class="matchInfo__score" v-for="(score, index) in match.goals" :key="index">{{ score ? score : 0 }}</span>
                     </div>
-                    <span class="matchInfo____status">{{ match.fixture.status.short == "FT" ? "FT" : match.fixture.status.elapsed ? match.fixture.status.elapsed : getDate(match.fixture.timestamp) }}</span>
+                    <!-- <span class="matchInfo____status" v-if="match.fixture">{{ match.fixture.status.short == "FT" ? "FT" : match.fixture.status.elapsed ? match.fixture.status.elapsed : getDate(match.fixture.timestamp) }}</span> -->
                 </div>
             </div>
             <div class="matchInfo__timerContainer">
                 <div class="matchInfo__bar">
-                    <div class="matchInfo__timerProgress" :style="{ width: convertMatchCurrentTimeInWidth(match.fixture.status.elapsed) }"></div>
+                    <div class="matchInfo__timerProgress" v-if="match.fixture" :style="{ width: convertMatchCurrentTimeInWidth(match.fixture.status.elapsed) }"></div>
                 </div>
                 <div class="matchInfo__labelsContainer">
-                    <span class="matchInfo__label">{{ getDate(match.fixture.timestamp) }}</span>
+                    <!-- <span class="matchInfo__label">{{ getDate(match.fixture.timestamp) }}</span> -->
                     <span class="matchInfo__label">HT</span>
                     <span class="matchInfo__label">FT</span>
                 </div>
