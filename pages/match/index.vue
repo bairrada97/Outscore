@@ -1,8 +1,17 @@
 <template>
-    <div class="matchDetail" v-if="!fetchState.pending">
+    <div class="matchDetail" v-if="selectedMatch">
         <MatchInfo :match="selectedMatch" v-if="selectedMatch" />
-        <MatchOverview :match="selectedMatch" v-if="selectedMatch" />
+
+        <MatchTabsWrapper>
+            <MatchTab title="Overview"><MatchOverview :matchDetail="selectedMatch" /> </MatchTab>
+            <MatchTab title="Lineup">Line-up</MatchTab>
+            <MatchTab title="Stats">Stats</MatchTab>
+            <MatchTab title="BestHelper">Best Helper</MatchTab>
+            <MatchTab title="H2H">H2H</MatchTab>
+            <MatchTab title="Standings">Standings</MatchTab>
+        </MatchTabsWrapper>
     </div>
+    <div v-else>loading...</div>
 </template>
 
 <script>
@@ -14,38 +23,37 @@
     export default {
         components: {
             MatchInfo: () => import("@/components/MatchInfo/MatchInfo.vue" /* webpackChunkName: "MatchInfo" */),
-            MatchOverview: () => import("@/components/MatchOverview/MatchOverview.vue" /* webpackChunkName: "MatchInfo" */)
+            MatchTabsWrapper: () => import("@/components/MatchTabsWrapper/MatchTabsWrapper.vue" /* webpackChunkName: "MatchTabsWrapper" */),
+            MatchTab: () => import("@/components/MatchTab/MatchTab.vue" /* webpackChunkName: "MatchTab" */),
+            MatchOverview: () => import("@/components/MatchOverview/MatchOverview.vue" /* webpackChunkName: "MatchOverview" */)
         },
         setup() {
             const { query } = useContext();
             const selectedMatch = ref({});
 
             const useSelectedMatch = async () => {
-                await fetchMatchById();
-                selectedMatch.value = store.getSelectedMatch();
-
-                return { ...toRefs(selectedMatch.value) };
-            };
-
-            const fetchMatchById = async () => {
                 await axios.get(`https://api-football-v3.herokuapp.com/api/v3/fixtures?id=${query.value.fixture}`).then(response => {
                     store.setSelectedMatch(response.data.response[0]);
+                    selectedMatch.value = response.data.response[0];
                 });
             };
 
             const { fetch, fetchState } = useFetch(async context => {
-                selectedMatch.value = await useSelectedMatch();
+                await useSelectedMatch();
             });
 
             fetch();
 
-            onActivated(() => {
-                fetch();
-            });
-
             onUpdated(() => {
                 selectedMatch.value = store.getSelectedMatch();
             });
+
+            watch(
+                () => query.value.fixture,
+                (newValue, prevValue) => {
+                    fetch();
+                }
+            );
 
             return {
                 selectedMatch,

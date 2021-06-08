@@ -35,7 +35,7 @@
                     case "Yellow Card":
                         require("~/assets/icons/event__cardYellow.svg");
                     case "Second Yellow Card":
-                        return require("~/assets/icons/event__cardSecondYellow.svg");
+                        return require("~/assets/icons/event__cardYellow.svg");
                     case "Red Card":
                         return require("~/assets/icons/event__cardRed.svg");
                     case "Substitution 1":
@@ -47,6 +47,8 @@
                     case "Substitution 4":
                         return require("~/assets/icons/event__sub.svg");
                     case "Substitution 5":
+                        return require("~/assets/icons/event__sub.svg");
+                    case "Substitution 6":
                         return require("~/assets/icons/event__sub.svg");
                     case "Goal Cancelled":
                         return require("~/assets/icons/event__cardRed.svg");
