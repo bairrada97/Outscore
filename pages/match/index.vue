@@ -1,8 +1,8 @@
 <template>
-    <div class="matchDetail" v-if="selectedMatch">
+    <div class="matchDetail">
         <MatchInfo :match="selectedMatch" v-if="selectedMatch" />
 
-        <MatchTabsWrapper>
+        <MatchTabsWrapper v-if="!fetchState.pending">
             <MatchTab title="Overview"><MatchOverview :matchDetail="selectedMatch" /> </MatchTab>
             <MatchTab title="Lineup">Line-up</MatchTab>
             <MatchTab title="Stats">Stats</MatchTab>
@@ -11,7 +11,6 @@
             <MatchTab title="Standings">Standings</MatchTab>
         </MatchTabsWrapper>
     </div>
-    <div v-else>loading...</div>
 </template>
 
 <script>
@@ -38,18 +37,14 @@
                 });
             };
 
-            const { fetch, fetchState } = useFetch(async context => {
+            const { fetch, fetchState } = useFetch(async () => {
                 await useSelectedMatch();
             });
 
             fetch();
 
-            onUpdated(() => {
-                selectedMatch.value = store.getSelectedMatch();
-            });
-
             watch(
-                () => query.value.fixture,
+                () => parseInt(query.value.fixture),
                 (newValue, prevValue) => {
                     fetch();
                 }

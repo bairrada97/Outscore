@@ -1,13 +1,13 @@
 <template>
-    <nuxt-link :class="{ isGameLive: isGameLive() }" class="cardGame" :to="{ name: 'match', query: { fixture: game.fixture.id } }">
+    <nuxt-link :class="{ isGameLive: isGameLive(), goalScored: hasScored }" class="cardGame" :to="{ name: 'match', query: { fixture: game.fixture.id } }">
         <span class="cardGame__status" v-if="isGameLive()">{{ game.fixture.status.elapsed }}’</span>
         <span class="cardGame__status" v-else>{{ game.fixture.status.short == "NS" ? getDate(game.fixture.timestamp) : game.fixture.status.short }}</span>
         <div class="cardGame__teamsContainer">
-            <div class="cardGame__team">
+            <div class="cardGame__team" :class="{ teamScored: game.teams.home.name == teamScored }">
                 <span class="cardGame__team__goal">{{ game.goals.home }}</span>
                 <span class="cardGame__team__name">{{ game.teams.home.name }}</span>
             </div>
-            <div class="cardGame__team">
+            <div class="cardGame__team" :class="{ teamScored: game.teams.away.name == teamScored }">
                 <span class="cardGame__team__goal">{{ game.goals.away }}</span>
                 <span class="cardGame__team__name">{{ game.teams.away.name }}</span>
             </div>
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-    import { watch, computed, ref } from "@nuxtjs/composition-api";
+    import { watch, computed, ref, onMounted } from "@nuxtjs/composition-api";
     import useCalendar from "../../modules/useCalendar";
     import store from "@/store.js";
 
@@ -37,9 +37,27 @@
         },
         setup(props) {
             const { game } = props;
+            const teamScored = ref("");
+            const hasScored = ref(false);
             const isGameLive = () => {
                 return game.fixture.status.short == "1H" || game.fixture.status.short == "2H" || game.fixture.status.short == "HT";
             };
+
+            const goalScored = () => {
+                if (!isGameLive() || !game.events) return;
+                const lastEvent = game.events[game.events.length - 1];
+                if (!game.events?.length || lastEvent.type != "Goal") return;
+
+                setInterval(function () {
+                    teamScored.value = "";
+                    hasScored.value = false;
+                    return false;
+                }, 60000);
+                teamScored.value = lastEvent.team.name;
+                hasScored.value = lastEvent.time.elapsed < game.fixture.status.elapsed;
+            };
+
+            // goalScored();
             const getDate = timestamp => {
                 let hours = new Date(timestamp * 1000).getHours();
                 let minutes = new Date(timestamp * 1000).getMinutes();
@@ -50,7 +68,7 @@
                 return hours + ":" + minutes;
             };
 
-            return { getDate, isGameLive };
+            return { getDate, isGameLive, goalScored, teamScored, hasScored };
         }
     };
 </script>
@@ -88,6 +106,10 @@
         &__team {
             display: flex;
             gap: 0 8px;
+
+            &.teamScored {
+                font-weight: 600;
+            }
         }
 
         &__viewMoreIcon {

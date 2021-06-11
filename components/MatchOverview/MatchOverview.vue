@@ -1,5 +1,5 @@
 <template>
-    <div class="matchOverview" v-if="reversePeriods">
+    <div class="matchOverview" v-if="matchDetail">
         <div class="matchOverview__period" v-for="(periods, name) in reversePeriods" :key="name">
             <h3 class="matchOverview__periodName">{{ periods.period }} Half</h3>
             <div class="matchOverview__periodTeam">
@@ -25,7 +25,6 @@
         },
         setup(props) {
             const match = ref(props.matchDetail);
-            const reversePeriods = ref({});
 
             const displayEvents = computed(() => {
                 return props.matchDetail.events?.reduce((acc, event) => {
@@ -47,8 +46,8 @@
                 }, {});
             });
 
-            setTimeout(() => {
-                reversePeriods.value = Object.keys(displayEvents.value)
+            const reversePeriods = computed(() => {
+                return Object.keys(displayEvents.value)
                     .reverse()
                     .map(key => {
                         const events = Array.from(displayEvents.value[key]);
@@ -59,7 +58,7 @@
                             events
                         };
                     });
-            }, 100);
+            });
 
             // watch(
             //     () => displayEvents.value,

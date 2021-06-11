@@ -53,7 +53,7 @@
                 sortGamesByCountryAndLeague.value = getLeagues.value?.sort((a, b) => a.league.country.localeCompare(b.league.country) || a.league.id - b.league.id);
                 return sortGamesByCountryAndLeague.value?.reduce((acc, game) => {
                     let league = game.league.name;
-                    let isGameLive = game.fixture.status.short == "1H" || game.fixture.status.short == "2H";
+
                     acc[game.league.country] = acc[game.league.country] || {};
 
                     acc[game.league.country].competitions = acc[game.league.country].competitions || {};
@@ -89,9 +89,6 @@
                 } else {
                     openGames.value.push(countryName);
                 }
-
-                // countryName != isShown.value ? (isSelected.value = true) : "";
-                // isShown.value = countryName;
             };
 
             const toggleLive = () => {
