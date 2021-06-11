@@ -1,7 +1,7 @@
 <template>
     <div class="cardCountry" :class="{ isOpen: isOpen }">
         <div class="cardCountry__container">
-            <img class="cardCountry__logo" width="24" height="24" :src="country.image" :alt="name + ' logo'" />
+            <nuxt-img v-if="country.image" class="cardCountry__logo" width="24" height="24" :src="country.image" :alt="name + ' logo'" />
             <h3 class="cardCountry__name">{{ name }}</h3>
             <span class="cardCountry__gamesNumber">
                 <span v-if="country.totalLiveGames" :class="{ cardCountry__liveGamesNumber: hasLiveGames }">{{ country.totalLiveGames }}</span>

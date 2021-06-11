@@ -113,6 +113,15 @@ export default {
         fallback: true
     },
     image: {
+        presets: {
+            team: {
+                modifiers: {
+                    format: "webp",
+                    width: 48,
+                    height: 48
+                }
+            }
+        },
         domains: ["https://media.api-sports.io"]
     },
 

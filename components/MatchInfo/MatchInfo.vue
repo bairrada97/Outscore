@@ -3,7 +3,7 @@
         <div class="matchInfo__container">
             <div class="matchInfo__teamsContainer" v-if="match.teams">
                 <div class="matchInfo__teams" v-for="team in match.teams" :key="team.id">
-                    <img class="matchInfo__teamsLogo" width="48" height="48" :src="team.logo" :alt="team.logo + ' logo'" />
+                    <nuxt-picture loading="lazy" v-if="team.logo" class="matchInfo__teamsLogo" width="48" height="48" sizes="sm:48px md:48px lg:48px" :src="team.logo" :alt="team.name + ' logo'" />
                     <h3 class="matchInfo__team">{{ team.name }}</h3>
                 </div>
                 <div class="matchInfo__statusContainer">

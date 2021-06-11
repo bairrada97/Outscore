@@ -1,7 +1,7 @@
 <template>
     <div class="MatchTabsWrapper">
         <ul>
-            <li v-for="title in tabTitles" :key="title" @click="selectedTab = title">{{ title }}</li>
+            <li v-if="title" v-for="title in tabTitles" :key="title" @click="selectedTab = title">{{ title }}</li>
         </ul>
 
         <slot />
