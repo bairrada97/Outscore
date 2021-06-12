@@ -64,6 +64,7 @@
             font-weight: 600;
             text-align: center;
             text-transform: uppercase;
+            cursor: pointer;
 
             &.selected {
                 border-bottom: 1px solid var(--color-primary);
