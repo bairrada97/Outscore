@@ -59,11 +59,11 @@
                 if (selectedTabIndex == 0 || selectedTabIndex == tabs.length - 1) return;
                 if (selectedTabIndex == tabs.length - 3 || selectedTabIndex == tabs.length - 2) {
                     tabsList.style.transform = `translateX(${-tabsListWidth + 94 * 4 - 16}px)`;
+                    state.diffX = 204;
                 } else {
                     tabsList.style.transform = `translateX(${-tabsListWidth + 94 * (tabs.length - selectedTabIndex + 1)}px)`;
+                    state.diffX = `${-tabsListWidth + 94 * (tabs.length - selectedTabIndex + 1)}`;
                 }
-
-                state.diffX = 0;
             };
 
             const userNotStartedDrag = () => state.initialX === null || state.initialY === null || !state.isStartTouch;
@@ -81,7 +81,7 @@
             const startTouch = event => {
                 const isTargetTabs = event => event.target.closest(".matchTabsWrapper__list");
                 if (!isTargetTabs(event)) return;
-
+                console.log(state.diffX, state.initialX);
                 state.initialX = event instanceof MouseEvent ? (state.diffX += event.clientX) : (state.diffX += event.touches[0].clientX);
                 state.initialY = event instanceof MouseEvent ? event.clientY : event.touches[0].clientY;
                 state.isStartTouch = true;
@@ -102,11 +102,13 @@
 
                 if (state.diffX > 204) {
                     tabs.style.transform = `translate3d(${-tabs.scrollWidth + 94 * 4 - 16}px, 0, 0) `;
+                    state.diffX = 204;
                     return;
                 }
 
                 if (state.diffX < 0) {
                     tabs.style.transform = `translate3d(0px, 0, 0) `;
+                    state.diffX = 0;
                     return;
                 }
                 userSlideToRight() ? (tabs.style.transform = `translate3d(-${state.diffX}px, 0, 0) `) : (tabs.style.transform = `translate3d(${-state.diffX}px, 0, 0) `);
