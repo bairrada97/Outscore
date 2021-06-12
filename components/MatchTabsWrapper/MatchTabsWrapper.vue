@@ -33,19 +33,11 @@
                 selectedTab.value = title;
                 const tabsList = matchDetail.value.querySelector(".matchTabsWrapper__list");
                 const tabsListWidth = tabsList.scrollWidth;
-                const tabsListVisibleWidth = tabsList.clientWidth;
                 const tabs = matchDetail.value.querySelectorAll(".matchTabsWrapper__tab");
-                const selectedTabElement = [...tabs].find(tab => tab.classList.contains("selected"));
-                const thirdTabElement = [...tabs].find((tab, index) => index == 2);
-                const secondTabElement = [...tabs].find((tab, index) => index == 1);
-                if (selectedTab.value.toLowerCase() == thirdTabElement.innerText.toLowerCase()) {
-                    const slideToTheEnd = tabsListWidth - tabsListVisibleWidth;
-                    tabsList.style.transform = `translateX(${-slideToTheEnd}px)`;
-                }
+                const selectedTabIndex = [...tabs].findIndex((element, index) => element.innerText.toLowerCase() == selectedTab.value.toLowerCase());
 
-                if (selectedTab.value.toLowerCase() == secondTabElement.innerText.toLowerCase()) {
-                    tabsList.style.transform = `translateX(0)`;
-                }
+                if (selectedTabIndex == 0 || selectedTabIndex == tabs.length - 1 || selectedTabIndex == tabs.length - 2) return;
+                tabsList.style.transform = `translateX(${-tabsListWidth + 94 * (tabs.length + 1 - selectedTabIndex)}px)`;
             };
             return {
                 tabTitles,
