@@ -1,7 +1,7 @@
 <template>
     <div class="matchTabsWrapper" ref="matchDetail">
         <ul class="matchTabsWrapper__list">
-            <li class="matchTabsWrapper__tab" :class="{ selected: selectedTab == title }" v-for="title in tabTitles" :key="title" @click.stop="slideTabs(title)">
+            <li class="matchTabsWrapper__tab" :class="{ selected: selectedTab == title }" v-for="title in tabTitles" :key="title" @click="slideTabs(title)">
                 {{ title }}
             </li>
         </ul>
@@ -61,10 +61,10 @@
                     state.diffX = 0;
                 } else if (selectedTabIndex == tabs.length - 3 || selectedTabIndex == tabs.length - 2 || selectedTabIndex == tabs.length - 1) {
                     tabsList.style.transform = `translateX(${-(tabsListWidth - tabsList.clientWidth)}px)`;
-                    state.diffX = tabsListWidth - tabsList.clientWidth;
+                    state.diffX = parseInt(tabsListWidth - tabsList.clientWidth);
                 } else {
                     tabsList.style.transform = `translateX(${-tabsListWidth + 94 * (tabs.length - selectedTabIndex + 1)}px)`;
-                    state.diffX = `${-tabsListWidth + 94 * (tabs.length - selectedTabIndex + 1)}`;
+                    state.diffX = parseInt(`${-tabsListWidth + 94 * (tabs.length - selectedTabIndex + 1)}`);
                 }
             };
 
@@ -99,8 +99,6 @@
 
                 tabs.style.transition = "none";
                 if (state.diffX > tabs.scrollWidth - tabs.clientWidth) {
-                    console.log("entrou");
-
                     tabs.style.transform = `translate3d(${-(tabs.scrollWidth - tabs.clientWidth)}px, 0, 0) `;
                     state.diffX = tabs.scrollWidth - tabs.clientWidth;
                     return;
