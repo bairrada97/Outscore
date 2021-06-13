@@ -51,7 +51,6 @@
 
             const slideTabs = title => {
                 selectedTab.value = title;
-                if (state.isDragging) return;
                 const tabsList = matchDetail.value.querySelector(".matchTabsWrapper__list");
                 const tabsListWidth = tabsList.scrollWidth;
                 const tabs = matchDetail.value.querySelectorAll(".matchTabsWrapper__tab");
@@ -84,7 +83,6 @@
             const startTouch = event => {
                 const isTargetTabs = event => event.target.closest(".matchTabsWrapper__list");
                 if (!isTargetTabs(event)) return;
-                console.log(state.diffX, state.initialX);
                 state.initialX = event instanceof MouseEvent ? (state.diffX += event.clientX) : (state.diffX += event.touches[0].clientX);
                 state.initialY = event instanceof MouseEvent ? event.clientY : event.touches[0].clientY;
                 state.isStartTouch = true;
@@ -94,7 +92,6 @@
                 if (userNotStartedDrag()) return;
                 setSliderValues(event);
                 translateCalendarOnSwipe(tabsList);
-                event.preventDefault();
             };
 
             const translateCalendarOnSwipe = tabs => {
@@ -119,9 +116,6 @@
             };
 
             const touchEnd = event => {
-                event.preventDefault();
-                event.stopPropagation();
-
                 const tabsList = matchDetail.value.querySelector(".matchTabsWrapper__list");
                 state.isStartTouch = false;
                 if (!state.isDragging) return;
