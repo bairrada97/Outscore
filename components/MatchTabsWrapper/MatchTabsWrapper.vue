@@ -1,7 +1,7 @@
 <template>
     <div class="matchTabsWrapper" ref="matchDetail">
         <ul class="matchTabsWrapper__list">
-            <li class="matchTabsWrapper__tab" :class="{ selected: selectedTab == title }" v-for="title in tabTitles" :key="title" @click="slideTabs(title)">
+            <li class="matchTabsWrapper__tab" :class="{ selected: selectedTab == title }" v-for="title in tabTitles" :key="title" @click.stop="slideTabs(title)">
                 {{ title }}
             </li>
         </ul>
@@ -51,15 +51,18 @@
 
             const slideTabs = title => {
                 selectedTab.value = title;
+                if (state.isDragging) return;
                 const tabsList = matchDetail.value.querySelector(".matchTabsWrapper__list");
                 const tabsListWidth = tabsList.scrollWidth;
                 const tabs = matchDetail.value.querySelectorAll(".matchTabsWrapper__tab");
                 const selectedTabIndex = [...tabs].findIndex((element, index) => element.innerText.toLowerCase() == selectedTab.value.toLowerCase());
-
-                if (selectedTabIndex == 0 || selectedTabIndex == tabs.length - 1) return;
-                if (selectedTabIndex == tabs.length - 3 || selectedTabIndex == tabs.length - 2) {
-                    tabsList.style.transform = `translateX(${-tabsListWidth + 94 * 4 - 16}px)`;
-                    state.diffX = 204;
+                console.log(tabs.length, selectedTabIndex);
+                if (selectedTabIndex == 0 || selectedTabIndex == 1) {
+                    tabsList.style.transform = `translateX(0px)`;
+                    state.diffX = 0;
+                } else if (selectedTabIndex == tabs.length - 3 || selectedTabIndex == tabs.length - 2 || selectedTabIndex == tabs.length - 1) {
+                    tabsList.style.transform = `translateX(${-(tabsListWidth - tabsList.clientWidth)}px)`;
+                    state.diffX = tabsListWidth - tabsList.clientWidth;
                 } else {
                     tabsList.style.transform = `translateX(${-tabsListWidth + 94 * (tabs.length - selectedTabIndex + 1)}px)`;
                     state.diffX = `${-tabsListWidth + 94 * (tabs.length - selectedTabIndex + 1)}`;
@@ -96,13 +99,13 @@
 
             const translateCalendarOnSwipe = tabs => {
                 if (userSlideYCoordinate()) return;
-                const tabsList = matchDetail.value.querySelector(".matchTabsWrapper__list");
-                tabsList.style.transition = "none";
-                const tabsElements = tabs.querySelectorAll(".matchTabsWrapper__tab");
 
-                if (state.diffX > 204) {
-                    tabs.style.transform = `translate3d(${-tabs.scrollWidth + 94 * 4 - 16}px, 0, 0) `;
-                    state.diffX = 204;
+                tabs.style.transition = "none";
+                if (state.diffX > tabs.scrollWidth - tabs.clientWidth) {
+                    console.log("entrou");
+
+                    tabs.style.transform = `translate3d(${-(tabs.scrollWidth - tabs.clientWidth)}px, 0, 0) `;
+                    state.diffX = tabs.scrollWidth - tabs.clientWidth;
                     return;
                 }
 
@@ -112,15 +115,20 @@
                     return;
                 }
                 userSlideToRight() ? (tabs.style.transform = `translate3d(-${state.diffX}px, 0, 0) `) : (tabs.style.transform = `translate3d(${-state.diffX}px, 0, 0) `);
+                return;
             };
 
-            const touchEnd = () => {
+            const touchEnd = event => {
+                event.preventDefault();
+                event.stopPropagation();
+
+                const tabsList = matchDetail.value.querySelector(".matchTabsWrapper__list");
                 state.isStartTouch = false;
                 if (!state.isDragging) return;
                 if (userSlideYCoordinate()) return;
-                const tabsList = matchDetail.value.querySelector(".matchTabsWrapper__list");
                 tabsList.style.transition = "transform 0.3s ease";
-                //userSlideToRight() ? goNext() : goPrev();
+
+                // userSlideToRight() ? (tabsList.style.transform = `translate3d(-${state.diffX}px, 0, 0) `) : (tabsList.style.transform = `translate3d(${-state.diffX}px, 0, 0) `);
 
                 state.isDragging = false;
             };
