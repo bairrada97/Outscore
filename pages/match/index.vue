@@ -5,7 +5,7 @@
         <MatchTabsWrapper v-if="selectedMatch">
             <MatchTab title="Overview"><MatchOverview :matchDetail="selectedMatch" /> </MatchTab>
             <MatchTab title="Lineup">Line-up</MatchTab>
-            <MatchTab title="Stats">Stats</MatchTab>
+            <MatchTab title="Stats"><MatchStatistics :matchDetail="selectedMatch" /></MatchTab>
             <MatchTab title="BestHelper">Best Helper</MatchTab>
             <MatchTab title="H2H">H2H</MatchTab>
             <MatchTab title="Standings">Standings</MatchTab>
@@ -24,7 +24,8 @@
             MatchInfo: () => import("@/components/MatchInfo/MatchInfo.vue" /* webpackChunkName: "MatchInfo" */),
             MatchTabsWrapper: () => import("@/components/MatchTabsWrapper/MatchTabsWrapper.vue" /* webpackChunkName: "MatchTabsWrapper" */),
             MatchTab: () => import("@/components/MatchTab/MatchTab.vue" /* webpackChunkName: "MatchTab" */),
-            MatchOverview: () => import("@/components/MatchOverview/MatchOverview.vue" /* webpackChunkName: "MatchOverview" */)
+            MatchOverview: () => import("@/components/MatchOverview/MatchOverview.vue" /* webpackChunkName: "MatchOverview" */),
+            MatchStatistics: () => import("@/components/MatchStatistics/MatchStatistics.vue" /* webpackChunkName: "MatchStatistics" */)
         },
         setup() {
             const { query } = useContext();

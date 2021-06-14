@@ -83,7 +83,6 @@
 
             const getOpenGame = game => openGames.value.find(item => item == game);
             const openGame = countryName => {
-                delete countryName.image;
                 if (openGames.value.includes(countryName)) {
                     openGames.value = openGames.value.filter(game => game != countryName);
                 } else {

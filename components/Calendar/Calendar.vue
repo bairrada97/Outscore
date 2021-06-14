@@ -91,6 +91,7 @@
         max-width: 450px;
         transform: translateY(-100%);
         transition: all 0.4s ease;
+        z-index: 3;
 
         &.isOpen {
             opacity: 1;
