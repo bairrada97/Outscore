@@ -28,10 +28,7 @@
         },
         setup(props) {
             const sumOfStatistics = Object.values(props.statistics).reduce((a, b) => a.value + b.value);
-
-            const convertStatsInWidth = stat => {
-                return (stat * 100) / sumOfStatistics + "%";
-            };
+            const convertStatsInWidth = stat => (stat * 100) / sumOfStatistics + "%";
 
             return {
                 convertStatsInWidth
@@ -47,12 +44,11 @@
         &__container {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
-            grid-template-rows: repeat(2, 1fr);
             gap: 4px;
         }
 
         &__teamName {
-            grid-column: 3/5;
+            grid-column: 2/6;
             grid-row: 1;
             justify-self: center;
         }
