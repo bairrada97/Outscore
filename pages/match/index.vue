@@ -1,11 +1,11 @@
 <template>
     <div class="matchDetail" v-if="!fetchState.pending">
-        <MatchInfo :match="selectedMatch" v-if="selectedMatch" />
+        <MatchInfo :match="selectedMatch" />
 
         <MatchTabsWrapper v-if="selectedMatch">
-            <MatchTab title="Overview"><MatchOverview :matchDetail="selectedMatch" /> </MatchTab>
+            <MatchTab title="Overview"><MatchOverview v-if="selectedMatch" :matchDetail="selectedMatch" /> </MatchTab>
             <MatchTab title="Lineup">Line-up</MatchTab>
-            <MatchTab title="Stats"><MatchStatistics :matchDetail="selectedMatch" /></MatchTab>
+            <MatchTab title="Stats"><MatchStatistics v-if="selectedMatch" :matchDetail="selectedMatch" /></MatchTab>
             <MatchTab title="BestHelper">Best Helper</MatchTab>
             <MatchTab title="H2H">H2H</MatchTab>
             <MatchTab title="Standings">Standings</MatchTab>
@@ -14,17 +14,21 @@
 </template>
 
 <script>
-    import { reactive, toRefs, ref, onMounted, useFetch, useContext, onActivated, computed, onDeactivated, watch, onUpdated } from "@nuxtjs/composition-api";
+    import { reactive, toRefs, ref, onMounted, useFetch, useContext, onActivated, onUnmounted, onDeactivated, watch, onUpdated } from "@nuxtjs/composition-api";
 
     import store from "@/store.js";
     import axios from "axios";
+    import MatchTabsWrapper from "@/components/MatchTabsWrapper/MatchTabsWrapper.vue";
+    import MatchTab from "@/components/MatchTab/MatchTab.vue";
+    import MatchInfo from "@/components/MatchInfo/MatchInfo.vue";
+    import MatchOverview from "@/components/MatchOverview/MatchOverview.vue";
 
     export default {
         components: {
-            MatchInfo: () => import("@/components/MatchInfo/MatchInfo.vue" /* webpackChunkName: "MatchInfo" */),
-            MatchTabsWrapper: () => import("@/components/MatchTabsWrapper/MatchTabsWrapper.vue" /* webpackChunkName: "MatchTabsWrapper" */),
-            MatchTab: () => import("@/components/MatchTab/MatchTab.vue" /* webpackChunkName: "MatchTab" */),
-            MatchOverview: () => import("@/components/MatchOverview/MatchOverview.vue" /* webpackChunkName: "MatchOverview" */),
+            MatchInfo,
+            MatchOverview,
+            MatchTabsWrapper,
+            MatchTab,
             MatchStatistics: () => import("@/components/MatchStatistics/MatchStatistics.vue" /* webpackChunkName: "MatchStatistics" */)
         },
         setup() {
@@ -45,6 +49,8 @@
             watch(
                 () => parseInt(query.value.fixture),
                 (newValue, prevValue) => {
+                    if (!query.value.fixture) return;
+
                     fetch();
                 }
             );

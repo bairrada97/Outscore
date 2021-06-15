@@ -16,6 +16,11 @@
     import axios from "axios";
 
     export default defineComponent({
+        props: {
+            title: {
+                type: String
+            }
+        },
         setup(props, { slots }) {
             const state = reactive({
                 initialX: null,
@@ -30,8 +35,9 @@
             const matchDetail = ref("");
             const tabTitles = ref({});
             const selectedTab = ref({});
+
             onMounted(() => {
-                tabTitles.value = slots.default().map(tab => tab.asyncMeta?.data.attrs.title);
+                tabTitles.value = slots.default().map(tab => tab.componentOptions?.propsData.title);
                 tabTitles.value = tabTitles.value.filter(item => !!item);
 
                 selectedTab.value = tabTitles.value[0];
@@ -46,7 +52,6 @@
                 body.addEventListener("mouseup", touchEnd, { passive: false });
                 body.addEventListener("touchend", touchEnd, { passive: false });
             });
-
             provide("selectedTab", selectedTab);
 
             const slideTabs = title => {

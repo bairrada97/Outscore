@@ -1,5 +1,5 @@
 <template>
-    <div class="matchOverview" v-if="matchDetail">
+    <div class="matchOverview">
         <div class="matchOverview__period" v-for="(periods, name) in reversePeriods" :key="name">
             <h3 class="matchOverview__periodName">{{ periods.period }} Half</h3>
             <div class="matchOverview__periodTeam">
@@ -10,7 +10,7 @@
 </template>
 
 <script>
-    import { reactive, watch, computed, ref, onMounted } from "@nuxtjs/composition-api";
+    import { reactive, watch, computed, ref, onMounted, onBeforeUnmount } from "@nuxtjs/composition-api";
     import useCalendar from "../../modules/useCalendar";
     import store from "@/store.js";
 
@@ -24,8 +24,6 @@
             }
         },
         setup(props) {
-            const match = ref(props.matchDetail);
-
             const displayEvents = computed(() => {
                 return props.matchDetail.events?.reduce((acc, event) => {
                     let homeTeam = computed(() => props.matchDetail.teams.home);
@@ -69,8 +67,7 @@
 
             return {
                 displayEvents,
-                reversePeriods,
-                match
+                reversePeriods
             };
         }
     };

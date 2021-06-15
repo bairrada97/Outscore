@@ -23,8 +23,6 @@
             }
         },
         setup(props) {
-            let homeTeam = ref(props.matchDetail.teams.home.name);
-            let awayTeam = ref(props.matchDetail.teams.away.name);
             const displayStatistics = computed(() => {
                 return props.matchDetail.statistics?.reduce((acc, stats) => {
                     stats.statistics.forEach(stat => {
@@ -32,9 +30,8 @@
 
                         acc[stat.type].home = acc[stat.type].home || {};
                         acc[stat.type].away = acc[stat.type].away || {};
-                        acc[stat.type].home.name = homeTeam.value;
-                        acc[stat.type].away.name = awayTeam.value;
-
+                        acc[stat.type].home.name = props.matchDetail.teams.home.name;
+                        acc[stat.type].away.name = props.matchDetail.teams.away.name;
                         if (acc[stat.type].home.name == stats.team.name) acc[stat.type].home.value = stat.value;
                         if (acc[stat.type].away.name == stats.team.name) acc[stat.type].away.value = stat.value;
                     });

@@ -123,6 +123,8 @@
             );
 
             fetch();
+
+            store.setSelectedMatch({});
             /*     onActivated(() => fetch());
             const interval = setInterval(() => fetch(), 15000); */
 
