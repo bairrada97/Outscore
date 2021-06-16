@@ -7,7 +7,7 @@
             <MatchTab title="Lineup">Line-up</MatchTab>
             <MatchTab title="Stats"><MatchStatistics v-if="selectedMatch" :matchDetail="selectedMatch" /></MatchTab>
             <MatchTab title="BestHelper">Best Helper</MatchTab>
-            <MatchTab title="H2H">H2H</MatchTab>
+            <MatchTab title="H2H"><MatchH2H v-if="selectedMatch" :matchDetail="selectedMatch" /></MatchTab>
             <MatchTab title="Standings">Standings</MatchTab>
         </MatchTabsWrapper>
     </div>
@@ -22,6 +22,8 @@
     import MatchTab from "@/components/MatchTab/MatchTab.vue";
     import MatchInfo from "@/components/MatchInfo/MatchInfo.vue";
     import MatchOverview from "@/components/MatchOverview/MatchOverview.vue";
+    import MatchStatistics from "@/components/MatchStatistics/MatchStatistics.vue";
+    import MatchH2H from "@/components/MatchH2H/MatchH2H.vue";
 
     export default {
         components: {
@@ -29,7 +31,8 @@
             MatchOverview,
             MatchTabsWrapper,
             MatchTab,
-            MatchStatistics: () => import("@/components/MatchStatistics/MatchStatistics.vue" /* webpackChunkName: "MatchStatistics" */)
+            MatchStatistics,
+            MatchH2H
         },
         setup() {
             const { query } = useContext();
@@ -49,7 +52,7 @@
             watch(
                 () => parseInt(query.value.fixture),
                 (newValue, prevValue) => {
-                    if (!query.value.fixture) return;
+                    if (!parseInt(query.value.fixture)) return;
 
                     fetch();
                 }
