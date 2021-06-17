@@ -13,10 +13,11 @@
     import { reactive, watch, computed, ref, onMounted, onBeforeUnmount } from "@nuxtjs/composition-api";
     import useCalendar from "../../modules/useCalendar";
     import store from "@/store.js";
+    import CardEvent from "@/components/CardEvent/CardEvent.vue";
 
     export default {
         components: {
-            CardEvent: () => import("@/components/CardEvent/CardEvent.vue" /* webpackChunkName: "CardEvent" */)
+            CardEvent
         },
         props: {
             matchDetail: {

@@ -18,6 +18,8 @@
 
     import store from "@/store.js";
     import axios from "axios";
+    import useMatchesById from "@/modules/useMatchesById";
+
     import MatchTabsWrapper from "@/components/MatchTabsWrapper/MatchTabsWrapper.vue";
     import MatchTab from "@/components/MatchTab/MatchTab.vue";
     import MatchInfo from "@/components/MatchInfo/MatchInfo.vue";
@@ -36,17 +38,10 @@
         },
         setup() {
             const { query } = useContext();
-            const selectedMatch = ref({});
-
-            const useSelectedMatch = async () => {
-                await axios.get(`https://api-football-v3.herokuapp.com/api/v3/fixtures?id=${query.value.fixture}`).then(response => {
-                    store.setSelectedMatch(response.data.response[0]);
-                    selectedMatch.value = response.data.response[0];
-                });
-            };
+            const { selectedMatch, loadMatchById } = useMatchesById();
 
             const { fetch, fetchState } = useFetch(async () => {
-                await useSelectedMatch();
+                await loadMatchById(parseInt(query.value.fixture));
             });
 
             watch(

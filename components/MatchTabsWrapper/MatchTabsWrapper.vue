@@ -11,7 +11,7 @@
 </template>
 
 <script>
-    import { defineComponent, provide, reactive, ref, onMounted, useFetch, onActivated, computed, watch } from "@nuxtjs/composition-api";
+    import { defineComponent, provide, reactive, ref, onMounted, useFetch, onActivated, computed, watch, useContext } from "@nuxtjs/composition-api";
     import store from "@/store.js";
     import axios from "axios";
 
@@ -22,6 +22,8 @@
             }
         },
         setup(props, { slots }) {
+            const { query } = useContext();
+
             const state = reactive({
                 initialX: null,
                 initialY: null,
@@ -60,7 +62,7 @@
                 const tabsListWidth = tabsList.scrollWidth;
                 const tabs = matchDetail.value.querySelectorAll(".matchTabsWrapper__tab");
                 const selectedTabIndex = [...tabs].findIndex((element, index) => element.innerText.toLowerCase() == selectedTab.value.toLowerCase());
-                console.log(tabs.length, selectedTabIndex);
+
                 if (selectedTabIndex == 0 || selectedTabIndex == 1) {
                     tabsList.style.transform = `translateX(0px)`;
                     state.diffX = 0;
@@ -129,6 +131,17 @@
 
                 state.isDragging = false;
             };
+
+            watch(
+                () => parseInt(query.value.fixture),
+                (newValue, prevValue) => {
+                    if (!parseInt(query.value.fixture)) return;
+                    const tabsList = matchDetail.value.querySelector(".matchTabsWrapper__list");
+                    tabsList.style.transform = `translate3d(0px, 0, 0) `;
+                    state.diffX = 0;
+                    selectedTab.value = tabTitles.value[0];
+                }
+            );
 
             return {
                 tabTitles,

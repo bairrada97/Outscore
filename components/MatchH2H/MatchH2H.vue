@@ -42,12 +42,13 @@
 <script>
     import { reactive, watch, computed, ref, toRefs, useFetch, useContext } from "@nuxtjs/composition-api";
     import useH2H from "@/modules/useH2H";
+    import CardGame from "@/components/CardGame/CardGame.vue";
 
     import store from "@/store.js";
 
     export default {
         components: {
-            CardGame: () => import("@/components/CardGame/CardGame.vue" /* webpackChunkName: "CardGame" */)
+            CardGame
         },
         props: {
             matchDetail: {
@@ -56,6 +57,7 @@
         },
         setup(props) {
             const { query } = useContext();
+
             const { loadH2H, h2h, homeTeamH2H, awayTeamH2H } = useH2H();
 
             const state = ref([

@@ -12,10 +12,11 @@
     import { reactive, watch, computed, ref, onMounted } from "@nuxtjs/composition-api";
     import useCalendar from "../../modules/useCalendar";
     import store from "@/store.js";
+    import CardStats from "@/components/CardStats/CardStats.vue";
 
     export default {
         components: {
-            CardStats: () => import("@/components/CardStats/CardStats.vue" /* webpackChunkName: "CardStats" */)
+            CardStats
         },
         props: {
             matchDetail: {
