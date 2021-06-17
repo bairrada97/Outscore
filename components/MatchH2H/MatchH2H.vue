@@ -109,8 +109,6 @@
             watch(
                 () => parseInt(query.value.fixture),
                 (newValue, prevValue) => {
-                    if (!parseInt(query.value.fixture)) return;
-
                     fetch();
                 }
             );
