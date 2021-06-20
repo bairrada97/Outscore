@@ -1,5 +1,11 @@
 <template>
-    <div class="matchH2H" v-if="!fetchState.pending">
+    <div class="matchH2H">
+        <div>
+            <button @click="filterH2H(0)">Overall</button>
+            <button @click="filterH2H(1)">{{ matchDetail.teams.home.name }}</button>
+            <button @click="filterH2H(2)">{{ matchDetail.teams.away.name }}</button>
+        </div>
+
         <div class="matchH2H__container">
             <h3 class="matchH2H__title">head to head</h3>
             <div class="matchH2H__matches">
@@ -12,7 +18,7 @@
                 <path d="M19.9973 13H13.9973V19H11.9973V13H5.99731V11H11.9973V5H13.9973V11H19.9973V13Z" fill="#797979" />
             </svg>
         </button>
-        <div class="matchH2H__container">
+        <div class="matchH2H__container" v-if="homeTeamH2H.length">
             <h3 class="matchH2H__title">Last Matches: {{ matchDetail.teams.home.name }}</h3>
             <div class="matchH2H__matches">
                 <CardGame v-if="showMatches(index, 1)" v-for="(match, index) in homeTeamH2H" :key="match.fixture.id" :game="match" type="H2H" :team="matchDetail.teams.home.id" :winCondition="getWinCondition(match, 'home')" />
@@ -24,7 +30,7 @@
                 <path d="M19.9973 13H13.9973V19H11.9973V13H5.99731V11H11.9973V5H13.9973V11H19.9973V13Z" fill="#797979" />
             </svg>
         </button>
-        <div class="matchH2H__container">
+        <div class="matchH2H__container" v-if="awayTeamH2H.length">
             <h3 class="matchH2H__title">Last Matches: {{ matchDetail.teams.away.name }}</h3>
             <div class="matchH2H__matches">
                 <CardGame v-if="showMatches(index, 2)" v-for="(match, index) in awayTeamH2H" :key="match.fixture.id" :game="match" type="H2H" :team="matchDetail.teams.away.id" :winCondition="getWinCondition(match, 'away')" />
@@ -40,7 +46,7 @@
 </template>
 
 <script>
-    import { reactive, watch, computed, ref, toRefs, useFetch, useContext } from "@nuxtjs/composition-api";
+    import { reactive, watch, computed, ref, onMounted, useFetch, useContext } from "@nuxtjs/composition-api";
     import useH2H from "@/modules/useH2H";
     import CardGame from "@/components/CardGame/CardGame.vue";
 
@@ -57,8 +63,14 @@
         },
         setup(props) {
             const { query } = useContext();
-
-            const { loadH2H, h2h, homeTeamH2H, awayTeamH2H } = useH2H();
+            const { loadH2H, awayTeamH2H, homeTeamH2H, h2h } = useH2H();
+            const originalHomeTeamH2H = computed(() => store.getHomeTeamH2H());
+            const originalAwayTeamH2H = computed(() => store.getAwayTeamH2H());
+            const originalH2H = computed(() => store.getH2H());
+            const showOnlyHome = computed(() => originalHomeTeamH2H.value.filter(match => match.teams.home.id === props.matchDetail.teams.home.id));
+            const showOnlyHomeH2H = computed(() => originalH2H.value.filter(match => match.teams.home.id === props.matchDetail.teams.home.id));
+            const showOnlyAway = computed(() => originalAwayTeamH2H.value.filter(match => match.teams.away.id === props.matchDetail.teams.away.id));
+            const showOnlyAwayH2H = computed(() => originalH2H.value.filter(match => match.teams.away.id === props.matchDetail.teams.away.id));
 
             const state = ref([
                 {
@@ -79,6 +91,26 @@
                 await loadH2H(props.matchDetail.teams);
             });
 
+            const filterH2H = filter => {
+                if (filter == 0) {
+                    homeTeamH2H.value = originalHomeTeamH2H.value;
+                    awayTeamH2H.value = originalAwayTeamH2H.value;
+                    h2h.value = originalH2H.value;
+                }
+                if (filter == 1) {
+                    homeTeamH2H.value = showOnlyHome.value;
+                    h2h.value = showOnlyHomeH2H.value;
+
+                    awayTeamH2H.value = [];
+                }
+                if (filter == 2) {
+                    awayTeamH2H.value = showOnlyAway.value;
+                    h2h.value = showOnlyAwayH2H.value;
+
+                    homeTeamH2H.value = [];
+                }
+            };
+
             const showAllMatchesEvent = selectedH2HIndex => {
                 state.value[selectedH2HIndex].clicked = true;
                 state.value[selectedH2HIndex].maxVisibleMatches = 41;
@@ -89,7 +121,7 @@
             };
 
             const showViewAllButton = (type, stateIndex) => {
-                return type.length > 5 && !state.value[stateIndex].clicked;
+                return type?.length > 5 && !state.value[stateIndex].clicked;
             };
 
             const getWinCondition = (match, side) => {
@@ -123,7 +155,10 @@
                 getWinCondition,
                 state,
                 showMatches,
-                showViewAllButton
+                showViewAllButton,
+                filterH2H,
+                originalAwayTeamH2H,
+                originalHomeTeamH2H
             };
         }
     };

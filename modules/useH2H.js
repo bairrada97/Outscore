@@ -3,11 +3,10 @@ import store from "@/store.js";
 import axios from "axios";
 
 export default function () {
-    const state = reactive({
-        h2h: {},
-        homeTeamH2H: {},
-        awayTeamH2H: {}
-    });
+    const awayTeamH2H = ref([]);
+    const homeTeamH2H = ref([]);
+    const h2h = ref([]);
+
     const loadH2H = async teams => {
         try {
             const { away, home } = teams;
@@ -20,16 +19,18 @@ export default function () {
 
             Promise.all(promiseArray)
                 .then(responses => {
-                    state.awayTeamH2H = computed(() => store.getAwayTeamH2H());
-                    state.homeTeamH2H = computed(() => store.getHomeTeamH2H());
-                    state.h2h = computed(() => store.getH2H());
-                    const hasAwayTeamH2HUpdated = !state.awayTeamH2H.cacheDate || responses[0].data.cacheDate != state.awayTeamH2H.cacheDate;
-                    const hasHomeTeamH2HUpdated = !state.homeTeamH2H.cacheDate || responses[1].data.cacheDate != state.homeTeamH2H.cacheDate;
-                    const hasH2HUpdated = !state.h2h.cacheDate || responses[2].data.cacheDate != state.h2h.cacheDate;
+                    const hasAwayTeamH2HUpdated = !awayTeamH2H.value.cacheDate || responses[0].data.cacheDate != awayTeamH2H.value.cacheDate;
+                    const hasHomeTeamH2HUpdated = !homeTeamH2H.value.cacheDate || responses[1].data.cacheDate != homeTeamH2H.value.cacheDate;
+                    const hasH2HUpdated = !h2h.value.cacheDate || responses[2].data.cacheDate != h2h.value.cacheDate;
 
-                    if (hasAwayTeamH2HUpdated) store.setAwayTeamH2H(responses[0].data.response.sort().reverse());
-                    if (hasHomeTeamH2HUpdated) store.setHomeTeamH2H(responses[1].data.response.sort().reverse());
-                    if (hasH2HUpdated) store.setH2H(responses[2].data.response.sort().reverse());
+                    if (hasAwayTeamH2HUpdated) store.setAwayTeamH2H(responses[0].data.response);
+                    if (hasHomeTeamH2HUpdated) store.setHomeTeamH2H(responses[1].data.response);
+                    if (hasH2HUpdated) store.setH2H(responses[2].data.response);
+                })
+                .then(() => {
+                    awayTeamH2H.value = store.getAwayTeamH2H();
+                    homeTeamH2H.value = store.getHomeTeamH2H();
+                    h2h.value = store.getH2H();
                 })
 
                 .catch(err => {});
@@ -38,6 +39,8 @@ export default function () {
 
     return {
         loadH2H,
-        ...toRefs(state)
+        awayTeamH2H,
+        homeTeamH2H,
+        h2h
     };
 }

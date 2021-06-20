@@ -6,7 +6,7 @@
             <MatchTab title="Overview"><MatchOverview v-if="selectedMatch" :matchDetail="selectedMatch" /> </MatchTab>
             <MatchTab title="Lineup">Line-up</MatchTab>
             <MatchTab title="Stats"><MatchStatistics v-if="selectedMatch" :matchDetail="selectedMatch" /></MatchTab>
-            <MatchTab title="BestHelper">Best Helper</MatchTab>
+            <MatchTab title="BestHelper"><MatchBetsHelper v-if="selectedMatch" :matchDetail="selectedMatch" /></MatchTab>
             <MatchTab title="H2H"><MatchH2H v-if="selectedMatch" :matchDetail="selectedMatch" /></MatchTab>
             <MatchTab title="Standings">Standings</MatchTab>
         </MatchTabsWrapper>
@@ -26,6 +26,7 @@
     import MatchOverview from "@/components/MatchOverview/MatchOverview.vue";
     import MatchStatistics from "@/components/MatchStatistics/MatchStatistics.vue";
     import MatchH2H from "@/components/MatchH2H/MatchH2H.vue";
+    import MatchBetsHelper from "@/components/MatchBetsHelper/MatchBetsHelper.vue";
 
     export default {
         components: {
@@ -34,7 +35,8 @@
             MatchTabsWrapper,
             MatchTab,
             MatchStatistics,
-            MatchH2H
+            MatchH2H,
+            MatchBetsHelper
         },
         setup() {
             const { query } = useContext();

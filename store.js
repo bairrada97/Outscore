@@ -1,39 +1,37 @@
-import { reactive } from "@nuxtjs/composition-api";
+import { reactive, computed } from "@nuxtjs/composition-api";
 
 const state = reactive({
     liveToggle: false,
     liveGames: {},
     selectedGameStatistics: {},
-    selectedMatch: {},
+    selectedMatch: {
+        match: {},
+        awayTeamH2H: [],
+        homeTeamH2H: [],
+        h2h: []
+    },
     games: {},
     selectedDate: {
         raw: null,
         formated: null
     },
-    isCalendarOpen: false,
-    awayTeamH2H: {},
-    homeTeamH2H: {},
-    h2h: {}
+    isCalendarOpen: false
 });
 
-const getAwayTeamH2H = () => {
-    return state.awayTeamH2H;
-};
-const getHomeTeamH2H = () => {
-    return state.homeTeamH2H;
-};
+const getAwayTeamH2H = () => state.selectedMatch.awayTeamH2H;
+const getHomeTeamH2H = () => state.selectedMatch.homeTeamH2H;
 
 const getH2H = () => {
-    return state.h2h;
+    return state.selectedMatch.h2h;
 };
 const setAwayTeamH2H = response => {
-    state.awayTeamH2H = response;
+    state.selectedMatch.awayTeamH2H = response;
 };
 const setHomeTeamH2H = response => {
-    state.homeTeamH2H = response;
+    state.selectedMatch.homeTeamH2H = response;
 };
 const setH2H = response => {
-    state.h2h = response;
+    state.selectedMatch.h2h = response;
 };
 
 const setLiveGames = response => {
@@ -81,11 +79,11 @@ const getGameStatistics = () => {
 };
 
 const setSelectedMatch = response => {
-    state.selectedMatch = response;
+    state.selectedMatch.match = response;
 };
 
 const getSelectedMatch = () => {
-    return state.selectedMatch;
+    return state.selectedMatch.match;
 };
 
 const getSpecificGame = payload => {
