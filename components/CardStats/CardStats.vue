@@ -3,7 +3,7 @@
         <div class="cardStats__container">
             <span class="cardStats__teamName">{{ team }}</span>
             <div class="cardStats__statistics" v-for="(stats, index) in statistics" :key="index">
-                <span>{{ stats.value || 0 }}</span>
+                <span>{{ stats.value || 0 }}{{ lastGamesLength ? `/${lastGamesLength}` : "" }}</span>
                 <div class="cardStats__bar">
                     <div class="cardStats__statsProgress" :style="{ width: convertStatsInWidth(stats.value) + '%' }" :data-id="index"></div>
                 </div>
@@ -24,6 +24,9 @@
             },
             statistics: {
                 type: Object
+            },
+            lastGamesLength: {
+                type: Number
             }
         },
         setup(props) {

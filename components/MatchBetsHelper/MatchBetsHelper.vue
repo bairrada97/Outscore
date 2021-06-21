@@ -4,7 +4,7 @@
             <li class="matchBetsHelper__item" v-for="(category, index) in betsHelper" :key="index">
                 <h3 class="matchBetsHelper__title">{{ index }}</h3>
                 <div class="matchBetsHelper__stats" v-for="(subCategory, index) in category" :key="index">
-                    <CardStats :statistics="subCategory" :team="index" />
+                    <CardStats :statistics="subCategory" :team="index" :lastGamesLength="lastGamesLength" />
                 </div>
             </li>
         </ul>
@@ -29,10 +29,10 @@
         setup(props) {
             const getHomeTeamH2H = computed(() => store.getHomeTeamH2H());
             const getAwayTeamH2H = computed(() => store.getAwayTeamH2H());
-
+            const lastGamesLength = 5;
             const betsHelper = computed(() => {
-                const lasthomeGames = [...getHomeTeamH2H.value].filter((item, index) => index < 5);
-                const lastawayGames = [...getAwayTeamH2H.value].filter((item, index) => index < 5);
+                const lasthomeGames = [...getHomeTeamH2H.value].filter((item, index) => index < lastGamesLength);
+                const lastawayGames = [...getAwayTeamH2H.value].filter((item, index) => index < lastGamesLength);
                 const join = [...lasthomeGames, ...lastawayGames].filter((thing, index, self) => self.findIndex(t => t.fixture.id === t.fixture.id) != index);
 
                 return join.reduce((acc, stats) => {
@@ -41,6 +41,8 @@
                     getGoals(acc, stats, 3.5);
                     getGoals(acc, stats, 4.5);
                     getGoals(acc, stats, 5.5);
+                    getBothTeamsToScore(acc, stats);
+                    getCleanSheet(acc, stats);
 
                     return acc;
                 }, {});
@@ -74,8 +76,67 @@
                 }
             };
 
+            const getBothTeamsToScore = (acc, stats) => {
+                let homeTeam = computed(() => props.matchDetail.teams.home);
+                let awayTeam = computed(() => props.matchDetail.teams.away);
+                const homeTeamSide = Object.values(stats.teams).find(team => team.id === homeTeam.value.id);
+                const awayTeamSide = Object.values(stats.teams).find(team => team.id === awayTeam.value.id);
+                const goalsHome = stats.goals.home;
+                const goalsAway = stats.goals.away;
+
+                acc["Both Teams To Score"] = acc["Both Teams To Score"] || {};
+                acc["Both Teams To Score"][`yes`] = acc["Both Teams To Score"][`yes`] || {};
+                acc["Both Teams To Score"][`yes`].home = acc["Both Teams To Score"][`yes`].home || {};
+                acc["Both Teams To Score"][`yes`].away = acc["Both Teams To Score"][`yes`].away || {};
+                acc["Both Teams To Score"][`yes`].home.name = props.matchDetail.teams.home.name;
+                acc["Both Teams To Score"][`yes`].away.name = props.matchDetail.teams.away.name;
+                acc["Both Teams To Score"][`yes`].home.value = acc["Both Teams To Score"][`yes`].home.value || 0;
+                acc["Both Teams To Score"][`yes`].away.value = acc["Both Teams To Score"][`yes`].away.value || 0;
+
+                if (acc["Both Teams To Score"][`yes`].home.name == homeTeamSide?.name) {
+                    if (goalsHome > 0 && goalsAway > 0) {
+                        acc["Both Teams To Score"][`yes`].home.value++;
+                    }
+                }
+                if (acc["Both Teams To Score"][`yes`].away.name == awayTeamSide?.name) {
+                    if (goalsHome > 0 && goalsAway > 0) {
+                        acc["Both Teams To Score"][`yes`].away.value++;
+                    }
+                }
+            };
+
+            const getCleanSheet = (acc, stats) => {
+                let homeTeam = computed(() => props.matchDetail.teams.home);
+                let awayTeam = computed(() => props.matchDetail.teams.away);
+                const homeTeamSide = Object.values(stats.teams).find(team => team.id === homeTeam.value.id);
+                const awayTeamSide = Object.values(stats.teams).find(team => team.id === awayTeam.value.id);
+                const goalsHome = stats.goals.home;
+                const goalsAway = stats.goals.away;
+
+                acc["Clean Sheet"] = acc["Clean Sheet"] || {};
+                acc["Clean Sheet"][`yes`] = acc["Clean Sheet"][`yes`] || {};
+                acc["Clean Sheet"][`yes`].home = acc["Clean Sheet"][`yes`].home || {};
+                acc["Clean Sheet"][`yes`].away = acc["Clean Sheet"][`yes`].away || {};
+                acc["Clean Sheet"][`yes`].home.name = props.matchDetail.teams.home.name;
+                acc["Clean Sheet"][`yes`].away.name = props.matchDetail.teams.away.name;
+                acc["Clean Sheet"][`yes`].home.value = acc["Clean Sheet"][`yes`].home.value || 0;
+                acc["Clean Sheet"][`yes`].away.value = acc["Clean Sheet"][`yes`].away.value || 0;
+
+                if (acc["Clean Sheet"][`yes`].home.name == homeTeamSide?.name) {
+                    if (goalsHome == 0) {
+                        acc["Clean Sheet"][`yes`].home.value++;
+                    }
+                }
+                if (acc["Clean Sheet"][`yes`].away.name == awayTeamSide?.name) {
+                    if (goalsAway == 0) {
+                        acc["Clean Sheet"][`yes`].away.value++;
+                    }
+                }
+            };
+
             return {
-                betsHelper
+                betsHelper,
+                lastGamesLength
             };
         }
     };
@@ -95,13 +156,14 @@
         }
 
         &__list {
-            border: 1px solid rgba(183, 183, 183, 0.3);
         }
 
         &__item {
             display: grid;
             gap: 24px 0;
             margin-bottom: 16px;
+            padding-bottom: 16px;
+            border: 1px solid rgba(183, 183, 183, 0.3);
         }
 
         &__stats {
