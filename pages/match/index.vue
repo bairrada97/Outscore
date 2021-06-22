@@ -3,18 +3,18 @@
         <MatchInfo :match="selectedMatch" />
 
         <MatchTabsWrapper v-if="selectedMatch">
-            <MatchTab title="Overview"><MatchOverview v-if="selectedMatch" :matchDetail="selectedMatch" /> </MatchTab>
+            <MatchTab title="Overview"><MatchOverview v-if="getSelectedTab == 'Overview'" :matchDetail="selectedMatch" /> </MatchTab>
             <MatchTab title="Lineup">Line-up</MatchTab>
-            <MatchTab title="Stats"><MatchStatistics v-if="selectedMatch" :matchDetail="selectedMatch" /></MatchTab>
-            <MatchTab title="BestHelper"><MatchBetsHelper v-if="selectedMatch" :matchDetail="selectedMatch" /></MatchTab>
-            <MatchTab title="H2H"><MatchH2H v-if="selectedMatch" :matchDetail="selectedMatch" /></MatchTab>
+            <MatchTab title="Stats"><MatchStatistics v-if="getSelectedTab == 'Stats'" :matchDetail="selectedMatch" /></MatchTab>
+            <MatchTab title="BestHelper"><MatchBetsHelper v-if="getSelectedTab == 'BestHelper'" :matchDetail="selectedMatch" /></MatchTab>
+            <MatchTab title="H2H"><MatchH2H v-if="getSelectedTab == 'H2H'" :matchDetail="selectedMatch" /></MatchTab>
             <MatchTab title="Standings">Standings</MatchTab>
         </MatchTabsWrapper>
     </div>
 </template>
 
 <script>
-    import { reactive, toRefs, ref, onMounted, useFetch, useContext, onActivated, onUnmounted, onDeactivated, watch, onUpdated } from "@nuxtjs/composition-api";
+    import { reactive, toRefs, ref, computed, useFetch, useContext, onActivated, onUnmounted, onDeactivated, watch, onUpdated } from "@nuxtjs/composition-api";
 
     import store from "@/store.js";
     import axios from "axios";
@@ -41,6 +41,7 @@
         setup() {
             const { query } = useContext();
             const { selectedMatch, loadMatchById } = useMatchesById();
+            const getSelectedTab = computed(() => store.getSelectedTab());
 
             const { fetch, fetchState } = useFetch(async () => {
                 await loadMatchById(parseInt(query.value.fixture));
@@ -57,7 +58,8 @@
 
             return {
                 selectedMatch,
-                fetchState
+                fetchState,
+                getSelectedTab
             };
         }
     };

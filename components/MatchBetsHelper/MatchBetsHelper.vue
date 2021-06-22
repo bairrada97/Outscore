@@ -1,6 +1,6 @@
 <template>
     <div class="matchBetsHelper">
-        <ul class="matchBetsHelper__list">
+        <ul class="matchBetsHelper__list" v-if="betsHelper">
             <li class="matchBetsHelper__item" v-for="(category, index) in betsHelper" :key="index">
                 <h3 class="matchBetsHelper__title">{{ index }}</h3>
                 <div class="matchBetsHelper__stats" v-for="(subCategory, index) in category" :key="index">
@@ -12,10 +12,11 @@
 </template>
 
 <script>
-    import { reactive, watch, computed, ref, onMounted } from "@nuxtjs/composition-api";
+    import { reactive, watch, computed, ref, useFetch } from "@nuxtjs/composition-api";
     import useCalendar from "../../modules/useCalendar";
     import store from "@/store.js";
     import CardStats from "@/components/CardStats/CardStats.vue";
+    import useH2H from "@/modules/useH2H";
 
     export default {
         components: {
@@ -27,6 +28,7 @@
             }
         },
         setup(props) {
+            const { loadH2H, awayTeamH2H, homeTeamH2H, h2h } = useH2H();
             const getHomeTeamH2H = computed(() => store.getHomeTeamH2H());
             const getAwayTeamH2H = computed(() => store.getAwayTeamH2H());
             const lastGamesLength = 5;
@@ -134,9 +136,16 @@
                 }
             };
 
+            const { fetch, fetchState } = useFetch(async () => {
+                await loadH2H(props.matchDetail.teams);
+            });
+
+            fetch();
+
             return {
                 betsHelper,
-                lastGamesLength
+                lastGamesLength,
+                fetchState
             };
         }
     };

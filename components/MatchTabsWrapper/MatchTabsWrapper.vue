@@ -55,6 +55,7 @@
                 body.addEventListener("touchend", touchEnd, { passive: false });
             });
             provide("selectedTab", selectedTab);
+            store.setSelectedTab(selectedTab);
 
             const slideTabs = title => {
                 selectedTab.value = title;

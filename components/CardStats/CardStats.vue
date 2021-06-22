@@ -88,3 +88,5 @@
         }
     }
 </style>
+
+bar.querySelector(".alertBar__bar").style.transform = `scaleX(${index >= 1 ? 1 - (0.2 * index) : 1})` changeScale += 0.2;

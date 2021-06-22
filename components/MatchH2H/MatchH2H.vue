@@ -6,7 +6,7 @@
             <button @click="filterH2H(2)">{{ matchDetail.teams.away.name }}</button>
         </div>
 
-        <div class="matchH2H__container">
+        <div class="matchH2H__container" v-if="h2h.length">
             <h3 class="matchH2H__title">head to head</h3>
             <div class="matchH2H__matches">
                 <CardGame v-if="showMatches(index, 0)" v-for="(match, index) in h2h" :key="match.fixture.id" :game="match" type="H2H" />
@@ -137,13 +137,6 @@
                     }
                 }
             };
-
-            watch(
-                () => parseInt(query.value.fixture),
-                (newValue, prevValue) => {
-                    fetch();
-                }
-            );
 
             fetch();
             return {

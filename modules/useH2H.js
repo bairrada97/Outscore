@@ -25,7 +25,7 @@ export default function () {
 
                     if (hasAwayTeamH2HUpdated) store.setAwayTeamH2H(responses[0].data.response);
                     if (hasHomeTeamH2HUpdated) store.setHomeTeamH2H(responses[1].data.response);
-                    if (hasH2HUpdated) store.setH2H(responses[2].data.response);
+                    if (hasH2HUpdated) store.setH2H(responses[2].data.response.reverse());
                 })
                 .then(() => {
                     awayTeamH2H.value = store.getAwayTeamH2H();

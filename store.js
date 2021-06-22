@@ -15,11 +15,13 @@ const state = reactive({
         raw: null,
         formated: null
     },
-    isCalendarOpen: false
+    isCalendarOpen: false,
+    selectedTab: ""
 });
 
 const getAwayTeamH2H = () => state.selectedMatch.awayTeamH2H;
 const getHomeTeamH2H = () => state.selectedMatch.homeTeamH2H;
+const getSelectedTab = () => state.selectedTab;
 
 const getH2H = () => {
     return state.selectedMatch.h2h;
@@ -102,6 +104,10 @@ const getLiveToggle = () => {
     return state.liveToggle;
 };
 
+const setSelectedTab = response => {
+    state.selectedTab = response;
+};
+
 export default {
     state,
     setLiveGames,
@@ -125,5 +131,7 @@ export default {
     getH2H,
     setAwayTeamH2H,
     setHomeTeamH2H,
-    setH2H
+    setH2H,
+    setSelectedTab,
+    getSelectedTab
 };
