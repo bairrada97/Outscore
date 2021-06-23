@@ -69,7 +69,8 @@
             };
 
             const getMatchMonth = date => {
-                return (new Date(date).getMonth() < 10 ? "0" : "") + new Date(date).getMonth();
+                var month = new Date(date).getMonth() + 1;
+                return month < 10 ? "0" + month : "" + month;
             };
 
             return { getStartMatchTime, getMatchDay, getMatchMonth, isGameLive, teamScored, hasScored };

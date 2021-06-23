@@ -6,7 +6,7 @@
             <MatchTab title="Overview"><MatchOverview v-if="getSelectedTab == 'Overview'" :matchDetail="selectedMatch" /> </MatchTab>
             <MatchTab title="Lineup">Line-up</MatchTab>
             <MatchTab title="Stats"><MatchStatistics v-if="getSelectedTab == 'Stats'" :matchDetail="selectedMatch" /></MatchTab>
-            <MatchTab title="BestHelper"><MatchBetsHelper v-if="getSelectedTab == 'BestHelper'" :matchDetail="selectedMatch" /></MatchTab>
+            <MatchTab title="Bets Helper"><MatchBetsHelper v-if="getSelectedTab == 'Bets Helper'" :matchDetail="selectedMatch" /></MatchTab>
             <MatchTab title="H2H"><MatchH2H v-if="getSelectedTab == 'H2H'" :matchDetail="selectedMatch" /></MatchTab>
             <MatchTab title="Standings"><MatchStandings v-if="getSelectedTab == 'Standings'" :matchDetail="selectedMatch" /></MatchTab>
         </MatchTabsWrapper>

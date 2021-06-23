@@ -35,9 +35,9 @@
             const betsHelper = computed(() => {
                 const lasthomeGames = [...getHomeTeamH2H.value].filter((item, index) => index < lastGamesLength);
                 const lastawayGames = [...getAwayTeamH2H.value].filter((item, index) => index < lastGamesLength);
-                const join = [...lasthomeGames, ...lastawayGames].filter((thing, index, self) => self.findIndex(t => t.fixture.id === t.fixture.id) != index);
+                const uniqueMatches = [...new Map([...lasthomeGames, ...lastawayGames].map(item => [item.fixture.id, item])).values()];
 
-                return join.reduce((acc, stats) => {
+                return uniqueMatches.reduce((acc, stats) => {
                     getGoals(acc, stats, 1.5);
                     getGoals(acc, stats, 2.5);
                     getGoals(acc, stats, 3.5);
