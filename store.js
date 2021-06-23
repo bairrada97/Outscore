@@ -8,7 +8,8 @@ const state = reactive({
         match: {},
         awayTeamH2H: [],
         homeTeamH2H: [],
-        h2h: []
+        h2h: [],
+        standings: []
     },
     games: {},
     selectedDate: {
@@ -34,6 +35,14 @@ const setHomeTeamH2H = response => {
 };
 const setH2H = response => {
     state.selectedMatch.h2h = response;
+};
+
+const setStandings = response => {
+    state.selectedMatch.standings = response;
+};
+
+const getStandings = () => {
+    return state.selectedMatch.standings;
 };
 
 const setLiveGames = response => {
@@ -133,5 +142,7 @@ export default {
     setHomeTeamH2H,
     setH2H,
     setSelectedTab,
-    getSelectedTab
+    getSelectedTab,
+    getStandings,
+    setStandings
 };
