@@ -125,12 +125,12 @@
                 acc["Clean Sheet"][`yes`].away.value = acc["Clean Sheet"][`yes`].away.value || 0;
 
                 if (acc["Clean Sheet"][`yes`].home.name == homeTeamSide?.name) {
-                    if (goalsHome == 0) {
+                    if (goalsAway == 0) {
                         acc["Clean Sheet"][`yes`].home.value++;
                     }
                 }
                 if (acc["Clean Sheet"][`yes`].away.name == awayTeamSide?.name) {
-                    if (goalsAway == 0) {
+                    if (goalsHome == 0) {
                         acc["Clean Sheet"][`yes`].away.value++;
                     }
                 }

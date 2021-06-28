@@ -5,7 +5,7 @@
             <div class="cardStats__statistics" v-for="(stats, index) in statistics" :key="index">
                 <span>{{ stats.value || 0 }}{{ lastGamesLength ? `/${lastGamesLength}` : "" }}</span>
                 <div class="cardStats__bar">
-                    <div class="cardStats__statsProgress" :style="{ width: convertStatsInWidth(stats.value) + '%' }" :data-id="index"></div>
+                    <div class="cardStats__statsProgress" :style="{ width:  convertStatsInWidth(stats.value) + '%' }" :data-id="index"></div>
                 </div>
             </div>
         </div>
@@ -31,7 +31,15 @@
         },
         setup(props) {
             const sumOfStatistics = Object.values(props.statistics).reduce((a, b) => parseInt(a.value) + parseInt(b.value));
-            const convertStatsInWidth = stat => (stat ? (parseInt(stat) * 100) / sumOfStatistics : 0);
+            const convertStatsInWidth = (stat) => {
+                if(props.lastGamesLength){
+                    return  stat ? (parseInt(stat) * 100) / props.lastGamesLength : 0
+                }else{
+                    return  stat ? (parseInt(stat) * 100) / sumOfStatistics : 0
+                }
+                
+               
+                };
 
             return {
                 convertStatsInWidth
