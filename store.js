@@ -1,6 +1,7 @@
 import { reactive, computed } from "@nuxtjs/composition-api";
 
 const state = reactive({
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     liveToggle: false,
     liveGames: {},
     selectedGameStatistics: {},
@@ -23,6 +24,7 @@ const state = reactive({
 const getAwayTeamH2H = () => state.selectedMatch.awayTeamH2H;
 const getHomeTeamH2H = () => state.selectedMatch.homeTeamH2H;
 const getSelectedTab = () => state.selectedTab;
+const getTimezone = () => state.timezone;
 
 const getH2H = () => {
     return state.selectedMatch.h2h;
@@ -119,6 +121,7 @@ const setSelectedTab = response => {
 
 export default {
     state,
+    getTimezone,
     setLiveGames,
     getLiveGames,
     setGames,
