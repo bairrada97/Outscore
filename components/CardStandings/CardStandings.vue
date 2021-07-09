@@ -38,17 +38,25 @@
 		display: grid;
 		grid-template-columns: 24px 1fr 20px 20px 20px 20px 24px;
 		gap: 4px;
-		margin-bottom: 8px;
 		padding: 4px 0;
 		place-items: center;
 		color: #797979;
+
+		&:not(:last-of-type) {
+			margin-bottom: 8px;
+		}
 
 		&__rank {
 			color: #212121;
 			border-radius: 50%;
 			width: 100%;
 			height: 100%;
-			text-align: center;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-weight: 600;
+			font-size: 14px;
+			line-height: 18px;
 		}
 
 		&__teamInfo {

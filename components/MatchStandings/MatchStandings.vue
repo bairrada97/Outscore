@@ -12,10 +12,12 @@
 		<div class="matchStandings__container" v-if="getTeamStandings">
 			<CardStandings v-for="standing in getTeamStandings" :key="standing.team.id" :standing="standing" :color="getColorDescription(standing)" />
 		</div>
-		<!-- <div class="MatchStandings__colorsDescription" v-for="(description, index) in removeDuplicates" :key="index">
-			<span class="MatchStandings__colorsLabel" :style="{ background: description.color }"></span>
-			<span>{{ description.name }}</span>
-		</div> -->
+		<div class="matchStandings__colorsDescriptionContainer">
+			<div class="matchStandings__colorsDescription" v-for="(description, index) in descriptionSubtitle" :key="index">
+				<span class="matchStandings__colorsLabel" :style="{ background: description.color }"></span>
+				<span class="matchStandings__subtitles">{{ description.name }}</span>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -40,27 +42,31 @@
 			const { loadStandings, standings } = useStandings();
 			const getStandings = computed(() => store.getStandings());
 			const getTeamStandings = computed(() => standings.value?.standings?.find(standing => standing?.find(item => item.team.id == props.matchDetail.teams.home.id || item.team.id == props.matchDetail.teams.away.id)));
-			const promotionColors = ["green", "blue", "pink"];
-			const relegationColors = ["red", "black", "purple"];
+			const promotionColors = ["#187C56", "#7CCC15", "#3CDBD3"];
+			const relegationColors = ["#D16666", "#FF8552", "#E3DBDB"];
 			const previousDescription = ref(null);
 			const descriptionSubtitle = ref([]);
-
+			let colorIndex = 0;
 			const getColorDescription = ({ description }) => {
 				let currentColor;
-				let colorIndex = 0;
+
 				if (!previousDescription.value) previousDescription.value = description;
-				if (description && description.includes("Promotion")) {
+				const alreadyExistsOnArray = descriptionSubtitle.value.find(item => item.name == description);
+				if (description && !description.includes("Relegation")) {
 					if (previousDescription.value == description) {
 						currentColor = promotionColors[colorIndex];
 					} else {
 						currentColor = promotionColors[colorIndex + 1];
 						colorIndex++;
+						previousDescription.value = description;
 					}
 
-					descriptionSubtitle.value.push({
-						name: description,
-						color: promotionColors[colorIndex]
-					});
+					if (!alreadyExistsOnArray) {
+						descriptionSubtitle.value.push({
+							name: description,
+							color: promotionColors[colorIndex]
+						});
+					}
 				}
 
 				if (description && description.includes("Relegation")) {
@@ -71,12 +77,15 @@
 					} else {
 						currentColor = relegationColors[colorIndex + 1];
 						colorIndex++;
+						previousDescription.value = description;
 					}
 
-					descriptionSubtitle.value.push({
-						name: description,
-						color: relegationColors[colorIndex]
-					});
+					if (!alreadyExistsOnArray) {
+						descriptionSubtitle.value.push({
+							name: description,
+							color: relegationColors[colorIndex]
+						});
+					}
 				}
 
 				return currentColor;
@@ -89,7 +98,8 @@
 
 			return {
 				getTeamStandings,
-				getColorDescription
+				getColorDescription,
+				descriptionSubtitle
 			};
 		}
 	};
@@ -98,6 +108,11 @@
 <style lang="scss" scoped>
 	.matchStandings {
 		padding: 24px 16px;
+
+		&__container {
+			padding-bottom: 24px;
+			box-shadow: inset 0px -1px 0px rgba(183, 183, 183, 0.3);
+		}
 		&__labels {
 			display: grid;
 			grid-template-columns: 24px 1fr 20px 20px 20px 20px 24px;
@@ -113,11 +128,26 @@
 			}
 		}
 
+		&__colorsDescriptionContainer {
+			margin-top: 16px;
+		}
+
+		&__colorsDescription {
+			display: flex;
+			align-items: center;
+			margin-bottom: 4px;
+		}
+
 		&__colorsLabel {
+			display: block;
 			border-radius: 50%;
 			width: 8px;
 			height: 8px;
 			margin-right: 16px;
+		}
+
+		&__subtitles {
+			color: #565656;
 		}
 	}
 </style>
