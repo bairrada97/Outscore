@@ -1,5 +1,5 @@
 <template>
-	<div class="matchStandings">
+	<div class="matchStandings" v-if="!fetchState.pending">
 		<div class="matchStandings__labels">
 			<div>#</div>
 			<div class="matchStandings__labels--team">Team</div>
@@ -10,14 +10,16 @@
 			<div>Pts</div>
 		</div>
 		<div class="matchStandings__container" v-if="getTeamStandings">
-			<CardStandings v-for="standing in getTeamStandings" :key="standing.team.id" :standing="standing" :color="getColorDescription(standing)" />
+			<CardStandings v-for="standing in getTeamStandings" :key="standing.team.id" :standing="standing" :color="getColorAndDescription(standing)" />
 		</div>
+		
 		<div class="matchStandings__colorsDescriptionContainer">
-			<div class="matchStandings__colorsDescription" v-for="(description, index) in descriptionSubtitle" :key="index">
+			<div class="matchStandings__colorsDescription" v-for="(description, index) in addColorsToDescription" :key="index">
 				<span class="matchStandings__colorsLabel" :style="{ background: description.color }"></span>
-				<span class="matchStandings__subtitles">{{ description.name }}</span>
+				<span class="matchStandings__subtitles">{{ description.description }}</span>
 			</div>
 		</div>
+	
 	</div>
 </template>
 
@@ -40,56 +42,89 @@
 		},
 		setup(props) {
 			const { loadStandings, standings } = useStandings();
-			const getStandings = computed(() => store.getStandings());
-			const getTeamStandings = computed(() => standings.value?.standings?.find(standing => standing?.find(item => item.team.id == props.matchDetail.teams.home.id || item.team.id == props.matchDetail.teams.away.id)));
+			const getTeamStandings = computed(() => standings.value?.standings?.find(standing => standing?.find(item => item.team.id == props.matchDetail.teams.home.id || item.team.id == props.matchDetail.teams.away.id)))
+			const filterTeamDescription = computed(() => new Set(getTeamStandings?.value?.map(item => item.description)));
 			const promotionColors = ["#187C56", "#7CCC15", "#3CDBD3"];
 			const relegationColors = ["#D16666", "#FF8552", "#E3DBDB"];
-			const previousDescription = ref(null);
 			const descriptionSubtitle = ref([]);
-			let colorIndex = 0;
+			let colorPromotionIndex = ref(0);
+			let colorRelegationIndex = ref(0);
+
+
+			const addColorsToDescription = computed(() => {
+				return Array.from(filterTeamDescription?.value)?.reduce((acc,description, index) => {
+					if(!description) return acc;
+					if(description.includes('Relegation')){
+						acc.push({
+							description,
+							color: relegationColors[colorRelegationIndex.value]
+						})
+						colorRelegationIndex.value++
+					}else{
+						acc.push({
+							description,
+							color: promotionColors[colorPromotionIndex.value]
+						})
+						colorPromotionIndex.value++;
+					}
+
+					return acc
+				}, [])
+			}) 
+			
+			const getColorAndDescription = ({description}) => {
+				const getMatchedDescription = addColorsToDescription?.value?.find(item => item.description == description);
+				return getMatchedDescription?.color
+			}
+		/*
 			const getColorDescription = ({ description }) => {
-				let currentColor;
+				let currentColor = ref(null);
 
 				if (!previousDescription.value) previousDescription.value = description;
 				const alreadyExistsOnArray = descriptionSubtitle.value.find(item => item.name == description);
 				if (description && !description.includes("Relegation")) {
 					if (previousDescription.value == description) {
-						currentColor = promotionColors[colorIndex];
+						currentColor.value = promotionColors[colorIndex.value];
 					} else {
-						currentColor = promotionColors[colorIndex + 1];
-						colorIndex++;
+						currentColor.value = promotionColors[colorIndex.value + 1];
+						colorIndex.value++;
 						previousDescription.value = description;
 					}
 
 					if (!alreadyExistsOnArray) {
 						descriptionSubtitle.value.push({
 							name: description,
-							color: promotionColors[colorIndex]
+							color: promotionColors[colorIndex.value]
 						});
 					}
 				}
 
 				if (description && description.includes("Relegation")) {
-					colorIndex = 0;
+					colorIndex.value = 0;
 					previousDescription.value = description;
 					if (previousDescription.value == description) {
-						currentColor = relegationColors[colorIndex];
+						currentColor.value = relegationColors[colorIndex.value];
 					} else {
-						currentColor = relegationColors[colorIndex + 1];
-						colorIndex++;
+						currentColor.value = relegationColors[colorIndex.value + 1];
+						colorIndex.value++;
 						previousDescription.value = description;
 					}
 
 					if (!alreadyExistsOnArray) {
 						descriptionSubtitle.value.push({
 							name: description,
-							color: relegationColors[colorIndex]
+							color: relegationColors[colorIndex.value]
 						});
 					}
 				}
 
-				return currentColor;
+				return currentColor.value;
 			};
+
+*/
+			
+
+			
 			const { fetch, fetchState } = useFetch(async () => {
 				await loadStandings(props.matchDetail.league.id, props.matchDetail.league.season);
 			});
@@ -98,9 +133,11 @@
 
 			return {
 				getTeamStandings,
-				getColorDescription,
-				descriptionSubtitle
-			};
+				descriptionSubtitle,
+				getColorAndDescription,
+				fetchState,
+				addColorsToDescription
+			}; 
 		}
 	};
 </script>
