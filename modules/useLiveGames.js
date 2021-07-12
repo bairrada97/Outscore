@@ -9,7 +9,7 @@ export default function () {
     const loadLiveGames = async () => {
         try {
             await axios
-                .get(`https://api-football-v3.herokuapp.com/api/v3/fixtures?live=all&timezone=${timezone.value}`)
+                .get(`https://api-football-v3.herokuapp.com/api/v3/fixtures?live=all&timezone=${timezone.value}&groupBy=country`)
                 .then(response => {
                     liveGames.value = store.getLiveGames();
                     const hasDataUpdated = !liveGames.value.cacheDate || response.data.cacheDate != liveGames.value.cacheDate;

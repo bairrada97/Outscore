@@ -28,7 +28,7 @@
 		},
 		setup(props) {
 			const displayEvents = computed(() => {
-				return props.matchDetail.events?.reduce((acc, event) => {
+				return props.matchDetail?.events?.reduce((acc, event) => {
 					let homeTeam = computed(() => props.matchDetail.teams.home);
 					let awayTeam = computed(() => props.matchDetail.teams.away);
 
@@ -65,7 +65,7 @@
 				};
 			});
 			const reversePeriods = computed(() => {
-				return Object.keys(displayEvents.value)
+				return Object.keys(displayEvents?.value)
 					.reverse()
 					.map(key => {
 						const events = Array.from(displayEvents.value[key]);

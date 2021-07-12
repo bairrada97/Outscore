@@ -16,7 +16,7 @@
                 type: String
             },
             league: {
-                type: Set
+                type: Array
             }
         },
         setup(props) {

@@ -16,7 +16,7 @@ export default function () {
     const loadGames = async () => {
         try {
             await axios
-                .get(`https://api-football-v3.herokuapp.com/api/v3/fixtures?date=${selectedDate.value}&timezone=${timezone.value}`)
+                .get(`https://api-football-v3.herokuapp.com/api/v3/fixtures?date=${selectedDate.value}&timezone=${timezone.value}&groupBy=country`)
                 .then(response => {
                     store.setLiveToggle(true);
                     games.value = store.getGames();
