@@ -6,7 +6,7 @@
 				<span class="matchLineups__formation">{{ team.formation }}</span>
 			</div>
 			<div class="matchLineups__fieldGrid">
-				<div class="matchLineups__fieldPlayers" :style="{ gridArea: getPlayerPositionGrid(player.player.grid) }" v-for="(player, index) in team.startXI" :key="index">
+				<div class="matchLineups__fieldPlayers" :style="{ gridRow: getPlayerRow(player.player.grid), gridColumn: getPlayerColumn(player.player.grid) }" v-for="(player, index) in team.startXI" :key="index">
 					{{ player.player.name }}
 				</div>
 			</div>
@@ -32,14 +32,20 @@
 				return formation.split("-").length + 1;
 			};
 
-			const getPlayerPositionGrid = grid => {
-				const column = grid.split(":")[0];
-				const row = grid.split(":")[1];
-				return `${column} / ${row}`;
+			const getPlayerRow = grid => {
+				const row = grid.split(":")[0];
+				return `${row}`;
+			};
+
+			const getPlayerColumn = grid => {
+				const column = 5 - grid.split(":")[1];
+
+				return `${column}`;
 			};
 			return {
 				getGrid,
-				getPlayerPositionGrid
+				getPlayerRow,
+				getPlayerColumn
 			};
 		}
 	};
@@ -78,6 +84,11 @@
 
 		&__fieldGrid {
 			display: grid;
+		}
+
+		&__fieldPlayers {
+			justify-self: center;
+			grid-row: auto;
 		}
 	}
 </style>
